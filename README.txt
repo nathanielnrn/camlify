@@ -30,7 +30,9 @@ on Cornell's GitHub.
 That should be it.
 
 
-TODO: Add your name here. When done, commit and push to git. (We can check if the git repo works this way.)
+TODO: Make sure you are working on your own branch (as detailed above)
+Add your name here. When done, commit, pull, and push to git.
+(We can check if the git repo works this way.)
 
 
 bin: location of our "main" ml file, which is turned into our main executable.
