@@ -1,0 +1,3 @@
+(library
+ (name camlify)
+ (public_name Camlify))
