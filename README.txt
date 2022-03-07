@@ -33,7 +33,7 @@ That should be it.
 TODO: Make sure you are working on your own branch (as detailed above)
 Add your name here. When done, commit, pull, and push to git.
 (We can check if the git repo works this way.)
-
+Nathaniel Navarro
 
 bin: location of our "main" ml file, which is turned into our main executable.
      Modules in lib directory can be accessed through Camlify.Mod where Mod is the name of the module
