@@ -17,7 +17,13 @@ from now on, before continuing any work you should make sure:
   Use [git push origin <branch-name>] (NOT MAIN). This tells git to take
   your local branch and uploads it to a new branch in the remote repository.
 4.You can keep pushing to this remote version of your branch using
-  [git push origin <branch-name>
+  [git push origin <branch-name>]
+
+  Now we can go to the github repo and your web browser and go to "branches."
+  Now make a pull request, this should let all team members see the changes.
+  Anyone can confirm pull requests.
+
+  We can also skip this test and directly push to main:
 5.When your code is ready to be merged to the "good" branch (meaning everything)
   works) swtich to your local main using [git switch main].
 6.Pull from remote main using [git pull origin main]
@@ -29,11 +35,14 @@ from now on, before continuing any work you should make sure:
 
 To recap, when making changes on a certain feature:
 1.[git switch <branch-name>]
-2.Make changes
-3.[git push origin <branch-name>]
-4.When happy use [git switch main] -> [git pull origin main]
-5.[git merge <branch-name>]
-6.[git push origin main]
+2.[git pull origin main]
+3.Make changes, add and commit as needed to <branch-name>.
+4.[git push origin <branch-name>]
+5.At this point make a pull request on github
+  OR
+  When happy use [git switch main] -> [git pull origin main]
+6.[git merge <branch-name>]
+7.[git push origin main]
 
 Please make sure to only commit 100% working code to remote main (step 6)
 
