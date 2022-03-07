@@ -12,20 +12,32 @@ descriptive about content of work done on branch, versus just your name.
 This is (kind of) like your own, localized version of any files and changes
 from now on, before continuing any work you should make sure:
 1.You're the branch you want to work on (by using [git switch <branch-name>])
-2.Your branch is up to date with main by using [git pull origin] this syncs
-  changes on the "working" version of the software with your local files.
-  any merge conflicts should be shown and dealt with.
+2.You now make local changes on your local branch "branch-name."
+3.When you are fairly certain the code is decent (doesn't have to be perfect)
+  Use [git push origin <branch-name>] (NOT MAIN). This tells git to take
+  your local branch and uploads it to a new branch in the remote repository.
+4.You can keep pushing to this remote version of your branch using
+  [git push origin <branch-name>
+5.When your code is ready to be merged to the "good" branch (meaning everything)
+  works) swtich to your local main using [git switch main].
+6.Pull from remote main using [git pull origin main]
+7.Merge your feature branch to main using [git merge <branch-name>
+8.Fix any merges conflicts
+9.Push your new updated version of main to the remote repo using
+  [git push origin main]
+10.Done!
 
-After working on any code:
+To recap, when making changes on a certain feature:
+1.[git switch <branch-name>]
+2.Make changes
+3.[git push origin <branch-name>]
+4.When happy use [git switch main] -> [git pull origin main]
+5.[git merge <branch-name>]
+6.[git push origin main]
 
-1.Add changed files using [git add <file>]
-2.Commit *good code* using [git commit]
-3.Use [git pull origin] and make sure nothing newly introduced breaks
-what you wrote.
-4.Once you have done EVERYTHING above and you are *CERTAIN* your code works
-and doesn't break anything you can [git push origin main]. This takes your
-local version of code and uploads it to the main remote repository hosted
-on Cornell's GitHub.
+Please make sure to only commit 100% working code to remote main (step 6)
+
+  
 
 That should be it.
 
