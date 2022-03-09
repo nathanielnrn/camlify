@@ -1,6 +1,4 @@
 (* TODO: Implement according to streamer.mli *)
-<<<<<<< Updated upstream
-=======
 open Gstreamer
 
 type file = int
@@ -22,10 +20,11 @@ let play () =
 
 
 
+  let parse _ = failwith "Not yet implemented"
+
 
 
 
 
 
   
->>>>>>> Stashed changes
