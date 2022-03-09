@@ -1,4 +1,3 @@
 (executable
- (public_name camlify)
  (name main)
- (libraries camlify))
+ (libraries Camlify))
