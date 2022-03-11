@@ -11,7 +11,7 @@
  val tags_of_file : file -> tags
 
  (*Plays audio based on file*)
- val play : file -> unit
+ val play : unit -> unit
 
 
  (*[parse song] Takes in an mp3 file and parses data.
