@@ -11,7 +11,7 @@ let tags_of_file f = ["To implement"]
 let play () =
   init();
 
-  let pipeline = Pipeline.parse_launch "playbin uri=https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm" in
+  let pipeline = Pipeline.parse_launch "playbin uri=file:///home/nate/cs3110/camlify/camlify/data/sample-15s.mp3" in
   
   let _ = Element.set_state pipeline State_playing in
 
