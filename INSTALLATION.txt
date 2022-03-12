@@ -20,3 +20,4 @@ sudo pacman -S gstreamer gst-libav gst-plugins-bad gst-plugins-base gst-plugins-
 pkg-config --cflags --libs gstreamer-1.0
 
 
+
