@@ -20,12 +20,15 @@ val played_songs : t-> string list
 val remove_dup : 'a list -> 'a list
 (**[remove_dup lst] is a helper function that removes duplicates in a lst*)
 
+(**The type representing the result of an attempted change of song*)
 type result = 
 | Legal of t
 |Illegal of t
 
 val play_song_by_name : string -> t 
-(** [play_song_in_playlist song_name] is *)
+(** [play_song_in_playlist song_name] returns the song of input song_name. 
+the current position within the playlist is moved to the index of the song_name song
+ *)
 
 val play_song_by_idx : int -> t
 
@@ -35,4 +38,4 @@ val remove_song_from_playlist : string -> t
 
 val next_song : t 
 
-val back : t
+val prev_song : t
