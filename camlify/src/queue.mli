@@ -22,14 +22,19 @@ type result =
 | Legal of t
 |Illegal of t
 
-val play_song_by_name : string -> t 
-(** [play_song_in_playlist song_name] returns the song of input song_name 
-the current position within the playlist is moved to the index of the song_name
- song*)
+val play_song_by_name : string -> t -> result
+(** [play_song_in_playlist song_name] is [r] if attempting to play [song_name]
+  in state [st] results in [r]. If [song_name] exists in [current_playlist], then
+  [r] is [Legal st'], where in [st'] the current_song_name and current_song_idx
+  is updated to the corresponding name and index of [song_name]. Otherwise,
+  the result is [Illegal]*)
 
-val play_song_by_idx : int -> t
-(**[play_song_by_idx song_idx] returns the song of input song_idx the current 
-position within the playlist is moved to the index of the song_idx song*)
+val play_song_by_idx : int -> t -> result
+(** [play_song_by_idx song_idx] is [r] if attempting to play song of
+  [song_idx] in state [st] results in [r]. If [song_idx] is smaller than the
+  length of [current_playlist], then [r] is [Legal st'], where in [st'] the 
+  current_song_name and current_song_idx is updated to the corresponding name and
+  index of [song_idx]. Otherwise, the result is [Illegal]*)
 
 val add_song_to_playlist : string -> MusicData.t -> t -> result
 (**[add_song_to_playlist song_name md st] is [r] if attempting to add song to
