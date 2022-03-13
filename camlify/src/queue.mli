@@ -1,24 +1,21 @@
-(* TODO: Populate. This file is the "state" of the player.
- * Current song being played, list of previous songs, next songs, etc. *)
 
-
-type t 
+type t
 (** The abstract type of values representing current state of music player*)
 
-val init_state : t
+val init_state : MusicData.t -> t
+(**[init_state md] is the initial state of the playlist. In that state
+the song is set to the first song of the current playlist.*)
 
+val current_song_name : t -> string
+(** [current_song_name st] is the identifier of the name of the song the user is
+ currently playing*)
 
-val current_song_id : t -> string
-(** [current_song st] is the identifier of the song the user is currently playing*)
+val current_song_idx : t -> int
+(**[current_song_idx st] is the identifier of the index of the song the user is
+ currently playing*)
 
-val following_songs : t -> string list
-(** [following_songs st] is the list of songs that are left to play on the playlist*)
-
-val played_songs : t-> string list
-(** [played_songs st] is the list of songs that have previously been played on the playlist*)
-
-val remove_dup : 'a list -> 'a list
-(**[remove_dup lst] is a helper function that removes duplicates in a lst*)
+val current_playlist : t -> string list
+(**[current_playlist st] is the identifier of the current playlist*)
 
 (**The type representing the result of an attempted change of song*)
 type result = 
@@ -26,16 +23,75 @@ type result =
 |Illegal of t
 
 val play_song_by_name : string -> t 
-(** [play_song_in_playlist song_name] returns the song of input song_name. 
-the current position within the playlist is moved to the index of the song_name song
- *)
+(** [play_song_in_playlist song_name] returns the song of input song_name 
+the current position within the playlist is moved to the index of the song_name
+ song*)
 
 val play_song_by_idx : int -> t
+(**[play_song_by_idx song_idx] returns the song of input song_idx the current 
+position within the playlist is moved to the index of the song_idx song*)
 
-val add_song_to_playlist : string -> t
+val add_song_to_playlist : string -> MusicData.t -> t -> result
+(**[add_song_to_playlist song_name md st] is [r] if attempting to add song to
+   playlist in playlist in state [st] results in [r]. If song_name is a song in
+   all_songs, then [r] is [Legal st'], where in [st'] the song is added to the
+   playlist. Otherwise, the result is [Illegal]*)
 
-val remove_song_from_playlist : string -> t
+val remove_song_from_playlist : string -> MusicData.t -> t -> result
+(**[remove_song_from_playlist song_name md st] is [r] if attempting to remove
+   song from playlist in playlist in state [st] results in [r]. If song_name is
+   a song in current_playlist, then [r] is [Legal st'], where in [st'] the song is
+   added to the playlist. Otherwise, the result is [Illegal]*)
 
-val next_song : t 
+val make_new_playlist : string -> MusicData.t -> t -> result
+(**[make_new_playlist playlist_name md st] is [r] if attempting to make a new 
+  playlist in state [st] results in [r]. If playlist_name is not in list_of_playlist,
+ then [r] is [Legal st'], where in [st'] the new empty playlist is added to
+ list_of_playlist. Otherwise, the result is [Illegal]*)
 
-val prev_song : t
+val select_playlist : string -> MusicData.t -> t -> result
+(**[select_new_playlist playlist_name md st] is [r] if attempting to select an 
+  existing playlist in state [st] results in [r]. If playlist_name is in 
+ list_of_playlist, then [r] is [Legal st'], where in [st'] the playlist_name 
+ selected with first song as current_song_name. Otherwise, the result is 
+ [Illegal]*)
+
+val delete_playlist : string -> MusicData.t -> t -> result
+(**[delete_playlist playlist_name md st] is [r] if attempting to delete a 
+  playlist in state [st] results in [r]. If playlist_name is in list_of_playlist,
+ then [r] is [Legal st'], where in [st'] the playlist is removed from
+ list_of_playlist. Otherwise, the result is [Illegal]*)
+
+val add_new_song : string -> MusicData.t -> t -> result
+(**[add_new_song song_name md st] is [r] if attempting to add a new song in 
+ all_songs in state [st] results in [r]. If song_name is not in list_of_all_songs,
+ then [r] is [Legal st'], where in [st'] the new song is added to
+ list_of_all_songs. Otherwise, the result is [Illegal]*)
+
+val remove_song_from_all_songs : string -> MusicData.t -> t -> result
+ (**[remove_new_song song_name md st] is [r] if attempting to remove an existing
+ song in all_songs in state [st] results in [r]. If song_name is in 
+ list_of_all_songs, then [r] is [Legal st'], where in [st'] the song is removed
+ from list_of_all_songs. Otherwise, the result is [Illegal]*)
+
+val next_song : t -> result 
+(**[next_song st] is [r] if attempting to play next song in playlist in state 
+  [st] results in [r]. If the length of current_playlist is greater than 0, then
+  [r] is [Legal st'], where in [st'] the current_song updated to the song of 
+  next index. Otherwise, the result is [Illegal]. If the current_song is the 
+  last song on playlist, the next_song loops around to the first song in 
+  playlist*)
+
+val prev_song : t -> result
+(**[prev_song st] is [r] if attempting to play previous song in playlist in state 
+  [st] results in [r]. If the length of current_playlist is greater than 0, then
+  [r] is [Legal st'], where in [st'] the current_song updated to the song of 
+  previous index. Otherwise, the result is [Illegal]. If the current_song is the 
+  first song on playlist, the prev_song loops around to the last song in 
+  playlist*)
+
+val random_song : t -> result
+(**[random_song st] is [r] if attempting to play random song in playlist in state 
+  [st] results in [r]. If the length of current_playlist is greater than 0, then
+  [r] is [Legal st'], where in [st'] the current_song updated to the song of 
+  random index. Otherwise, the result is [Illegal].*)
