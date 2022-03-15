@@ -126,10 +126,10 @@ let make_new_playlist playlist_name md st =
 let select_playlist playlist_name md st =
   try List.find (fun x -> x = playlist_name) (st.list_of_playlist)
   |> fun x -> Legal{
-    current_song_name = List.nth playlist_name 0;
+    current_song_name = List.nth (MusicData.select_playlist playlist_name) 0;
     current_song_idx = 0;
     current_playlist_name = playlist_name;
-    current_playlist = MusicData select_playlist playlist_name;
+    current_playlist = MusicData.select_playlist playlist_name;
     list_of_playlist = st.list_of_playlist;
     list_of_all_songs = st.list_of_all_songs;
   }
