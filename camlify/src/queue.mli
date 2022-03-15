@@ -20,21 +20,43 @@ val current_playlist : t -> string list
 (**The type representing the result of an attempted change of song*)
 type result = 
 | Legal of t
-|Illegal of t
+|Illegal
 
 val play_song_by_name : string -> t -> result
-(** [play_song_in_playlist song_name] is [r] if attempting to play [song_name]
+(** [play_song_in_playlist song_name st] is [r] if attempting to play [song_name]
   in state [st] results in [r]. If [song_name] exists in [current_playlist], then
   [r] is [Legal st'], where in [st'] the current_song_name and current_song_idx
   is updated to the corresponding name and index of [song_name]. Otherwise,
   the result is [Illegal]*)
 
 val play_song_by_idx : int -> t -> result
-(** [play_song_by_idx song_idx] is [r] if attempting to play song of
+(** [play_song_by_idx song_idx st] is [r] if attempting to play song of
   [song_idx] in state [st] results in [r]. If [song_idx] is smaller than the
   length of [current_playlist], then [r] is [Legal st'], where in [st'] the 
   current_song_name and current_song_idx is updated to the corresponding name and
   index of [song_idx]. Otherwise, the result is [Illegal]*)
+
+val next_song : t -> result 
+(**[next_song st] is [r] if attempting to play next song in playlist in state 
+  [st] results in [r]. If the length of current_playlist is greater than 0, then
+  [r] is [Legal st'], where in [st'] the current_song updated to the song of 
+  next index. Otherwise, the result is [Illegal]. If the current_song is the 
+  last song on playlist, the next_song loops around to the first song in 
+  playlist*)
+
+val prev_song : t -> result
+(**[prev_song st] is [r] if attempting to play previous song in playlist in state 
+  [st] results in [r]. If the length of current_playlist is greater than 0, then
+  [r] is [Legal st'], where in [st'] the current_song updated to the song of 
+  previous index. Otherwise, the result is [Illegal]. If the current_song is the 
+  first song on playlist, the prev_song loops around to the last song in 
+  playlist*)
+
+val random_song : t -> result
+(**[random_song st] is [r] if attempting to play random song in playlist in state 
+  [st] results in [r]. If the length of current_playlist is greater than 0, then
+  [r] is [Legal st'], where in [st'] the current_song updated to the song of 
+  random index. Otherwise, the result is [Illegal].*)
 
 val add_song_to_playlist : string -> MusicData.t -> t -> result
 (**[add_song_to_playlist song_name md st] is [r] if attempting to add song to
@@ -79,24 +101,3 @@ val remove_song_from_all_songs : string -> MusicData.t -> t -> result
  list_of_all_songs, then [r] is [Legal st'], where in [st'] the song is removed
  from list_of_all_songs. Otherwise, the result is [Illegal]*)
 
-val next_song : t -> result 
-(**[next_song st] is [r] if attempting to play next song in playlist in state 
-  [st] results in [r]. If the length of current_playlist is greater than 0, then
-  [r] is [Legal st'], where in [st'] the current_song updated to the song of 
-  next index. Otherwise, the result is [Illegal]. If the current_song is the 
-  last song on playlist, the next_song loops around to the first song in 
-  playlist*)
-
-val prev_song : t -> result
-(**[prev_song st] is [r] if attempting to play previous song in playlist in state 
-  [st] results in [r]. If the length of current_playlist is greater than 0, then
-  [r] is [Legal st'], where in [st'] the current_song updated to the song of 
-  previous index. Otherwise, the result is [Illegal]. If the current_song is the 
-  first song on playlist, the prev_song loops around to the last song in 
-  playlist*)
-
-val random_song : t -> result
-(**[random_song st] is [r] if attempting to play random song in playlist in state 
-  [st] results in [r]. If the length of current_playlist is greater than 0, then
-  [r] is [Legal st'], where in [st'] the current_song updated to the song of 
-  random index. Otherwise, the result is [Illegal].*)
