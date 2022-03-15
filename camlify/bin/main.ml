@@ -24,7 +24,6 @@ let step (q: Queue.t) =
         let play_new_song = Streamer.play song_name in 
         (step_r new_q)
 
-
   in
   step_r q
 
