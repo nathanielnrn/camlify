@@ -1,4 +1,4 @@
 (library
  (name camlify)
  (public_name Camlify)
- (libraries yojson))
+ (libraries gstreamer yojson))

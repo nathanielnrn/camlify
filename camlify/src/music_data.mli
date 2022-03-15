@@ -13,6 +13,8 @@ type playlist
 type interface
 (**represents all the song and playlist data available*)
 
-val from_json : Yojson.Basic.t -> t
+val from_json : Yojson.Basic.t -> interface
 (** [from_json j] is the data that [j] represents. Requires: [j] is
-    a valid JSON music data representation. *)
+    a valid JSON music data representation.*)
+
+val test_write : unit
