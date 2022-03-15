@@ -14,14 +14,14 @@ let rec remove_element element lst =
   |h::t -> if h = element then remove_element element t else h::remove_element element t
 
 
-let init_state selected_playlist md=
+let init_state selected_playlist=
   {
-    current_song_name = List.nth (MusicData.select_playlist selected_playlist) 0;
+    current_song_name = List.nth (Music_data.select_playlist selected_playlist) 0;
     current_song_idx = 0;
     current_playlist_name = selected_playlist;
-    current_playlist = MusicData.select_playlist selected_playlist;
-    list_of_playlist = MusicData.list_of_playlist;
-    list_of_all_songs = MusicData.all_songs;
+    current_playlist = Music_data.select_playlist selected_playlist;
+    list_of_playlist = Music_data.list_of_playlist;
+    list_of_all_songs = Music_data.all_songs;
   }
 
 let current_song_name st = st.current_song_name
@@ -78,7 +78,7 @@ else play_song_by_idx (current_song_idx st -1) st
 
 let random_song st = play_song_by_idx (Random.int (List.length st.current_playlist)) st
 
-let add_song_to_playlist song_name md st = 
+let add_song_to_playlist song_name st = 
     try 
     List.find (fun x -> x = song_name) (st.list_of_all_songs)
     |> fun x -> Legal {
@@ -91,7 +91,7 @@ let add_song_to_playlist song_name md st =
   }
 with Failure x -> Illegal
 
-let remove_song_from_playlist song_name md st = 
+let remove_song_from_playlist song_name st = 
   try
     List.find (fun x -> x = song_name) (st.current_playlist)
     |> fun x -> Legal{
@@ -104,7 +104,7 @@ let remove_song_from_playlist song_name md st =
     }
   with Failure x -> Illegal
 
-let make_new_playlist playlist_name md st =
+let make_new_playlist playlist_name st =
   try
     if List.exists(fun x -> x = playlist_name) (st.list_of_playlist) then
       Illegal else Legal {current_song_name = st.current_song_name;
@@ -123,19 +123,19 @@ let make_new_playlist playlist_name md st =
       list_of_all_songs = st.list_of_all_songs
   }
 
-let select_playlist playlist_name md st =
+let select_playlist playlist_name st =
   try List.find (fun x -> x = playlist_name) (st.list_of_playlist)
   |> fun x -> Legal{
-    current_song_name = List.nth (MusicData.select_playlist playlist_name) 0;
+    current_song_name = List.nth (Music_data.select_playlist playlist_name) 0;
     current_song_idx = 0;
     current_playlist_name = playlist_name;
-    current_playlist = MusicData.select_playlist playlist_name;
+    current_playlist = Music_data.select_playlist playlist_name;
     list_of_playlist = st.list_of_playlist;
     list_of_all_songs = st.list_of_all_songs;
   }
 with Failure x -> Illegal
 
-let delete_playlist playlist_name md st =
+let delete_playlist playlist_name st =
   try List.find (fun x -> x = playlist_name) (st.list_of_playlist)
   |> fun x -> Legal{
     current_song_name = st.current_song_name;
@@ -147,7 +147,7 @@ let delete_playlist playlist_name md st =
   }
 with Failure x -> Illegal
 
-let add_new_song song_name md st =
+let add_new_song song_name st =
   try List.find (fun x -> x = song_name) (st.list_of_all_songs)
   |> fun x -> Illegal
 with Failure x -> Legal{
@@ -159,7 +159,7 @@ with Failure x -> Legal{
     list_of_all_songs = st.list_of_all_songs @ [song_name];
 }
 
-let remove_song_from_all_songs song_name md st =
+let remove_song_from_all_songs song_name st =
   try List.find (fun x -> x = song_name) (st.list_of_all_songs)
   |> fun x -> Legal{
   current_song_name = st.current_song_name;
