@@ -10,8 +10,6 @@ type song = {
   artist : string option;
   album : string option;
   year : int option;
-  tags : string list;
-
 }
 
 type playlist = {name : string ; songs : song list}
@@ -33,8 +31,7 @@ let song_from_json song =
       song |> member "album" |> to_string_option;
     year = if ((song |> member "year") = `Null) then None else 
       song |> member "year" |> to_int_option;
-    tags = if ((song |> member "tags") = `Null) then [] else 
-      song |> member "tags" |> to_list |> List.map to_string
+
   }
 
 let playlist_from_json playlist =
@@ -50,15 +47,73 @@ let from_json json =
   }
 
 
-let to_song (song : song) : Yojson.t = 
+let rec to_song (song : song) : Yojson.t = 
   `Assoc (("name", `String song.name ) :: 
-  ("name", `String song.name ) 
-  :: ("name", `String song.name )
-  :: ("name", `String song.name )
-  :: ("name", `String song.name )
-  :: ("name", `String song.name )
-  :: ("name", `String song.name )
+  ("liked", `Bool song.liked ) 
+  :: ("mp3 file", `String song.mp3_file )
+  :: ("artist", match song.artist with 
+  | None -> `Null
+  | Some artist -> `String artist )
+  :: ("album", match song.album with 
+  | None -> `Null
+  | Some album -> `String album )
+  :: ("year", match song.year with 
+  | None -> `Null
+  | Some year -> `Int year )
   ::[])
+
+  let rec to_playlist (playlist : playlist) : Yojson.t = 
+    `Assoc (("name", `String playlist.name ) :: 
+    ("songs", `List (playlist.songs|> List.map to_song)) 
+    ::[])
+  
+  let rec to_interface (interface: interface) : Yojson.t = 
+    `Assoc (("all songs", `List (interface.all_songs |> List.map to_song)) :: 
+    ("playlists", `List (interface.playlists|> List.map to_playlist)) 
+    ::[])
+
+let song1 ={
+      name = "fly me to the caml";
+      liked = true;
+      mp3_file = "yeet";
+      artist = None;
+      album = None;
+      year = None;
+    }
+
+
+let song1 ={
+  name = "fly me to the caml";
+  liked = true;
+  mp3_file = "yeet";
+  artist = None;
+  album = None;
+  year = None;
+    }
+
+let x : interface = {all_songs = [{
+  name = "fly me to the moon";
+  liked = true;
+  mp3_file = "yeet";
+  artist = None;
+  album = None;
+  year = None;
+};
+{
+  name = "fly me to the caml";
+  liked = true;
+  mp3_file = "yeet";
+  artist = None;
+  album = None;
+  year = None;
+}
+];
+
+playlists = []}
+  
+
+  
+  
 
 
 (*let rec to_interface (interface : interface) : Yojson.Basic.t = 

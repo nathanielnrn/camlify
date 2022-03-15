@@ -1,1 +1,43 @@
-{"playlists":[{"name":"frankie","songs":[{"name":"fly me to the moon","tagged": true,"mp3 file": "this"}]}]}
+{
+  "all songs": [
+    {
+      "name": "fly me to the moon",
+      "liked": true,
+      "mp3 file": "yeet",
+      "artist": null,
+      "album": null,
+      "year": null
+    },
+    {
+      "name": "fly me to the caml",
+      "liked": true,
+      "mp3 file": "yeet",
+      "artist": null,
+      "album": null,
+      "year": null
+    }
+  ],
+  "playlists": [
+    {
+      "name": "bangers",
+      "songs": [
+        {
+          "name": "fly me to the moon",
+          "liked": true,
+          "mp3 file": "yeet",
+          "artist": null,
+          "album": null,
+          "year": null
+        },
+        {
+          "name": "fly me to the caml",
+          "liked": true,
+          "mp3 file": "yeet",
+          "artist": null,
+          "album": null,
+          "year": null
+        }
+      ]
+    }
+  ]
+}
