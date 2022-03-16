@@ -35,7 +35,8 @@ let rec reduce_filepath s n =
 let play file_name =
   (*Create file path code*)
 
-  let file_path = data_dir_uri ^ file_name in
+  (*Replaces spaces with %20*)
+  let file_path = data_dir_uri ^ file_name |> String.split_on_char ' ' |> String.concat "%20" in
 
 
   (*GStreamer initialization and running code
