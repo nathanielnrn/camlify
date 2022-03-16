@@ -1,5 +1,7 @@
 type song_name = string
+
 type playlist_name = string
+
 type index = int
 
 exception Empty
@@ -51,6 +53,7 @@ let parse (str : string) : command =
         else if String.equal hd "new_pl" then
             if List.length tl == 0 then raise Malformed 
             else CreatePlayList (String.concat " " tl)
+
         else if String.equal hd "next" then
             if List.length tl != 0 then raise Malformed 
             else NextSong

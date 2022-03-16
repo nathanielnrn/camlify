@@ -1,5 +1,7 @@
 type song_name = string
+
 type playlist_name = string
+
 type index = int
 
 exception Empty
@@ -10,6 +12,7 @@ type command =
     | PlayIndex of index
     | CurrentSongName
     | CurrentSongIndex
+
     | ViewPlaylists
     | CurrentPlayList
     | ChangePlayList of playlist_name
@@ -23,3 +26,4 @@ type command =
     | Idle
 
 val parse : string -> command
+

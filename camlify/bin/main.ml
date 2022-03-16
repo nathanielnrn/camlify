@@ -1,3 +1,4 @@
+
 open Camlify.Music_data
 open Camlify.Queue
 open Camlify.Streamer 
@@ -156,8 +157,6 @@ let help_message : string =
          (step_r new_q)
         end
       | _ -> failwith "TODO Add song, remove song"
-
-
   in
   step_r q
 
@@ -179,6 +178,7 @@ let main () =
   let playlist = choose_playlist() in
   let _ = print_endline ("Opening playlist " ^ playlist ^ "...") in
   let q = Camlify.Queue.init_state playlist in
+
   step q
 
 (* Execute the mp3. *)

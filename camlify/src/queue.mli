@@ -1,3 +1,4 @@
+
 (* TODO: Populate. This file is the "state" of the player.
  * Current song being played, list of previous songs, next songs, etc. *)
 
@@ -105,3 +106,4 @@
   song in all_songs in state [st] results in [r]. If song_name is in 
   list_of_all_songs, then [r] is [Legal st'], where in [st'] the song is removed
   from list_of_all_songs. Otherwise, the result is [Illegal]*)
+

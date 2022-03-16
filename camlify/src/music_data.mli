@@ -1,5 +1,6 @@
 (* TODO: Populate. This module reads and writes to files in data/ directory.
  * These files contain info on playlists, settings, etc. *)
+
  type song
 
  val select_playlist : string -> string list
@@ -19,3 +20,4 @@
  val song_name_to_mp3_file: string -> song list -> string
  
  val all_songs_objects: song list
+
