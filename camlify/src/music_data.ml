@@ -1,3 +1,5 @@
+print_endline "here at least6";
+
 (* TODO: Implement according to music_data.mli *)
 open Yojson.Basic.Util
 
@@ -110,12 +112,17 @@ let () =
     close_out oc;;*)
 
 let slist_to_snames (slist : song list) = 
+  print_endline "h1";
   List.map  (fun (s : song)-> s.name) slist
 
+
+  
 let plist_to_pnames (plist : playlist list) = 
+  print_endline "h2";
   List.map  (fun (p : playlist)-> p.name) plist
 
 let rec playlist_selector (plist : playlist list) (pname : string)= 
+print_endline "h3";
   match plist with
   | [] -> []
   | h::t when h.name = pname -> slist_to_snames h.songs
@@ -125,20 +132,35 @@ let rec playlist_selector (plist : playlist list) (pname : string)=
 (**[select_playlist playlist_name] returns the list of song names that the 
   playlist of playlist_name contains*)
 let select_playlist pname = 
+<<<<<<< Updated upstream
   let j = Yojson.Basic.from_file "data/interface.json" in
+=======
+  print_endline "h4";
+  let j = Yojson.Basic.from_file file in
+>>>>>>> Stashed changes
     let iface = from_json j in
       playlist_selector iface.playlists pname      
    
 (**[list_of_playlist] is a list of all playlist names*)
 let list_of_playlist : string list = 
+<<<<<<< Updated upstream
   let j = Yojson.Basic.from_file "data/interface.json" in
+=======
+  print_endline ;
+  let j = Yojson.Basic.from_file file in
+>>>>>>> Stashed changes
     let iface = from_json j in
       plist_to_pnames iface.playlists
  
       
 (*song list to name of somg lists*)      
 let all_songs : string list = 
+<<<<<<< Updated upstream
   let j = Yojson.Basic.from_file "data/interface.json" in
+=======
+  print_endline "h6";
+  let j = Yojson.Basic.from_file file in
+>>>>>>> Stashed changes
     let iface = from_json j in
       slist_to_snames iface.all_songs
   

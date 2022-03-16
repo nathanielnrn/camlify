@@ -1,8 +1,28 @@
+<<<<<<< Updated upstream
 open Yojson
+=======
+(* open Camlify.Music_data
+open Camlify.Queue
+open Camlify.Streamer *)
+(* open Camlify.Command *)
+>>>>>>> Stashed changes
 
 (* TODO: update with interface to client using terminal,
  * see a2 bin/main.ml for direction *)
 
+<<<<<<< Updated upstream
+=======
+ let step (q: Camlify.Queue.t) =
+
+  let rec step_r (q: Camlify.Queue.t) : Camlify.Queue.t = 
+    print_string "> ";
+    
+    let cmd : Camlify.Command.command = match read_line () with
+    | exception End_of_file -> Quit
+    | command -> try (Camlify.Command.parse command) with
+      | Camlify.Command.Empty -> let _ = print_endline "Please write anything..." in Idle
+      | Camlify.Command.Malformed -> let _ = print_endline "Wrong command input" in Idle in
+>>>>>>> Stashed changes
 
 let next_song (data: Music_data.t) (st: queue.t) : queue.t = 
   let _ = print_endline ((st |> current_song ^ "\n") in
@@ -34,6 +54,7 @@ let play_song f =
 let data_dir_prefix = "data" ^ Filename.dir_sep;;
 
 let main () =
+<<<<<<< Updated upstream
   ANSITerminal.print_string [ ANSITerminal.red ]
     "\n\nWelcome to the MP3 \n";
   print_endline
@@ -45,3 +66,18 @@ let main () =
 
 (* Execute the mp3. *)
 let () = main ()
+=======
+  print_endline "here at least";
+  let q = Camlify.Queue.init_state ("Playlist one") in (** hope Camlify.Music_data.init_state returns Camlify.Music_data.t  *)
+  (* ANSITerminal.print_string [ ANSITerminal.red ] *)
+  print_endline  "\n\nWelcome to Camlify \n";
+  print_endline "Commands you can use:";
+  print_endline "play [name_of_song.mp3]";
+  step q
+
+(* Execute the mp3. *)
+let _ = 
+  print_endline "here at least2";
+
+  main ()
+>>>>>>> Stashed changes
