@@ -37,9 +37,9 @@ let help_message : string =
     match cmd with
     | Idle -> (step_r q)
 
-    | Help -> let _ = print_endline help_message in (step_r q)
+    | Help -> print_endline help_message; (step_r q)
 
-    | Quit -> let _ = print_endline "Bye!" in let _ = Stdlib.exit 0 in (step_r q)
+    | Quit -> print_endline "Bye!"; Stdlib.exit 0;
 
     | Play song_name -> 
 
