@@ -1,6 +1,6 @@
-open Camlify.Music_data
+(* open Camlify.Music_data
 open Camlify.Queue
-open Camlify.Streamer
+open Camlify.Streamer *)
 open Camlify.Command
 
 (* TODO: update with interface to client using terminal,
@@ -43,19 +43,19 @@ open Camlify.Command
         print_endline ("There is no such index as " ^ (string_of_int idx));
         (step_r q)
       | Legal new_q ->
-        let new_song_name : string = current_song_name new_q in
+        let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
         let _ = Camlify.Streamer.play new_song_name in 
         (step_r new_q)
       end
 
     | CurrentSongName ->
-      let song_name = current_song_name q in
+      let song_name = Camlify.Queue.current_song_name q in
       print_endline ("Current song: " ^ song_name);
       (step_r q)
 
     | CurrentSongIndex -> 
-      let song_index = current_song_idx q in
+      let song_index = Camlify.Queue.current_song_idx q in
     print_endline ("Current song index: " ^ (string_of_int song_index));
       (step_r q)
     | CurrentPlayList -> failwith "TODO: implement"
@@ -67,7 +67,7 @@ open Camlify.Command
       print_endline ("There is no next song in the queue.");
         (step_r q)
       | Legal new_q ->
-        let new_song_name : string = current_song_name new_q in
+        let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "…");
         let _ = Camlify.Streamer.play new_song_name in 
         (step_r new_q)
@@ -80,7 +80,7 @@ open Camlify.Command
       print_endline ("There is no previous song in the queue.");
         (step_r q)
       | Legal new_q ->
-        let new_song_name : string = current_song_name new_q in
+        let new_song_name : string = Camlify.Queue.current_song_name new_q in
         print_endline ("Playing song " ^ new_song_name ^ "…");
         let _ = Camlify.Streamer.play new_song_name in 
         (step_r new_q)
@@ -92,7 +92,7 @@ open Camlify.Command
   step_r q
 
 let main () =
-  let q = Camlify.Queue.init_state ("Playlist One") in (** hope Camlify.Music_data.init_state returns Camlify.Music_data.t  *)
+  let q = Camlify.Queue.init_state ("Playlist one") in (** hope Camlify.Music_data.init_state returns Camlify.Music_data.t  *)
   (* ANSITerminal.print_string [ ANSITerminal.red ] *)
   print_endline  "\n\nWelcome to Camlify \n";
   print_endline "Commands you can use:";
