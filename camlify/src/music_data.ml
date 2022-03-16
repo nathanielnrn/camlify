@@ -1,6 +1,8 @@
 (* TODO: Implement according to music_data.mli *)
 open Yojson.Basic.Util
 
+let file = "data/interface.json"
+
 let data = Yojson.Basic.from_file "interface.json"
 
 type song = {
@@ -62,18 +64,18 @@ let rec to_song (song : song) : Yojson.t =
   | Some year -> `Int year )
   ::[])
 
-  let rec to_playlist (playlist : playlist) : Yojson.t = 
+let rec to_playlist (playlist : playlist) : Yojson.t = 
     `Assoc (("name", `String playlist.name ) :: 
     ("songs", `List (playlist.songs|> List.map to_song)) 
     ::[])
   
-  let rec to_interface (interface: interface) : Yojson.t = 
+let rec to_interface (interface: interface) : Yojson.t = 
     `Assoc (("all songs", `List (interface.all_songs |> List.map to_song)) :: 
     ("playlists", `List (interface.playlists|> List.map to_playlist)) 
     ::[])
 
 let song1 ={
-      name = "fly me to the caml";
+      name = "fly me to the moon";
       liked = true;
       mp3_file = "yeet";
       artist = None;
@@ -81,55 +83,69 @@ let song1 ={
       year = None;
     }
 
-
-let song1 ={
+let song2 ={
   name = "fly me to the caml";
   liked = true;
   mp3_file = "yeet";
   artist = None;
   album = None;
   year = None;
-    }
+  }
+let playlist1 = {name = "bangers";
+songs = [song1;song2]
 
-let x : interface = {all_songs = [{
-  name = "fly me to the moon";
-  liked = true;
-  mp3_file = "yeet";
-  artist = None;
-  album = None;
-  year = None;
-};
-{
-  name = "fly me to the caml";
-  liked = true;
-  mp3_file = "yeet";
-  artist = None;
-  album = None;
-  year = None;
 }
-];
 
-playlists = []}
+let x : interface = {all_songs = [song1;song2];
+playlists = [playlist1]}
+
+let to_x = to_interface x
+
+let pushed = Yojson.pretty_to_string to_x
+
+let () =  
+  (* Write message to file *)
+  let oc = open_out file in (* create or truncate file, return channel *)
+    Printf.fprintf oc "%s\n" pushed; (* write something *)   
+    close_out oc;;
+
+let slist_to_snames (slist : song list) = 
+  List.map  (fun (s : song)-> s.name) slist
+
+let plist_to_pnames (plist : playlist list) = 
+  List.map  (fun (p : playlist)-> p.name) plist
+
+let rec playlist_selector (plist : playlist list) (pname : string)= 
+  match plist with
+  | [] -> []
+  | h::t when h.name = pname -> slist_to_snames h.songs
+  | h::t -> playlist_selector t pname
+       
+
+(**[select_playlist playlist_name] returns the list of song names that the 
+  playlist of playlist_name contains*)
+let select_playlist pname = 
+  let j = Yojson.Basic.from_file "data/interface.json" in
+    let iface = from_json j in
+      playlist_selector iface.playlists pname      
+   
+(**[list_of_playlist] is a list of all playlist names*)
+let list_of_playlist : string list = 
+  let j = Yojson.Basic.from_file "data/interface.json" in
+    let iface = from_json j in
+      plist_to_pnames iface.playlists
+ 
+      
+(*song list to name of somg lists*)      
+let all_songs : string list = 
+  let j = Yojson.Basic.from_file "data/interface.json" in
+    let iface = from_json j in
+      slist_to_snames iface.all_songs
   
-
-  
-  
-let string_of_all_songs (lst:string list) = 
-  match lst with
-  |[] -> ""
-  |h::t -> (List.fold_left (fun acc song -> acc ^ ", " ^ song) h t)
-
-
-  (** Acumulator version of string of all songs*)
-let string_of_all_songs_aux acc lst = 
-
-
 (*let rec to_interface (interface : interface) : Yojson.Basic.t = 
   `Assoc [("playlists",(match interface.playlists with
   | [] -> `List []
   | h::t -> [List]*)
-
-
   
 let file = "interface.json"
 let message = "Hello!"
@@ -138,9 +154,6 @@ let test_write =
   let oc = open_out file in (* create or truncate file, return channel *)
     Printf.fprintf oc "%s\n" message; (* write something *)   
     close_out oc; 
-
-
-
 
 (*let rewrite_json = ()
 
