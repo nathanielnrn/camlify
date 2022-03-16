@@ -74,7 +74,7 @@ let rec to_interface (interface: interface) : Yojson.t =
     ("playlists", `List (interface.playlists|> List.map to_playlist)) 
     ::[])
 
-let song1 ={
+(*let song1 ={
       name = "fly me to the moon";
       liked = true;
       mp3_file = "yeet";
@@ -107,7 +107,7 @@ let () =
   (* Write message to file *)
   let oc = open_out file in (* create or truncate file, return channel *)
     Printf.fprintf oc "%s\n" pushed; (* write something *)   
-    close_out oc;;
+    close_out oc;;*)
 
 let slist_to_snames (slist : song list) = 
   List.map  (fun (s : song)-> s.name) slist
@@ -147,7 +147,7 @@ let all_songs : string list =
   | [] -> `List []
   | h::t -> [List]*)
   
-(* let file = "interface.json" *)
+(*let file = "interface.json"
 let message = "Hello!"
 let test_write =  
   (* Write message to file *)
@@ -159,4 +159,4 @@ let test_write =
 
   type t = {x: int; y: int} [@@deriving to_yojson]
   type u = {s: string; pos: t} [@@deriving to_yojson]
-  let () = print_endline (Yojson.Safe.pretty_to_string (u_to_yojson {s= "hello"; pos={x= 1; y= 2}}))  *)
+  let () = print_endline (Yojson.Safe.pretty_to_string (u_to_yojson {s= "hello"; pos={x= 1; y= 2}}))  *)*)
