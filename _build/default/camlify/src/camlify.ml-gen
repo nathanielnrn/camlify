@@ -1,0 +1,14 @@
+(** @canonical Camlify.Command *)
+module Command = Camlify__Command
+
+
+(** @canonical Camlify.Music_data *)
+module Music_data = Camlify__Music_data
+
+
+(** @canonical Camlify.Queue *)
+module Queue = Camlify__Queue
+
+
+(** @canonical Camlify.Streamer *)
+module Streamer = Camlify__Streamer

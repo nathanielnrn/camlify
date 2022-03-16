@@ -44,7 +44,9 @@ let playlist_from_json playlist =
 
 let from_json json =
   {
-    all_songs = json |> member "songs" |> to_list |> List.map song_from_json;
+
+    all_songs = json |> member "all songs" |> to_list |> List.map song_from_json;
+
     playlists = json |> member "playlists" |> to_list |> List.map playlist_from_json;
   }
 
@@ -83,6 +85,7 @@ let rec to_interface (interface: interface) : Yojson.t =
       year = None;
     }
 
+
 let song2 ={
   name = "fly me to the caml";
   liked = true;
@@ -95,12 +98,9 @@ let playlist1 = {name = "bangers";
 songs = [song1;song2]
 
 }
-
 let x : interface = {all_songs = [song1;song2];
 playlists = [playlist1]}
-
 let to_x = to_interface x
-
 let pushed = Yojson.pretty_to_string to_x
 
 let () =  
@@ -177,7 +177,7 @@ let test_write =
     close_out oc; 
 
 (*let rewrite_json = ()
-
   type t = {x: int; y: int} [@@deriving to_yojson]
   type u = {s: string; pos: t} [@@deriving to_yojson]
   let () = print_endline (Yojson.Safe.pretty_to_string (u_to_yojson {s= "hello"; pos={x= 1; y= 2}}))  *)*)
+
