@@ -114,6 +114,14 @@ playlists = []}
 
   
   
+let string_of_all_songs (lst:string list) = 
+  match lst with
+  |[] -> ""
+  |h::t -> (List.fold_left (fun acc song -> acc ^ ", " ^ song) h t)
+
+
+  (** Acumulator version of string of all songs*)
+let string_of_all_songs_aux acc lst = 
 
 
 (*let rec to_interface (interface : interface) : Yojson.Basic.t = 

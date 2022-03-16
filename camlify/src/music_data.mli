@@ -27,3 +27,6 @@ val list_of_playlist : string list
 val all_songs : string list
 (**[all_songs] is a list of all song names*)*)
 
+(**[string_of_all_songs lst] returns a string of form "song1, song2, song3..." *)
+val string_of_all_songs : string list -> string
+
