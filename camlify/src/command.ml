@@ -12,7 +12,9 @@ type command =
     | CurrentPlayList
     | NextSong
     | PreviousSong
+    | AddSong
     | Quit
+    | Idle
 
 let parse (str : string) : command = 
     if String.length str = 0 then raise Empty else
@@ -43,4 +45,7 @@ let parse (str : string) : command =
         else if String.equal hd "prev" then
             if List.length tl != 0 then raise Malformed 
             else PreviousSong
+        else if String.equal hd "add" then
+            if List.length tl != 1 then raise Malformed 
+            else AddSong
         else raise Malformed
