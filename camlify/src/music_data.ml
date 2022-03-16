@@ -3,7 +3,7 @@ open Yojson.Basic.Util
 
 let file = "data/interface.json"
 
-let data = Yojson.Basic.from_file "interface.json"
+let data = Yojson.Basic.from_file file
 
 type song = {
   name : string;

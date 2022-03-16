@@ -1,3 +1,5 @@
+print_endline "here at least5";
+
 (* TODO: Implement according to streamer.mli *)
 open Gstreamer
 
