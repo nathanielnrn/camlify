@@ -38,6 +38,43 @@
           "year": null
         }
       ]
+    },
+    {
+      "name": "Playlist one",
+      "songs": [
+        {
+          "name": "All Falls Down",
+          "liked": false,
+          "mp3 file": "all_falls_down.mp3",
+          "artist": null,
+          "album": null,
+          "year": null
+        },
+        {
+          "name": "Break My Heart",
+          "liked": false,
+          "mp3 file": "break_my_heart.mp3",
+          "artist": null,
+          "album": null,
+          "year": null
+        },
+        {
+          "name": "Reptilia",
+          "liked": false,
+          "mp3 file": "reptilia.mp3",
+          "artist": null,
+          "album": null,
+          "year": null
+        },
+        {
+          "name": "Sample 15s",
+          "liked": false,
+          "mp3 file": "sample_15s.mp3",
+          "artist": null,
+          "album": null,
+          "year": null
+        }
+      ]
     }
   ]
 }

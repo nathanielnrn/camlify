@@ -20,16 +20,16 @@ let parse (str : string) : command =
     if String.length str = 0 then raise Empty else
     match (String.split_on_char ' ' str) with
     | [] -> raise Malformed
-    | hd::tl -> 
+    | hd :: tl -> 
         if String.equal hd "quit" then
             if List.length tl != 0 then raise Malformed 
             else Quit
         else if String.equal hd "play" then
             if List.length tl != 1 then raise Malformed
-            else Play tl[0]
+            else (Play (List.hd tl))
         else if String.equal hd "play_index" then
             if List.length tl != 1 then raise Malformed 
-            else PlayIndex (int_of_string tl[0])
+            else PlayIndex (int_of_string (List.hd tl))
         else if String.equal hd "cname" then
             if List.length tl != 0 then raise Malformed 
             else CurrentSongName
