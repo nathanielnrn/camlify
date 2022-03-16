@@ -127,8 +127,16 @@ let rec playlist_selector (plist : playlist list) (pname : string)=
 let select_playlist pname = 
   let j = Yojson.Basic.from_file file in
     let iface = from_json j in
-      playlist_selector iface.playlists pname      
-   
+      playlist_selector iface.playlists pname   
+        
+let get_mp3 lst = List.map (fun x -> x.mp3_file) lst
+        
+(*song list to mp3 file of song lists*)      
+let all_songs_mp3 : string list = 
+  let j = Yojson.Basic.from_file file in
+    let iface = from_json j in
+      get_mp3 iface.all_songs
+
 (**[list_of_playlist] is a list of all playlist names*)
 let list_of_playlist : string list = 
   let j = Yojson.Basic.from_file file in
@@ -141,7 +149,20 @@ let all_songs : string list =
   let j = Yojson.Basic.from_file file in
     let iface = from_json j in
       slist_to_snames iface.all_songs
-  
+
+  (*song list to name of somg lists*)      
+let all_songs_objects : song list = 
+  let j = Yojson.Basic.from_file file in
+    let iface = from_json j in
+      iface.all_songs
+
+let rec song_name_to_mp3_file song_name (lst:song list)=
+  match lst with 
+  |[] -> ""
+  |h::t -> if h.name = song_name then h.mp3_file 
+  else song_name_to_mp3_file song_name t
+
+        
 (*let rec to_interface (interface : interface) : Yojson.Basic.t = 
   `Assoc [("playlists",(match interface.playlists with
   | [] -> `List []
