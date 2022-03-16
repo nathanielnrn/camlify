@@ -32,7 +32,7 @@ open Camlify.Command
 
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
-        let play_new_song = Camlify.Streamer.play song_name in 
+        let _ = Camlify.Streamer.play song_name in 
         (step_r new_q)
       end
     | PlayIndex idx ->
@@ -45,7 +45,7 @@ open Camlify.Command
       | Legal new_q ->
         let new_song_name : string = current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
-        let play_new_song = Camlify.Streamer.play new_song_name in 
+        let _ = Camlify.Streamer.play new_song_name in 
         (step_r new_q)
       end
 
@@ -69,7 +69,7 @@ open Camlify.Command
       | Legal new_q ->
         let new_song_name : string = current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "…");
-        let play_new_song = Camlify.Streamer.play new_song_name in 
+        let _ = Camlify.Streamer.play new_song_name in 
         (step_r new_q)
       end
     | PreviousSong ->
@@ -82,7 +82,7 @@ open Camlify.Command
       | Legal new_q ->
         let new_song_name : string = current_song_name new_q in
         print_endline ("Playing song " ^ new_song_name ^ "…");
-        let play_new_song = Camlify.Streamer.play new_song_name in 
+        let _ = Camlify.Streamer.play new_song_name in 
         (step_r new_q)
       end
       | _ -> failwith "TODO Add song, remove song"
@@ -92,14 +92,12 @@ open Camlify.Command
   step_r q
 
 let main () =
-  let q = Camlify.Queue.init_state (Camlify.Music_data.playlist ()) in (** hope Camlify.Music_data.init_state returns Camlify.Music_data.t  *)
-  ANSITerminal.print_string [ ANSITerminal.red ]
-    "\n\nWelcome to the MP3 \n";
-  print_endline
-    "Commands you can use:";
-  print_endline
-    "play [name_of_song.mp3]"
-  step q;
+  let q = Camlify.Queue.init_state ("Playlist One") in (** hope Camlify.Music_data.init_state returns Camlify.Music_data.t  *)
+  (* ANSITerminal.print_string [ ANSITerminal.red ] *)
+  print_endline  "\n\nWelcome to Camlify \n";
+  print_endline "Commands you can use:";
+  print_endline "play [name_of_song.mp3]";
+  step q
 
 (* Execute the mp3. *)
-let () = main ()
+let _ = main ()

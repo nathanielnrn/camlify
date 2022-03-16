@@ -3,7 +3,7 @@ open Yojson.Basic.Util
 
 let file = "data/interface.json"
 
-let data = Yojson.Basic.from_file "interface.json"
+let data = Yojson.Basic.from_file file
 
 type song = {
   name : string;
@@ -125,20 +125,20 @@ let rec playlist_selector (plist : playlist list) (pname : string)=
 (**[select_playlist playlist_name] returns the list of song names that the 
   playlist of playlist_name contains*)
 let select_playlist pname = 
-  let j = Yojson.Basic.from_file "data/interface.json" in
+  let j = Yojson.Basic.from_file file in
     let iface = from_json j in
       playlist_selector iface.playlists pname      
    
 (**[list_of_playlist] is a list of all playlist names*)
 let list_of_playlist : string list = 
-  let j = Yojson.Basic.from_file "data/interface.json" in
+  let j = Yojson.Basic.from_file file in
     let iface = from_json j in
       plist_to_pnames iface.playlists
  
       
 (*song list to name of somg lists*)      
 let all_songs : string list = 
-  let j = Yojson.Basic.from_file "data/interface.json" in
+  let j = Yojson.Basic.from_file file in
     let iface = from_json j in
       slist_to_snames iface.all_songs
   
@@ -147,7 +147,7 @@ let all_songs : string list =
   | [] -> `List []
   | h::t -> [List]*)
   
-let file = "interface.json"
+(* let file = "interface.json" *)
 let message = "Hello!"
 let test_write =  
   (* Write message to file *)
