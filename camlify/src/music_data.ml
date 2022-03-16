@@ -44,7 +44,7 @@ let playlist_from_json playlist =
 
 let from_json json =
   {
-    all_songs = json |> member "songs" |> to_list |> List.map song_from_json;
+    all_songs = json |> member "all songs" |> to_list |> List.map song_from_json;
     playlists = json |> member "playlists" |> to_list |> List.map playlist_from_json;
   }
 
@@ -125,20 +125,20 @@ let rec playlist_selector (plist : playlist list) (pname : string)=
 (**[select_playlist playlist_name] returns the list of song names that the 
   playlist of playlist_name contains*)
 let select_playlist pname = 
-  let j = Yojson.Basic.from_file "data/interface.json" in
+  let j = Yojson.Basic.from_file file in
     let iface = from_json j in
       playlist_selector iface.playlists pname      
    
 (**[list_of_playlist] is a list of all playlist names*)
 let list_of_playlist : string list = 
-  let j = Yojson.Basic.from_file "data/interface.json" in
+  let j = Yojson.Basic.from_file file in
     let iface = from_json j in
       plist_to_pnames iface.playlists
  
       
 (*song list to name of somg lists*)      
 let all_songs : string list = 
-  let j = Yojson.Basic.from_file "data/interface.json" in
+  let j = Yojson.Basic.from_file file in
     let iface = from_json j in
       slist_to_snames iface.all_songs
   
