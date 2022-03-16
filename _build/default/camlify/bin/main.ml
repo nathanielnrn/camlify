@@ -72,7 +72,7 @@ open Streamer
   step_r q
 
 let main () =
-  let q = Queue.init_state (Music_data.playlist ()) in 
+  let q = Queue.init_state (Music_data.init_state ()) in (** hope Music_data.init_state returns Music_data.t  *)
   ANSITerminal.print_string [ ANSITerminal.red ]
     "\n\nWelcome to the MP3 \n";
   print_endline
