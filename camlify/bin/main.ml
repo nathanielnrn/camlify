@@ -8,7 +8,7 @@ open Camlify.Command
  * see a2 bin/main.ml for direction *)
 
 let help_message : string = 
-  "List of commands :\n \
+  "List of commands (note that the commands only run after the song ends):\n \
   help : print this message\n \
   quit : turn off this program\n \
   p [filename.mp3] : plays mp3 file with given filename\n \
@@ -16,14 +16,14 @@ let help_message : string =
   pl : displays list of songs in current playlist\n \
   pls : displays list of all playlists\n \
   change_pl [playlist name] : change current playlist into given playlist\n \
-  new_pl [playlist name] : create new playlist with given name\n \ 
   name : displays name of current song\n \
   index : displays index of current song in current playlist\n \
   next : plays next song in current playlist\n \
-  prev : plays previous song in current playlist\n \
-  add [filename.mp3] : add a song named filename.mp3 in current playlist\n \
-  rm [filename.mp3 ]: remove song filename.mp3 in current playlist\n"
+  prev : plays previous song in current playlist\n "
 
+  (*add [filename.mp3] : add a song named filename.mp3 in current playlist\n \
+  rm [filename.mp3 ]: remove song filename.mp3 in current playlist*)
+  (* new_pl [playlist name] : create new playlist with given name\n \  *)
  let step (q: Camlify.Queue.t) =
   let rec step_r (q: Camlify.Queue.t) : Camlify.Queue.t = 
     print_string "> ";
