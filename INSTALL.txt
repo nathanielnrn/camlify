@@ -1,3 +1,5 @@
+Before running camlify download the following mp3 files : all_falls_down.mp3, break_my_heart.mp3, reptilia.mp3, sample-15s.mp3
+
 Enter the following:
 
 
