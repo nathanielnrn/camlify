@@ -37,7 +37,8 @@ let rec reduce_filepath s n =
 let play file_name =
   (*Create file path code*)
 
-  let file_path = data_dir_uri ^ file_name in
+  (*Replaces spaces with %20*)
+  let file_path = data_dir_uri ^ file_name |> String.split_on_char ' ' |> String.concat "%20" in
 
 
   (*GStreamer initialization and running code
@@ -47,10 +48,6 @@ let play file_name =
   (*Replace uri=file:../data/samples-15s.mp3*)
   (*linux: file:///home/nate/cs3110/camlify/camlify/data/sample-15s.mp3*)
   (*windows: file:///home/navarro/cs3110/camlify/camlify/data/sample-15s.mp3*)
-  print_endline (Sys.executable_name);
-  print_endline (data_dir_uri);
-  print_endline(file_path);
-
 
   let pipeline = Pipeline.parse_launch ("playbin uri=file://" ^ file_path) in
   

@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< Updated upstream
+
 open Yojson
 =======
 (* open Camlify.Music_data
@@ -9,16 +8,33 @@ open Camlify.Streamer *)
 >>>>>>> Stashed changes
 =======
 (* open Camlify.Music_data
+=======
+
+open Camlify.Music_data
+>>>>>>> 820a90b5d722e406bb6ea47dd6b2828384e8cbe3
 open Camlify.Queue
-open Camlify.Streamer *)
+open Camlify.Streamer 
 open Camlify.Command
 (* TODO: update with interface to client using terminal,
  * see a2 bin/main.ml for direction *)
 
+let help_message : string = 
+  "List of commands (note that the commands only run after the song ends):\n \
+  help : print this message\n \
+  quit : turn off this program\n \
+  p [filename.mp3] : plays mp3 file with given filename\n \
+  pi [index] : plays mp3 file with given index in current playlist\n \
+  pl : displays list of songs in current playlist\n \
+  pls : displays list of all playlists\n \
+  change_pl [playlist name] : change current playlist into given playlist\n \
+  name : displays name of current song\n \
+  index : displays index of current song in current playlist\n \
+  next : plays next song in current playlist\n \
+  prev : plays previous song in current playlist\n "
 
- let step (q: Camlify.Queue.t) =
-
-
+  (*add [filename.mp3] : add a song named filename.mp3 in current playlist\n \
+  rm [filename.mp3 ]: remove song filename.mp3 in current playlist*)
+  (* new_pl [playlist name] : create new playlist with given name\n \  *)
  let step (q: Camlify.Queue.t) =
 
   let rec step_r (q: Camlify.Queue.t) : Camlify.Queue.t = 
@@ -39,7 +55,9 @@ open Camlify.Command
     match cmd with
     | Idle -> (step_r q)
 
-    | Quit -> let _ = print_endline "Bye!" in let _ = Stdlib.exit 0 in (step_r q)
+    | Help -> print_endline help_message; (step_r q)
+
+    | Quit -> print_endline "Bye!"; Stdlib.exit 0;
 
     | Play song_name -> 
 
@@ -52,7 +70,8 @@ open Camlify.Command
 
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
-        let _ = Camlify.Streamer.play song_name in 
+        let file_name = Camlify.Queue.song_name_to_mp3 song_name in
+        let _ = Camlify.Streamer.play file_name in 
         (step_r new_q)
       end
     | PlayIndex idx ->
@@ -65,7 +84,8 @@ open Camlify.Command
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
-        let _ = Camlify.Streamer.play new_song_name in 
+        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
+        let _ = Camlify.Streamer.play file_name in  
         (step_r new_q)
       end
 
@@ -78,7 +98,32 @@ open Camlify.Command
       let song_index = Camlify.Queue.current_song_idx q in
     print_endline ("Current song index: " ^ (string_of_int song_index));
       (step_r q)
-    | CurrentPlayList -> failwith "TODO: implement"
+    | CurrentPlayList -> let _ = print_endline (String.concat "\n" (Camlify.Queue.current_playlist q)) in 
+      (step_r q)
+    | ViewPlaylists -> let _ = print_endline (String.concat "\n" Camlify.Music_data.list_of_playlist) in 
+      (step_r q)
+    | ChangePlayList pl_name ->
+      let res = (Camlify.Queue.select_playlist pl_name q) in
+      begin
+      match res with
+      | Illegal ->
+        print_endline ("There is no playlist named " ^ pl_name);
+        (step_r q)
+      | Legal new_q ->
+        print_endline ("Opening playlist " ^ pl_name ^ "…");
+        (step_r new_q)
+      end
+    | CreatePlayList pl_name ->
+      let res = (Camlify.Queue.make_new_playlist pl_name q) in
+      begin
+      match res with
+      | Illegal ->
+        print_endline ("Failed to create playlist " ^ pl_name);
+        (step_r q)
+      | Legal new_q ->
+        print_endline ("Create new playlist " ^ pl_name ^ "…");
+        (step_r new_q)
+      end
     | NextSong ->
       let res = Camlify.Queue.next_song q in
       begin
@@ -89,7 +134,8 @@ open Camlify.Command
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "…");
-        let _ = Camlify.Streamer.play new_song_name in 
+        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
+        let _ = Camlify.Streamer.play file_name in  
         (step_r new_q)
       end
     | PreviousSong ->
@@ -102,35 +148,55 @@ open Camlify.Command
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
         print_endline ("Playing song " ^ new_song_name ^ "…");
-        let _ = Camlify.Streamer.play new_song_name in 
+        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
+        let _ = Camlify.Streamer.play file_name in  
         (step_r new_q)
       end
+      | AddSong song_name ->
+        let res = Camlify.Queue.add_song_to_playlist song_name q in
+        begin
+        match res with
+        | Illegal ->
+        print_endline ("There is no song named " ^ song_name);
+         (step_r q)
+        | Legal new_q ->
+         print_endline (song_name ^ " added to current playlist.");
+         (step_r new_q)
+        end
+      | RemoveSong song_name ->
+        let res = Camlify.Queue.remove_song_from_playlist song_name q in
+        begin
+        match res with
+        | Illegal ->
+        print_endline ("There is no song named " ^ song_name);
+         (step_r q)
+        | Legal new_q ->
+         print_endline (song_name ^ " removed from current playlist.");
+         (step_r new_q)
+        end
       | _ -> failwith "TODO Add song, remove song"
-
-
   in
   step_r q
 
-let main () =
-
-  ANSITerminal.print_string [ ANSITerminal.red ]
-    "\n\nWelcome to the MP3 \n";
-  print_endline
-    "Please enter the name of the song you want to play.\n";
+let rec choose_playlist () : string = 
+  print_endline "Choose Playlist:";
+  print_endline ((String.concat "\n" Camlify.Music_data.list_of_playlist) ^ "\n");
   print_string "> ";
-  match read_line () with
-  | exception End_of_file -> ()
-  | file_name -> play_song (data_dir_prefix ^ file_name ^ ".json")
+  let playlist = match read_line () with
+    | exception End_of_file -> let _ = print_endline "Empty input :(" in choose_playlist ()
+    | some_str -> 
+      if List.mem some_str Camlify.Music_data.list_of_playlist 
+      then some_str
+      else let _ = print_endline "There is no such playlist :(" in choose_playlist ()
+  in playlist
 
-(* Execute the mp3. *)
-let () = main ()
-
-  print_endline "here at least";
-  let q = Camlify.Queue.init_state ("Playlist one") in (** hope Camlify.Music_data.init_state returns Camlify.Music_data.t  *)
+let main () =
   (* ANSITerminal.print_string [ ANSITerminal.red ] *)
   print_endline  "\n\nWelcome to Camlify \n";
-  print_endline "Commands you can use:";
-  print_endline "play [name_of_song.mp3]";
+  let playlist = choose_playlist() in
+  let _ = print_endline ("Opening playlist " ^ playlist ^ "...") in
+  let q = Camlify.Queue.init_state playlist in
+
   step q
 
 (* Execute the mp3. *)
