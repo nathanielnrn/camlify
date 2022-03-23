@@ -1,7 +1,8 @@
-<<<<<<< Updated upstream
+
 (* TODO: Implement based on queue.mli *)
-=======
+
 print_endline "here at least3";
+
 
 type t =
 {
@@ -178,4 +179,3 @@ let remove_song_from_all_songs song_name st =
 }
 with Failure x -> Illegal
 
->>>>>>> Stashed changes
