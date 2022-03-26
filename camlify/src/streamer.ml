@@ -11,6 +11,8 @@ type tag = string list
 let pipeline_instance = ref None
 let data_source = ref None
 let data_sink = ref None
+let audio_convert = ref None
+let audio_resample = ref None
 
 
 (*TODO: implement*)
@@ -46,14 +48,15 @@ let init_pipeline =
 init();
 
 (*pointers to be used later*)
-data_source := Some (Element_factory.make "uridecodebin" "source");
+data_source := Some (Element_factory.make "filesrc" "source");
 data_sink := Some (Element_factory.make "autoaudiosink" "sink");
+audio_convert := Some (Element_factory.make "audioconvert" "convert");
+audio_resample := Some (Element_factory.make "audioresample" "resampler");
 
 pipeline_instance  := Some (Pipeline.create "audio_pipeline");
 
-(*add bins and link them*)
-Bin.add_many (get !pipeline_instance) [get !data_source; get !data_sink];
-Element.link (get !data_source) (get !data_sink);
+
+Bin.add_many (get !pipeline_instance) [get !data_source; get !audio_convert; get !audio_resample; get !data_sink];
 ()
 
 
@@ -61,25 +64,43 @@ Element.link (get !data_source) (get !data_sink);
 
 let play file_name =
 
+  
   (*Create file path code*)
   (*Replaces spaces with %20*)
   let file_path = data_dir_uri ^ file_name |> String.split_on_char ' ' |> String.concat "%20" in
-
-
+  
+  
   (*GStreamer initialization and running code
   See Gstreamer tutorials for explanations. Important one is pipeline*)
   init_pipeline;
-
+  
   (*Replace uri=file:../data/samples-15s.mp3*)
   (*linux: file:///home/nate/cs3110/camlify/camlify/data/sample-15s.mp3*)
   (*windows: file:///home/navarro/cs3110/camlify/camlify/data/sample-15s.mp3*)
-
-  Element.set_property_string (get !data_source) "uri" ("file://" ^ file_path);
+  
+  
   
   (* let pipeline_instance = Pipeline.parse_launch ("playbin uri=file://" ^ file_path) in *)
   
-  ignore (Element.set_state (get !pipeline_instance) State_playing);
+  
+  Element.set_state (get !pipeline_instance) State_ready;
+  
+  Element.set_property_string (get !data_source) "location" (file_path);
+  Element.link_many [get !data_source; get !audio_convert; get !audio_resample; get !data_sink];
+  
+  (* Element.set_state (get !pipeline_instance) State_paused; *)
 
+  let ret = Element.set_state (get !pipeline_instance) State_playing in
+  print_endline "here";
+  
+  (* match (print_endline "here"; Element.get_state (get !pipeline_instance)) with
+  |(return, curr, pending) -> print_endline @@ Element.string_of_state curr;
+  
+  if (ret <> Element.State_change_success) then failwith "Could not set state"
+  else
+    print_endline "Got here"; *)
+  
+  
   let bus = Bus.of_element (get !pipeline_instance) in
 
   match Bus.timed_pop_filtered bus [Bus.(`End_of_stream); Bus.(`Error)] with
