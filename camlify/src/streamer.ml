@@ -1,11 +1,17 @@
 (* TODO: Implement according to streamer.mli *)
 open Gstreamer
+open Option
 
 type file = int
 
 type streamer = int
 
 type tag = string list
+
+let pipeline_instance = ref None
+let data_source = ref None
+let data_sink = ref None
+
 
 (*TODO: implement*)
 let tags_of_file f = []
@@ -30,28 +36,51 @@ let rec reduce_filepath s n =
  (*Creates a path of form [<some_path>/data/]*)
   else reduce_filepath exe_name 2 ^ sep ^ "data" ^ sep
 
-  (*Not good*)
-(* let data_dir_uri = Filename.parent_dir_name ^ Filename.dir_sep ^ "data" ^ Filename.dir_sep *)
-let play file_name =
-  (*Create file path code*)
 
+
+  (* Start of stream stuff*)
+
+
+(*Creates an empty pipeline that can then be added to in [play file_name]*)
+let init_pipeline = 
+init();
+
+(*pointers to be used later*)
+data_source := Some (Element_factory.make "uridecodebin" "source");
+data_sink := Some (Element_factory.make "autoaudiosink" "sink");
+
+pipeline_instance  := Some (Pipeline.create "audio_pipeline");
+
+(*add bins and link them*)
+Bin.add_many (get !pipeline_instance) [get !data_source; get !data_sink];
+Element.link (get !data_source) (get !data_sink);
+()
+
+
+
+
+let play file_name =
+
+  (*Create file path code*)
   (*Replaces spaces with %20*)
   let file_path = data_dir_uri ^ file_name |> String.split_on_char ' ' |> String.concat "%20" in
 
 
   (*GStreamer initialization and running code
   See Gstreamer tutorials for explanations. Important one is pipeline*)
-  init();
+  init_pipeline;
 
   (*Replace uri=file:../data/samples-15s.mp3*)
   (*linux: file:///home/nate/cs3110/camlify/camlify/data/sample-15s.mp3*)
   (*windows: file:///home/navarro/cs3110/camlify/camlify/data/sample-15s.mp3*)
 
-  let pipeline = Pipeline.parse_launch ("playbin uri=file://" ^ file_path) in
+  Element.set_property_string (get !data_source) "uri" ("file://" ^ file_path);
   
-  let _ = Element.set_state pipeline State_playing in
+  (* let pipeline_instance = Pipeline.parse_launch ("playbin uri=file://" ^ file_path) in *)
+  
+  ignore (Element.set_state (get !pipeline_instance) State_playing);
 
-  let bus = Bus.of_element pipeline in
+  let bus = Bus.of_element (get !pipeline_instance) in
 
   match Bus.timed_pop_filtered bus [Bus.(`End_of_stream); Bus.(`Error)] with
   |{payload=Bus.(`Error s); _} -> raise (Error s)
@@ -59,6 +88,9 @@ let play file_name =
 
 
 
+
+
+(*TODO: See mli file spec*)
   let parse _ = failwith "Not yet implemented"
 
 
