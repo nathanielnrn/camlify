@@ -53,7 +53,7 @@ let help_message : string =
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
         let file_name = Camlify.Queue.song_name_to_mp3 song_name in
-        let _ = Camlify.Streamer.play file_name in 
+        let streamer_thread = (Thread.create Camlify.Streamer.play file_name) in
         (step_r new_q)
       end
     | PlayIndex idx ->
@@ -67,7 +67,7 @@ let help_message : string =
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
         let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
-        let _ = Camlify.Streamer.play file_name in  
+        Camlify.Streamer.play file_name;
         (step_r new_q)
       end
 
@@ -80,9 +80,9 @@ let help_message : string =
       let song_index = Camlify.Queue.current_song_idx q in
     print_endline ("Current song index: " ^ (string_of_int song_index));
       (step_r q)
-    | CurrentPlayList -> let _ = print_endline (String.concat "\n" (Camlify.Queue.current_playlist q)) in 
+    | CurrentPlayList -> print_endline (String.concat "\n" (Camlify.Queue.current_playlist q));
       (step_r q)
-    | ViewPlaylists -> let _ = print_endline (String.concat "\n" Camlify.Music_data.list_of_playlist) in 
+    | ViewPlaylists -> print_endline (String.concat "\n" Camlify.Music_data.list_of_playlist);
       (step_r q)
     | ChangePlayList pl_name ->
       let res = (Camlify.Queue.select_playlist pl_name q) in
@@ -117,7 +117,8 @@ let help_message : string =
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "…");
         let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
-        let _ = Camlify.Streamer.play file_name in  
+        Camlify.Streamer.pause;
+        (* Camlify.Streamer.play file_name; *)
         (step_r new_q)
       end
     | PreviousSong ->
@@ -131,7 +132,7 @@ let help_message : string =
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
         print_endline ("Playing song " ^ new_song_name ^ "…");
         let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
-        let _ = Camlify.Streamer.play file_name in  
+        Camlify.Streamer.play file_name;
         (step_r new_q)
       end
       | AddSong song_name ->
@@ -176,7 +177,7 @@ let main () =
   (* ANSITerminal.print_string [ ANSITerminal.red ] *)
   print_endline  "\n\nWelcome to Camlify \n";
   let playlist = choose_playlist() in
-  let _ = print_endline ("Opening playlist " ^ playlist ^ "...") in
+  print_endline ("Opening playlist " ^ playlist ^ "...");
   let q = Camlify.Queue.init_state playlist in
 
   step q
