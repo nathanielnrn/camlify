@@ -9,9 +9,7 @@
  (**[init_state playlist_name] is the initial state of the playlist. In that state
  the song is set to the first song of the current playlist.*)
  
- val song_name_to_mp3 : string -> string
- (**[song_name_to_mp3 song_name] maps song_name to its corresponding mp3 file*)
- 
+
  val current_song_name : t -> string
  (** [current_song_name st] is the identifier of the name of the song the user is
   currently playing*)
