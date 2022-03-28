@@ -1,6 +1,6 @@
 (* TODO: Implement according to streamer.mli *)
 open Gstreamer
-open Option
+include Option
 
 type file = int
 
@@ -8,8 +8,8 @@ type streamer = int
 
 type tag = string list
 
-let pipeline_instance = ref None
-let current_song = ref ""
+(* let pipeline_instance = ref None *)
+(* let current_song = ref "" *)
 
 (*TODO: implement*)
 let tags_of_file f = []
@@ -38,16 +38,16 @@ let rec reduce_filepath s n =
 
   let init_pipeline = 
     init();
-    pipeline_instance  := Some (Pipeline.create "audio_pipeline") 
+    ref (Some (Pipeline.create "audio_pipeline"))
 
 
-let play file_name =
-  if !current_song = file_name then
-    ignore (Element.set_state (get !pipeline_instance) State_playing)
 
-  else
+let play pipeline file_name =
+  (* if !current_song = file_name then
+    ignore (Element.set_state (get !pipeline) State_playing)
+
+  else *)
     begin
-  init_pipeline;
 
   (*Create file path code*)
   (*Replaces spaces with %20*)
@@ -56,19 +56,18 @@ let play file_name =
   
   (*GStreamer initialization and running code
   See Gstreamer tutorials for explanations. Important one is pipeline*)
-  init_pipeline;
   
   (*Replace uri=file:../data/samples-15s.mp3*)
   (*linux: file:///home/nate/cs3110/camlify/camlify/data/sample-15s.mp3*)
   (*windows: file:///home/navarro/cs3110/camlify/camlify/data/sample-15s.mp3*)
 
-  pipeline_instance := Some (Pipeline.parse_launch ("playbin uri=file://" ^ file_path));
-  current_song := file_name;
+  pipeline := Some (Pipeline.parse_launch ("playbin uri=file://" ^ file_path));
+  (* current_song := file_name; *)
 
-  ignore (Element.set_state (get !pipeline_instance) State_playing);
+  ignore (Element.set_state (get !pipeline) State_playing);
 
 
-  let bus = Bus.of_element (get !pipeline_instance) in
+  let bus = Bus.of_element (get !pipeline) in
     
   match Bus.timed_pop_filtered bus [Bus.(`End_of_stream); Bus.(`Error)] with
   |{payload=Bus.(`Error s); _} -> raise (Error s)
@@ -76,20 +75,22 @@ let play file_name =
 end
 
 
+
+
 (**Todo: should throw an exception if pipeline not instantiated*)
-  let pause =
-    if !pipeline_instance = None then failwith "Should not be called before play"
-    else ignore (Element.set_state (get !pipeline_instance) Element.State_paused)
+  let pause pipeline =
+    if !pipeline = None then failwith "Should not be called before play"
+    else ignore (Element.set_state (get !pipeline) Element.State_paused)
     
     
     (**Todo: should throw an exception if pipeline not instantiated (maybe)?*)
-    let stop = 
-      if !pipeline_instance = None then print_endline "No current pipeline_instance"
-      else ignore (Element.set_state (get !pipeline_instance) Element.State_null);
-      pipeline_instance := None
+    let stop pipeline = 
+      if !pipeline = None then (print_endline "No current pipeline_instance"; failwith "shouldn't happen for now")
+      else ignore (Element.set_state (get !pipeline) Element.State_null);
+      pipeline := None
 
   
-
+let get_pipeline = ref None
 
 
 

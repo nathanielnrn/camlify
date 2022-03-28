@@ -7,6 +7,7 @@ open Camlify.Command
 (* TODO: update with interface to client using terminal,
  * see a2 bin/main.ml for direction *)
 
+ let pipeline = Camlify.Streamer.get_pipeline
 let help_message : string = 
   "List of commands (note that the commands only run after the song ends):\n \
   help : print this message\n \
@@ -53,7 +54,7 @@ let help_message : string =
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
         let file_name = Camlify.Queue.song_name_to_mp3 song_name in
-        let streamer_thread = (Thread.create Camlify.Streamer.play file_name) in
+        let streamer_thread = (Thread.create (Camlify.Streamer.play pipeline) file_name) in
         (step_r new_q)
       end
     | PlayIndex idx ->
@@ -67,7 +68,7 @@ let help_message : string =
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
         let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
-        Camlify.Streamer.play file_name;
+        Camlify.Streamer.play pipeline file_name;
         (step_r new_q)
       end
 
@@ -117,7 +118,7 @@ let help_message : string =
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "…");
         let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
-        Camlify.Streamer.pause;
+        Camlify.Streamer.pause pipeline;
         (* Camlify.Streamer.play file_name; *)
         (step_r new_q)
       end
@@ -132,7 +133,7 @@ let help_message : string =
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
         print_endline ("Playing song " ^ new_song_name ^ "…");
         let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
-        Camlify.Streamer.play file_name;
+        Camlify.Streamer.play pipeline file_name;
         (step_r new_q)
       end
       | AddSong song_name ->
