@@ -31,11 +31,11 @@ let help_message : string =
   index : displays index of current song in current playlist\n \
   next : plays next song in current playlist\n \
   prev : plays previous song in current playlist\n 
-  play_by_artist : displays list of artist names and plays selected artist's songs \n \
-  play_by_album : displays list of album names and plays selected album's songs \n \
-  play_by_year : displays list of years and plays selected year's songs \n \
+  play_artist : displays list of artist names and plays selected artist's songs \n \
+  play_album : displays list of album names and plays selected album's songs \n \
+  play_year : displays list of years and plays selected year's songs \n \
   play_liked : plays all liked songs
-  play_by_tag : displays list of tag names and plays selected tag's songs \n \
+  play_tag : displays list of tag names and plays selected tag's songs \n \
 
   "
 
@@ -70,7 +70,7 @@ let help_message : string =
 
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
-        let file_name = Camlify.Queue.song_name_to_mp3 song_name in
+        let file_name = Camlify.Music_data.read_song_mp3_file song_name in
         let _ = Camlify.Streamer.play file_name in 
         (step_r new_q)
       end
@@ -87,7 +87,7 @@ let help_message : string =
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
-        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
+        let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
         let _ = Camlify.Streamer.play file_name in  
         (step_r new_q)
       end
@@ -182,7 +182,7 @@ let help_message : string =
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "…");
-        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
+        let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
         let _ = Camlify.Streamer.play file_name in  
         (step_r new_q)
       end
@@ -196,7 +196,7 @@ let help_message : string =
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
         print_endline ("Playing song " ^ new_song_name ^ "…");
-        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
+        let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
         let _ = Camlify.Streamer.play file_name in  
         (step_r new_q)
       end
@@ -222,6 +222,8 @@ let help_message : string =
          print_endline (song_name ^ " removed from current playlist.");
          (step_r new_q)
         end
+     
+
       | _ -> failwith "TODO Add song, remove song"
   in
   step_r q
