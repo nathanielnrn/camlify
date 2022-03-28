@@ -30,7 +30,14 @@ let help_message : string =
   name : displays name of current song\n \
   index : displays index of current song in current playlist\n \
   next : plays next song in current playlist\n \
-  prev : plays previous song in current playlist\n "
+  prev : plays previous song in current playlist\n 
+  play_by_artist : displays list of artist names and plays selected artist's songs \n \
+  play_by_album : displays list of album names and plays selected album's songs \n \
+  play_by_year : displays list of years and plays selected year's songs \n \
+  play_liked : plays all liked songs
+  play_by_tag : displays list of tag names and plays selected tag's songs \n \
+
+  "
 
   (*add [filename.mp3] : add a song named filename.mp3 in current playlist\n \
   rm [filename.mp3 ]: remove song filename.mp3 in current playlist*)
