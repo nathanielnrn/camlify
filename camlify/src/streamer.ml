@@ -76,7 +76,6 @@ end
 
 
 
-
 (**Todo: should throw an exception if pipeline not instantiated*)
   let pause pipeline =
     if !pipeline = None then failwith "Should not be called before play"
