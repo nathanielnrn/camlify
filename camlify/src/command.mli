@@ -9,10 +9,10 @@ exception Malformed
 
 type command = 
     | Play of song_name
+    | Pause
     | PlayIndex of index
     | CurrentSongName
     | CurrentSongIndex
-
     | ViewPlaylists
     | CurrentPlayList
     | ChangePlayList of playlist_name
@@ -21,6 +21,12 @@ type command =
     | PreviousSong
     | AddSong of song_name
     | RemoveSong of song_name
+    | ChangeSongLike of (song_name, bool)
+    | ChangeSongArtist of song_name
+    | ChangeSongAlbum of song_name
+    | ChangeSongYear of (song_name, year)
+    | AddSongTag of song_name
+    | RemoveSongTag of song_name
     | Help
     | Quit
     | Idle

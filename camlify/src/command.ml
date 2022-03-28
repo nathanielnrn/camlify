@@ -9,6 +9,7 @@ exception Malformed
 
 type command = 
     | Play of song_name
+    | Pause
     | PlayIndex of index
     | CurrentSongName
     | CurrentSongIndex
@@ -20,6 +21,12 @@ type command =
     | PreviousSong
     | AddSong of song_name
     | RemoveSong of song_name
+    | ChangeSongLike of (song_name, bool)
+    | ChangeSongArtist of song_name
+    | ChangeSongAlbum of song_name
+    | ChangeSongYear of (song_name, year)
+    | AddSongTag of song_name
+    | RemoveSongTag of song_name
     | Help
     | Quit
     | Idle
@@ -35,6 +42,9 @@ let parse (str : string) : command =
         else if String.equal hd "p" then
             if List.length tl == 0 then raise Malformed
             else (Play (String.concat " " tl))
+        else if String.equal hd "pp" then
+            if List.length tl != 0 then raise Malformed 
+            else Pause
         else if String.equal hd "pi" then
             if List.length tl != 1 then raise Malformed 
             else PlayIndex (int_of_string (List.hd tl))
@@ -50,10 +60,37 @@ let parse (str : string) : command =
         else if String.equal hd "change_pl" then
             if List.length tl == 0 then raise Malformed 
             else ChangePlayList (String.concat " " tl)
+        else if String.equal hd "change_l" then
+            if (List.length tl < 2 || (List.length tl > 0 && ((List.nth (List.length tl -1) tl) <> "true") && (List.nth (List.length tl -1) tl) <> "false")) then raise Malformed 
+            else 
+                begin
+                let bool = List.nth (List.length tl -1) tl;
+                ChangeSongLike (String.concat " " (List.filter (fun x -> x <> bool) tl), bool)
+                end
+        else if String.equal hd "change_ar" then
+            if List.length tl == 0 then raise Malformed 
+            else ChangeSongArtist (String.concat " " tl)
+        else if String.equal hd "change_al" then
+            if List.length tl == 0 then raise Malformed 
+            else ChangeSongAlbum (String.concat " " tl)
+        else if String.equal hd "change_y" then
+            if List.length tl < 2 then raise Malformed 
+            else 
+                begin
+                let year = List.nth (List.length tl -1) tl;
+                let year_int = try int_of_string year with
+                | _ -> Raise Malformed;
+                ChangeSongYear (String.concat " " (List.filter (fun x -> x <> year) tl), year_int)
+                end
+        else if String.equal hd "add_tag" then
+            if List.length tl == 0 then raise Malformed 
+            else AddSongTag (String.concat " " tl)
+        else if String.equal hd "rm_tag" then
+            if List.length tl == 0 then raise Malformed 
+            else RemoveSongTag (String.concat " " tl)
         else if String.equal hd "new_pl" then
             if List.length tl == 0 then raise Malformed 
             else CreatePlayList (String.concat " " tl)
-
         else if String.equal hd "next" then
             if List.length tl != 0 then raise Malformed 
             else NextSong

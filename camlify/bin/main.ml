@@ -12,10 +12,21 @@ let help_message : string =
   help : print this message\n \
   quit : turn off this program\n \
   p [filename.mp3] : plays mp3 file with given filename\n \
+  pp : pause currently played mp3 file\n \
   pi [index] : plays mp3 file with given index in current playlist\n \
   pl : displays list of songs in current playlist\n \
   pls : displays list of all playlists\n \
   change_pl [playlist name] : change current playlist into given playlist\n \
+  change_l [filename.mp3] : change like of the song in the json file\n \
+  change_ar [filename.mp3] : change the artist of the song in the json file.\n \
+  An additional prompt is given to get the artist of song\n \
+  change_al [filename.mp3] : change the album of the song in the json file.\n \
+  An additional prompt is given to get the album of song\n \
+  change_y [filename.mp3] [year] : change the year of the song in the json file.\n \
+  add_tag [filename.mp3] : add a tag to the song in the json file.\n \
+  An additional prompt is given to get the new tag\n \
+  rm_tag [filename.mp3] : remove a tag to the song in the json file.\n \
+  An additional prompt is given to get the tag\n \
   name : displays name of current song\n \
   index : displays index of current song in current playlist\n \
   next : plays next song in current playlist\n \
@@ -56,6 +67,9 @@ let help_message : string =
         let _ = Camlify.Streamer.play file_name in 
         (step_r new_q)
       end
+
+    | Pause -> (step_r q) (** TODO *)
+
     | PlayIndex idx ->
       let res = Camlify.Queue.play_song_by_idx idx q in
       begin
@@ -95,6 +109,51 @@ let help_message : string =
         print_endline ("Opening playlist " ^ pl_name ^ "…");
         (step_r new_q)
       end
+
+    | ChangeSongLike song_name, bool -> 
+      begin
+      change_song_liked song_name (to_string bool);
+      (step_r q)
+      end
+
+    | ChangeSongArtist song_name ->
+      begin
+        print_endline "What is the name of the artist?"; print "> ";
+        let artist = read_line ();
+        change_song_artist song_name artist;
+        (step_r q)
+      end
+
+    | ChangeSongAlbum song_name ->
+      begin
+        print_endline "What is the name of the album?"; print "> ";
+        let album = read_line ();
+        change_song_album song_name album;
+        (step_r q)
+      end
+
+    | ChangeSongYear (song_name, year) ->
+      begin
+      change_song_year song_name year;
+      (step_r q)
+      end
+
+    | AddSongTag song_name -> 
+      begin
+        print_endline "What is a new tag?"; print "> ";
+        let tag = read_line ();
+        add_song_tag song_name tag;
+        (step_r q)
+      end
+
+    | RemoveSongTag song_name -> 
+      begin
+        print_endline "What is the tag?"; print "> ";
+        let tag = read_line ();
+        remove_song_tag song_name tag;
+        (step_r q)
+      end
+
     | CreatePlayList pl_name ->
       let res = (Camlify.Queue.make_new_playlist pl_name q) in
       begin
