@@ -14,7 +14,6 @@ let rec remove_element element lst =
   |[] -> []
   |h::t -> if h = element then remove_element element t else h::remove_element element t
 
-
 let init_state selected_playlist=
   {
     current_song_name = List.nth (Music_data.select_playlist selected_playlist) 0;
@@ -139,6 +138,71 @@ let select_playlist playlist_name st =
     current_song_idx = 0;
     current_playlist_name = playlist_name;
     current_playlist = Music_data.select_playlist playlist_name;
+    list_of_playlist = st.list_of_playlist;
+    list_of_all_songs = st.list_of_all_songs;
+  }
+with Failure x -> Illegal
+
+let select_playlist_by_artist artist st =
+  try List.find (fun x -> artist= Music_data.read_song_artist x) (st.list_of_all_songs)
+  |> fun x -> Legal{
+    current_song_name = List.nth (List.filter (fun x-> artist = Music_data.read_song_artist x) Music_data.all_songs) 0;
+    current_song_mp3_file = Music_data.read_song_mp3_file st.current_song_name;
+    current_song_idx = 0;
+    current_playlist_name = "Songs by "^ artist;
+    current_playlist = List.filter (fun x-> artist = Music_data.read_song_artist x) Music_data.all_songs;
+    list_of_playlist = st.list_of_playlist;
+    list_of_all_songs = st.list_of_all_songs;
+  }
+with Failure x -> Illegal
+
+let select_playlist_by_album album st =
+  try List.find (fun x -> album= Music_data.read_song_album x) (st.list_of_all_songs)
+  |> fun x -> Legal{
+    current_song_name = List.nth (List.filter (fun x-> album = Music_data.read_song_artist x) Music_data.all_songs) 0;
+    current_song_mp3_file = Music_data.read_song_mp3_file st.current_song_name;
+    current_song_idx = 0;
+    current_playlist_name = "Songs in "^ album;
+    current_playlist = List.filter (fun x-> album = Music_data.read_song_album x) Music_data.all_songs;
+    list_of_playlist = st.list_of_playlist;
+    list_of_all_songs = st.list_of_all_songs;
+  }
+with Failure x -> Illegal
+
+let select_playlist_by_year year st =
+  try List.find (fun x -> year= Music_data.read_song_year x) (st.list_of_all_songs)
+  |> fun x -> Legal{
+    current_song_name = List.nth (List.filter (fun x-> year = Music_data.read_song_year x) Music_data.all_songs) 0;
+    current_song_mp3_file = Music_data.read_song_mp3_file st.current_song_name;
+    current_song_idx = 0;
+    current_playlist_name = "Songs from "^ (string_of_int year);
+    current_playlist = List.filter (fun x-> year = Music_data.read_song_year x) Music_data.all_songs;
+    list_of_playlist = st.list_of_playlist;
+    list_of_all_songs = st.list_of_all_songs;
+  }
+with Failure x -> Illegal
+
+let select_playlist_by_liked st =
+  try List.find (fun x -> true = Music_data.read_song_liked x) (st.list_of_all_songs)
+  |> fun x -> Legal{
+    current_song_name = List.nth (List.filter (fun x-> true = Music_data.read_song_liked x) Music_data.all_songs) 0;
+    current_song_mp3_file = Music_data.read_song_mp3_file st.current_song_name;
+    current_song_idx = 0;
+    current_playlist_name = "Songs you liked";
+    current_playlist = List.filter (fun x-> true = Music_data.read_song_liked x) Music_data.all_songs;
+    list_of_playlist = st.list_of_playlist;
+    list_of_all_songs = st.list_of_all_songs;
+  }
+with Failure x -> Illegal
+
+let select_playlist_by_tag tag st =
+  try List.find (fun x -> true = List.mem tag (Music_data.read_tags x)) (st.list_of_all_songs)
+  |> fun x -> Legal{
+    current_song_name = List.nth (List.filter (fun x -> true = List.mem tag (Music_data.read_tags x)) Music_data.all_songs) 0;
+    current_song_mp3_file = Music_data.read_song_mp3_file st.current_song_name;
+    current_song_idx = 0;
+    current_playlist_name = "Songs with tag "^ tag;
+    current_playlist = List.filter (fun x -> true = List.mem tag (Music_data.read_tags x)) Music_data.all_songs;
     list_of_playlist = st.list_of_playlist;
     list_of_all_songs = st.list_of_all_songs;
   }

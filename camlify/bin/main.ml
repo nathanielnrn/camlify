@@ -38,6 +38,7 @@ let help_message : string =
   play_tag : displays list of tag names and plays selected tag's songs \n \
 
   "
+let remove_dup lst = List.sort_uniq compare lst
 
   (*add [filename.mp3] : add a song named filename.mp3 in current playlist\n \
   rm [filename.mp3 ]: remove song filename.mp3 in current playlist*)
@@ -119,7 +120,7 @@ let help_message : string =
 
     | ChangeSongLike song_name, bool -> 
       begin
-      change_song_liked song_name (to_string bool);
+      Camlify.Music_data.change_song_liked song_name (to_string bool);
       (step_r q)
       end
 
@@ -127,7 +128,7 @@ let help_message : string =
       begin
         print_endline "What is the name of the artist?"; print "> ";
         let artist = read_line ();
-        change_song_artist song_name artist;
+        Camlify.Music_data.change_song_artist song_name artist;
         (step_r q)
       end
 
@@ -222,7 +223,83 @@ let help_message : string =
          print_endline (song_name ^ " removed from current playlist.");
          (step_r new_q)
         end
-     
+     |PlayArtist ->
+      begin
+      print_endline ("Names of all artists in this player :")
+      print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_artist Camlify.Music_data.all_songs))
+      print_endline "Select artist"; print "> ";
+      let artist = read_line ();
+      let res = (Camlify.Queue.select_playlist_by_artist artist q) in 
+        match res with
+        |Illegal ->
+          print_endline ("Artist named " ^artist^ " doesn't exist");
+          (step_r q)
+        |Legal new_q ->
+          print_endline("Playing songs by "^artist^"...");
+          (step r new_q)
+      (step_r q)
+      end
+      |PlayAlbum ->
+        begin
+        print_endline ("Names of all albums in this player :")
+        print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_album Camlify.Music_data.all_songs))
+        print_endline "Select album"; print "> ";
+        let album = read_line ();
+        let res = (Camlify.Queue.select_playlist_by_album album q) in 
+          match res with
+          |Illegal ->
+            print_endline ("Album named " ^album^ " doesn't exist");
+            (step_r q)
+          |Legal new_q ->
+            print_endline("Playing songs in "^album^"...");
+            (step r new_q)
+        (step_r q)
+        end
+      |PlayYear ->
+        begin
+        print_endline ("List of years of songs in this player :")
+        print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_year Camlify.Music_data.all_songs))
+        print_endline "Select year"; print "> ";
+        let year = read_line ();
+        let res = (Camlify.Queue.select_playlist_by_year (int_of_string year) q) in 
+          match res with
+          |Illegal ->
+            print_endline ("Songs in year " ^year^ " doesn't exist");
+            (step_r q)
+          |Legal new_q ->
+            print_endline("Playing songs from "^year^"...");
+            (step r new_q)
+        (step_r q)
+        end
+      |PlayLiked ->
+        begin
+        let res = (Camlify.Queue.select_playlist_by_liked q) in 
+          match res with
+          |Illegal ->
+            print_endline ("No songs are liked");
+            (step_r q)
+          |Legal new_q ->
+            print_endline("Playing liked songs...");
+            (step r new_q)
+        (step_r q)
+        end
+      
+      |PlayTag ->
+        begin
+        print_endline ("Names of all tags in this player :")
+        print_endline (String.concat ", " (remove_dup (List.flatten (List.map Camlify.Music_data.read_tags Camlify.Music_data.all_songs))))
+        print_endline "Select tag"; print "> ";
+        let tag = read_line ();
+        let res = (Camlify.Queue.select_playlist_by_tag tag q) in 
+          match res with
+          |Illegal ->
+            print_endline ("Tag named " ^tag^ " doesn't exist");
+            (step_r q)
+          |Legal new_q ->
+            print_endline("Playing songs with tag "^tag^"...");
+            (step r new_q)
+        (step_r q)
+        end
 
       | _ -> failwith "TODO Add song, remove song"
   in
