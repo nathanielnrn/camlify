@@ -9,11 +9,7 @@ type streamer = int
 type tag = string list
 
 let pipeline_instance = ref None
-let data_source = ref None
-let data_sink = ref None
-let audio_convert = ref None
-let audio_resample = ref None
-
+let current_song = ref ""
 
 (*TODO: implement*)
 let tags_of_file f = []
@@ -40,31 +36,19 @@ let rec reduce_filepath s n =
 
 
 
-  (* Start of stream stuff*)
-
-
-(*Creates an empty pipeline that can then be added to in [play file_name]*)
-let init_pipeline = 
-init();
-
-(*pointers to be used later*)
-data_source := Some (Element_factory.make "filesrc" "source");
-data_sink := Some (Element_factory.make "autoaudiosink" "sink");
-audio_convert := Some (Element_factory.make "audioconvert" "convert");
-audio_resample := Some (Element_factory.make "audioresample" "resampler");
-
-pipeline_instance  := Some (Pipeline.create "audio_pipeline");
-
-
-Bin.add_many (get !pipeline_instance) [get !data_source; get !audio_convert; get !audio_resample; get !data_sink];
-()
-
-
+  let init_pipeline = 
+    init();
+    pipeline_instance  := Some (Pipeline.create "audio_pipeline") 
 
 
 let play file_name =
+  if !current_song = file_name then
+    ignore (Element.set_state (get !pipeline_instance) State_playing)
 
-  
+  else
+    begin
+  init_pipeline;
+
   (*Create file path code*)
   (*Replaces spaces with %20*)
   let file_path = data_dir_uri ^ file_name |> String.split_on_char ' ' |> String.concat "%20" in
@@ -77,43 +61,38 @@ let play file_name =
   (*Replace uri=file:../data/samples-15s.mp3*)
   (*linux: file:///home/nate/cs3110/camlify/camlify/data/sample-15s.mp3*)
   (*windows: file:///home/navarro/cs3110/camlify/camlify/data/sample-15s.mp3*)
-  
-  
-  
-  (* let pipeline_instance = Pipeline.parse_launch ("playbin uri=file://" ^ file_path) in *)
-  
-  
-  Element.set_state (get !pipeline_instance) State_ready;
-  
-  Element.set_property_string (get !data_source) "location" (file_path);
-  Element.link_many [get !data_source; get !audio_convert; get !audio_resample; get !data_sink];
-  
-  (* Element.set_state (get !pipeline_instance) State_paused; *)
 
-  let ret = Element.set_state (get !pipeline_instance) State_playing in
-  print_endline "here";
-  
-  (* match (print_endline "here"; Element.get_state (get !pipeline_instance)) with
-  |(return, curr, pending) -> print_endline @@ Element.string_of_state curr;
-  
-  if (ret <> Element.State_change_success) then failwith "Could not set state"
-  else
-    print_endline "Got here"; *)
-  
-  
+  pipeline_instance := Some (Pipeline.parse_launch ("playbin uri=file://" ^ file_path));
+  current_song := file_name;
+
+  ignore (Element.set_state (get !pipeline_instance) State_playing);
+
+
   let bus = Bus.of_element (get !pipeline_instance) in
-
+    
   match Bus.timed_pop_filtered bus [Bus.(`End_of_stream); Bus.(`Error)] with
   |{payload=Bus.(`Error s); _} -> raise (Error s)
   |_ -> ()
+end
 
+
+(**Todo: should throw an exception if pipeline not instantiated*)
+  let pause =
+    if !pipeline_instance = None then failwith "Should not be called before play"
+    else ignore (Element.set_state (get !pipeline_instance) Element.State_paused)
+    
+    
+    (**Todo: should throw an exception if pipeline not instantiated (maybe)?*)
+    let stop = 
+      if !pipeline_instance = None then print_endline "No current pipeline_instance"
+      else ignore (Element.set_state (get !pipeline_instance) Element.State_null);
+      pipeline_instance := None
+
+  
 
 
 
 
 (*TODO: See mli file spec*)
   let parse _ = failwith "Not yet implemented"
-
-
-
 

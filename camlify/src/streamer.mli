@@ -15,6 +15,12 @@
  (*Plays audio based on string of a file. File must be of form ["<name>.mp3"] and is expected to be in the /data/ directory*)
  val play : string -> unit
 
+ (**Pauses currently playing song, throws an exception otherwise (TBD what kind)*)
+ val pause : unit
+
+ (**Stops currently playing stream or does nothing because there is none*)
+ val stop : unit
+
 
  (*[parse song] Takes in an mp3 file and parses data.
  Outputs this data in standardized format*)
