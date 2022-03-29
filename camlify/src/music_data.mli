@@ -4,6 +4,9 @@
 exception UnknownSong of string
 (**raised when the inputed song is unknown*)
 
+exception UnknownInformation of string
+(**raised when the song does not contain the information requested*)
+
 val select_playlist : string -> string list
 (**[select_playlist playlist_name] returns the list of song names that the 
 playlist of playlist_name contains 
@@ -42,10 +45,13 @@ val read_tags : string -> string list
 
 
 
-(*val add_song_to_playlist : string -> string -> unit
+(*val add_song_to_playlist : string -> string -> unit*)
 
 val delete_song_from_playlist : string -> string -> unit
-
+(**[delete_song_from_playlist playlist song] deletes song from playlist in json
+ *)
+ 
+(*
 val change_song_liked : string -> bool -> unit
 (**[change_song_liked song_name liked_state ] modifies the liked field of 
 song_name to liked_state. 
