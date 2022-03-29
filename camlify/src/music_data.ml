@@ -4,6 +4,7 @@ open Yojson.Basic.Util
 
 exception UnknownSong of string
 exception UnknownInformation of string
+exception UnknownPlaylist of string
 
 let file = "data/interface.json"
 
@@ -16,7 +17,7 @@ type song = {
   artist : string option;
   album : string option;
   year : int option;
-  tags : string list option;
+  tags : string list;
 }
 
 type playlist = {name : string ; songs : song list}
@@ -38,8 +39,7 @@ let song_from_json song =
       song |> member "album" |> to_string_option;
     year = if ((song |> member "year") = `Null) then None else 
       song |> member "year" |> to_int_option;
-    tags = if ((song |> member "tags") = `Null) then None else Some 
-      (song |> member "tags" |> to_list |> List.map to_string);
+    tags = (song |> member "tags" |> to_list |> List.map to_string);
   }
 
 let playlist_from_json playlist =
@@ -68,9 +68,7 @@ let rec to_song (song : song) : Yojson.t =
   :: ("year", match song.year with 
   | None -> `Null
   | Some year -> `Int year )
-  ::("tags", match song.tags with 
-  | None -> `Null
-  | Some tags -> `List  (List.map (fun s -> `String s) tags)) :: [])
+  ::("tags", `List  (List.map (fun s -> `String s) song.tags)) :: [])
 
 let rec to_playlist (playlist : playlist) : Yojson.t = 
     `Assoc (("name", `String playlist.name ) :: 
@@ -97,7 +95,7 @@ let plist_to_pnames (plist : playlist list) =
 
 let rec playlist_selector (plist : playlist list) (pname : string)= 
   match plist with
-  | [] -> []
+  | [] -> raise (UnknownPlaylist pname)
   | h::t when h.name = pname -> slist_to_snames h.songs
   | h::t -> playlist_selector t pname
        
@@ -211,12 +209,12 @@ let read_song_tags song =
               | None -> raise (UnknownInformation song)
 
 let rec delete_song (songs : song list) song = match songs with 
-  | [] -> []
+  | [] -> raise (UnknownSong song)
   | h::t when h.name = song -> delete_song t song
   | h::t -> h :: delete_song t song
 
 let rec delete_playlist (playlists : playlist list) playlist song= match playlists with 
-  | [] -> raise ((UnknownSong song))
+  | [] -> raise ((UnknownSong playlist))
   | h::t when h.name = playlist -> {h with songs = delete_song h.songs song} :: delete_playlist t playlist song
   | h::t -> h :: delete_playlist t playlist song
 
@@ -226,8 +224,43 @@ let delete_song_from_playlist playlist song = let j = Yojson.Basic.from_file fil
    let newiface = {iface with playlists = delete_playlist iface.playlists playlist song} in
     update_json newiface
 
+let rec add_song_playlist (playlists : playlist list) playlist song= match playlists with 
+  | [] -> raise ((UnknownSong playlist))
+  | h::t when h.name = playlist -> {h with songs = h.songs @ [ song ]} :: add_song_playlist t playlist song
+  | h::t -> h :: add_song_playlist t playlist song
 
+
+let add_song_to_playlist playlist song = let j = Yojson.Basic.from_file file in
+  let iface = from_json j in
+   let newiface = {iface with playlists = add_song_playlist 
+    iface.playlists 
+    playlist 
+  (List.find (fun (sng:song) -> sng.name = song) iface.all_songs)} in
+    update_json newiface
+
+let rec modify_song f (songlst : song list) song = match songlst with
+| [] -> raise (UnknownSong song)
+| h::t when h.name = song -> (f h) :: modify_song f t song 
+| h::t -> h :: modify_song f t song 
+
+let modify_song_and_write f song = let j = Yojson.Basic.from_file file in
+  let iface = from_json j in
+   let newiface = {iface with all_songs = modify_song f iface.all_songs song} in
+    update_json newiface
+
+let change_song_liked song like = modify_song_and_write (fun sng -> {sng with liked = like}) song
     
+
+let change_song_artist song artist = modify_song_and_write (fun sng -> {sng with artist = Some artist}) song
+
+let change_song_year song year = modify_song_and_write (fun sng -> {sng with year = Some year}) song
+
+let add_song_tag song tag = modify_song_and_write (fun sng -> {sng with tags = (sng.tags)@ [ tag ]}) song
+
+
+let remove_song_tag song tag = modify_song_and_write (fun sng -> {sng with tags = List.filter (fun t-> t<>tag) sng.tags}) song
+
+
 
 
 
