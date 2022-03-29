@@ -10,6 +10,7 @@ exception Malformed
 type command = 
     | Play of song_name
     | Pause
+    | Stop
     | PlayIndex of index
     | CurrentSongName
     | CurrentSongIndex
@@ -27,6 +28,11 @@ type command =
     | ChangeSongYear of (song_name, year)
     | AddSongTag of song_name
     | RemoveSongTag of song_name
+    | PlayArtist
+    | PlayAlbum
+    | PlayYear
+    | PlayLiked
+    | PlayTag
     | Help
     | Quit
     | Idle
@@ -45,6 +51,9 @@ let parse (str : string) : command =
         else if String.equal hd "pp" then
             if List.length tl != 0 then raise Malformed 
             else Pause
+        else if String.equal hd "s" then
+            if List.length tl != 0 then raise Malformed 
+            else Stop
         else if String.equal hd "pi" then
             if List.length tl != 1 then raise Malformed 
             else PlayIndex (int_of_string (List.hd tl))
@@ -106,6 +115,21 @@ let parse (str : string) : command =
         else if String.equal hd "pls" then
             if List.length tl != 0 then raise Malformed 
             else ViewPlaylists
+        else if String.equal hd "pl_ar" then
+            if List.length tl != 0 then raise Malformed 
+            else PlayArtist
+        else if String.equal hd "pl_al" then
+            if List.length tl != 0 then raise Malformed 
+            else PlayAlbum
+        else if String.equal hd "pl_y" then
+            if List.length tl != 0 then raise Malformed 
+            else PlayYear
+        else if String.equal hd "pl_l" then
+            if List.length tl != 0 then raise Malformed 
+            else PlayLiked
+        else if String.equal hd "pl_t" then
+            if List.length tl != 0 then raise Malformed 
+            else PlayTag
         else if String.equal hd "help" then
             if List.length tl != 0 then raise Malformed 
             else Help

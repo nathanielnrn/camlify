@@ -10,6 +10,7 @@ exception Malformed
 type command = 
     | Play of song_name
     | Pause
+    | Stop
     | PlayIndex of index
     | CurrentSongName
     | CurrentSongIndex
@@ -27,6 +28,11 @@ type command =
     | ChangeSongYear of (song_name, year)
     | AddSongTag of song_name
     | RemoveSongTag of song_name
+    | PlayArtist
+    | PlayAlbum
+    | PlayYear
+    | PlayLiked
+    | PlayTag
     | Help
     | Quit
     | Idle

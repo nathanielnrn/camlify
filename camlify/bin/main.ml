@@ -7,7 +7,7 @@ open Camlify.Command
 (* TODO: update with interface to client using terminal,
  * see a2 bin/main.ml for direction *)
 
- let pipeline = Camlify.Streamer.get_pipeline
+let pipeline = Camlify.Streamer.get_pipeline
 let help_message : string = 
   "List of commands (note that the commands only run after the song ends):\n \
   help : print this message\n \
@@ -77,7 +77,23 @@ let remove_dup lst = List.sort_uniq compare lst
         (step_r new_q)
       end
 
-    | Pause -> (step_r q) (** TODO *)
+    | Pause ->
+      begin
+      let song_name = Camlify.Queue.current_song_name q;
+      print_endline ("Pausing " ^ song_name ^ "...");
+      let file_name = Camlify.Queue.song_name_to_mp3 song_name in
+      (Thread.create (Camlify.Streamer.pause pipeline) file_name);
+      (step_r q)
+      end
+
+    | Stop ->
+      begin
+      let song_name = Camlify.Queue.current_song_name q;
+      print_endline ("Stopping " ^ song_name ^ "...");
+      let file_name = Camlify.Queue.song_name_to_mp3 song_name in
+      (Thread.create (Camlify.Streamer.stop pipeline) file_name);
+      (step_r q)
+      end
 
     | PlayIndex idx ->
       let res = Camlify.Queue.play_song_by_idx idx q in
@@ -225,7 +241,7 @@ let remove_dup lst = List.sort_uniq compare lst
          print_endline (song_name ^ " removed from current playlist.");
          (step_r new_q)
         end
-     |PlayArtist ->
+     | PlayArtist ->
       begin
       print_endline ("Names of all artists in this player :")
       print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_artist Camlify.Music_data.all_songs))
@@ -241,7 +257,7 @@ let remove_dup lst = List.sort_uniq compare lst
           (step r new_q)
       (step_r q)
       end
-      |PlayAlbum ->
+      | PlayAlbum ->
         begin
         print_endline ("Names of all albums in this player :")
         print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_album Camlify.Music_data.all_songs))
@@ -303,7 +319,7 @@ let remove_dup lst = List.sort_uniq compare lst
         (step_r q)
         end
 
-      | _ -> failwith "TODO Add song, remove song"
+      | _ -> failwith "TODO?"
   in
   step_r q
 
