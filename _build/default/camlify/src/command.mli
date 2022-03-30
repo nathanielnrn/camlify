@@ -11,7 +11,6 @@ type command =
     | Play of song_name
     | Pause
     | Stop
-    | Continue
     | PlayIndex of index
     | CurrentSongName
     | CurrentSongIndex

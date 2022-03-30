@@ -87,12 +87,6 @@ let remove_dup lst = List.sort_uniq compare lst
       Camlify.Streamer.stop pipeline;
       (step_r q)
 
-    | Continue ->
-        let song_name = Camlify.Queue.current_song_name q in
-        print_endline ("Continuing " ^ song_name ^ "...");
-        Camlify.Streamer.continue pipeline;
-        (step_r q)
-        
     | PlayIndex idx ->
       let res = Camlify.Queue.play_song_by_idx idx q in
       begin

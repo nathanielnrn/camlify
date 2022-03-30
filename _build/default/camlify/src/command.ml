@@ -11,7 +11,6 @@ type command =
     | Play of song_name
     | Pause
     | Stop
-    | Continue
     | PlayIndex of index
     | CurrentSongName
     | CurrentSongIndex
@@ -53,9 +52,6 @@ let parse (str : string) : command =
             if List.length tl != 0 then raise Malformed 
             else Pause
         else if String.equal hd "s" then
-            if List.length tl != 0 then raise Malformed 
-            else Stop
-        else if String.equal hd "c" then
             if List.length tl != 0 then raise Malformed 
             else Stop
         else if String.equal hd "pi" then
