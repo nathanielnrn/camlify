@@ -1,3 +1,4 @@
+(* TODO: Implement according to music_data.mli *)
 open Yojson.Basic
 open Yojson.Basic.Util
 
@@ -282,6 +283,7 @@ let test_write =
   let oc = open_out file in (* create or truncate file, return channel *)
     Printf.fprintf oc "%s\n" message; (* write something *)   
     close_out oc; 
+
 (*let rewrite_json = ()
   type t = {x: int; y: int} [@@deriving to_yojson]
   type u = {s: string; pos: t} [@@deriving to_yojson]
@@ -296,6 +298,8 @@ let test_write =
       year = None;
       tags = Some [];
     }
+
+
 let song2 ={
   name = "fly me to the caml";
   liked = true;
@@ -305,8 +309,10 @@ let song2 ={
   year = None;
   tags = Some [];
   }
+
 let playlist1 = {name = "bangers";
 songs = [song1;song2]
+
 }
 let x : interface = {all_songs = [song1;song2];
 playlists = [playlist1]}
