@@ -251,6 +251,8 @@ let change_song_liked song like = modify_song_and_write (fun sng -> {sng with li
 
 let change_song_artist song artist = modify_song_and_write (fun sng -> {sng with artist = Some artist}) song
 
+let change_song_album song album = modify_song_and_write (fun sng -> {sng with album = Some album}) song
+
 let change_song_year song year = modify_song_and_write (fun sng -> {sng with year = Some year}) song
 
 let add_song_tag song tag = modify_song_and_write (fun sng -> {sng with tags = (sng.tags)@ [ tag ]}) song

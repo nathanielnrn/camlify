@@ -51,8 +51,8 @@ Raises [UnknownSong] for a song that does not exist
 Raises [UnknownInformation] if the year for the song was not specified in 
 the json file*)
 
-val read_tags : string -> string list
-(**[read_tags song_name] returns the list of tags associated with song_name.
+val read_song_tags : string -> string list
+(**[read_tags song_name] returns the list of tags associated with [song_name].
 Raises [UnknownSong] for a song that does not exist
 Raises [UnknownInformation] if the tags for the song was not specified in 
 the json file*)
@@ -73,12 +73,12 @@ val delete_song_from_playlist : string -> string -> unit
 
 val change_song_liked : string -> bool -> unit
 (**[change_song_liked song_name liked_state ] modifies the liked field of 
-song_name to liked_state. 
+[song_name] to [liked_state]. 
 ex) change_song_liked Reptilia true changes the liked field of Reptilia to true.*)
 
 val change_song_artist : string -> string -> unit
 (**[change_song_artist song_name new_artist] modifies the artist of 
-song_name to new_artist.*)
+[song_name] to [new_artist].*)
 
 val change_song_album : string -> string -> unit
 (**[change_song_album song_name new_album] modifies the album of 
