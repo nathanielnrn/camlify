@@ -196,7 +196,7 @@ let read_song_year song =
             | Some i -> i
             | None -> raise (UnknownInformation song)
 
-let read_song_tags song = 
+let read_tags song = 
   let read_song song = let j = Yojson.Basic.from_file file in
     let iface = from_json j in
       let rec song_tags song  (songlst : song list) = match songlst with

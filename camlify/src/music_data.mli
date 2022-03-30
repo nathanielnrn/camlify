@@ -51,7 +51,7 @@ Raises [UnknownSong] for a song that does not exist
 Raises [UnknownInformation] if the year for the song was not specified in 
 the json file*)
 
-val read_song_tags : string -> string list
+val read_tags : string -> string list
 (**[read_tags song_name] returns the list of tags associated with [song_name].
 Raises [UnknownSong] for a song that does not exist
 Raises [UnknownInformation] if the tags for the song was not specified in 
