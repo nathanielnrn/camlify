@@ -14,6 +14,10 @@
  (** [current_song_name st] is the identifier of the name of the song the user is
   currently playing*)
  
+  val current_playlist_name : t -> string
+  (** [current_playlist_name st] is the identifier of the name of the song the user is
+   currently playing*)
+
  val current_song_idx : t -> int
  (**[current_song_idx st] is the identifier of the index of the song the user is
   currently playing*)
