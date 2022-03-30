@@ -68,7 +68,8 @@
           "mp3 file": "yeet",
           "artist": null,
           "album": null,
-          "year": null
+          "year": null,
+          "tags": []
         },
         {
           "name": "fly me to the caml",
@@ -76,7 +77,8 @@
           "mp3 file": "yeet",
           "artist": null,
           "album": null,
-          "year": null
+          "year": null,
+          "tags": []
         }
       ]
     },
