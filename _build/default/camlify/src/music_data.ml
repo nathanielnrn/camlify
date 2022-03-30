@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 (* TODO: Implement according to music_data.mli *)
-=======
->>>>>>> 9afba092a6600f449ac8b3351c7a6f755cb4a8c1
 open Yojson.Basic
 open Yojson.Basic.Util
 
@@ -300,11 +297,6 @@ let test_write =
       year = None;
       tags = Some [];
     }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 9afba092a6600f449ac8b3351c7a6f755cb4a8c1
 let song2 ={
   name = "fly me to the caml";
   liked = true;
@@ -314,22 +306,11 @@ let song2 ={
   year = None;
   tags = Some [];
   }
-<<<<<<< HEAD
-
 let playlist1 = {name = "bangers";
 songs = [song1;song2]
-
-=======
-let playlist1 = {name = "bangers";
-songs = [song1;song2]
->>>>>>> 9afba092a6600f449ac8b3351c7a6f755cb4a8c1
 }
 let x : interface = {all_songs = [song1;song2];
 playlists = [playlist1]}
 let to_x = to_interface x
 let pushed = Yojson.pretty_to_string to_x
-<<<<<<< HEAD
 *)*)
-=======
-*)*)
->>>>>>> 9afba092a6600f449ac8b3351c7a6f755cb4a8c1

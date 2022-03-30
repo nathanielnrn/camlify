@@ -1,9 +1,3 @@
-
-(* TODO: Implement based on queue.mli *)
-
-print_endline "here at least3";
-
-
 type t =
 {
   current_song_name : string;
@@ -21,8 +15,6 @@ let rec remove_element element lst =
   |h::t -> if h = element then remove_element element t else h::remove_element element t
 
 let init_state selected_playlist=
-print_endline "h9";
-print_endline (List.nth (Music_data.select_playlist selected_playlist) 0);
   {
     current_song_name = List.nth (Music_data.select_playlist selected_playlist) 0;
     current_song_mp3_file = Music_data.read_song_mp3_file (List.nth (Music_data.select_playlist selected_playlist) 0);

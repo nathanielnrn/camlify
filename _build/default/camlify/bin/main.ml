@@ -1,20 +1,9 @@
 
-open Yojson
-=======
-(* open Camlify.Music_data
-open Camlify.Queue
-open Camlify.Streamer *)
-(* open Camlify.Command *)
->>>>>>> Stashed changes
-=======
-(* open Camlify.Music_data
-=======
-
 open Camlify.Music_data
->>>>>>> 820a90b5d722e406bb6ea47dd6b2828384e8cbe3
 open Camlify.Queue
 open Camlify.Streamer 
 open Camlify.Command
+
 (* TODO: update with interface to client using terminal,
  * see a2 bin/main.ml for direction *)
 
@@ -56,21 +45,14 @@ let remove_dup lst = List.sort_uniq compare lst
   rm [filename.mp3 ]: remove song filename.mp3 in current playlist*)
   (* new_pl [playlist name] : create new playlist with given name\n \  *)
  let step (q: Camlify.Queue.t) =
-
   let rec step_r (q: Camlify.Queue.t) : Camlify.Queue.t = 
     print_string "> ";
     
     let cmd : Camlify.Command.command = match read_line () with
     | exception End_of_file -> Quit
-
-    | command -> try (Camlify.Command.parse command) with
-      | Camlify.Command.Empty -> let _ = print_endline "Please write anything..." in Idle
-      | Camlify.Command.Malformed -> let _ = print_endline "Wrong command input" in Idle in
-
     | command -> try (parse command) with
       | Empty -> let _ = print_endline "Please write anything..." in Idle
       | Malformed -> let _ = print_endline "Wrong command input" in Idle in
-
 
     match cmd with
     | Idle -> (step_r q)
@@ -158,7 +140,7 @@ let remove_dup lst = List.sort_uniq compare lst
         (step_r q)
 
     | ChangeSongAlbum song_name ->
-        let _ = print_endline "What is the name of the album?" in 
+        let _ = print_endline "What is the name of the album?"in 
         let _ = print "> " in
         let album = read_line () in
         change_song_album song_name album in
@@ -346,18 +328,4 @@ let main () =
   step q
 
 (* Execute the mp3. *)
-let _ = 
-  print_endline "here at least2";
-
-  main ()
-
-  let q = Camlify.Queue.init_state ("Playlist one") in (** hope Camlify.Music_data.init_state returns Camlify.Music_data.t  *)
-  (* ANSITerminal.print_string [ ANSITerminal.red ] *)
-  print_endline  "\n\nWelcome to Camlify \n";
-  print_endline "Commands you can use:";
-  print_endline "play [name_of_song.mp3]";
-  step q
-
-(* Execute the mp3. *)
 let _ = main ()
-
