@@ -62,9 +62,8 @@ let remove_dup lst = List.sort_uniq compare lst
     | Quit -> print_endline "Bye!"; Stdlib.exit 0;
 
     | Play song_name -> 
-
-      let res = Camlify.Queue.play_song_by_name song_name q in
       begin
+      let res = Camlify.Queue.play_song_by_name song_name q in
       match res with
       | Illegal -> 
         print_endline ("There is no such song as " ^ song_name); 
@@ -72,26 +71,25 @@ let remove_dup lst = List.sort_uniq compare lst
 
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
-        let file_name = Camlify.Queue.song_name_to_mp3 song_name in
-        (Thread.create (Camlify.Streamer.play pipeline) file_name);
+        let file_name = Camlify.Music_data.read_song_mp3_file song_name in
+        ignore((Thread.create (Camlify.Streamer.play pipeline) file_name));
         (step_r new_q)
       end
 
     | Pause ->
       begin
-      let song_name = Camlify.Queue.current_song_name q;
+      let song_name = Camlify.Queue.current_song_name q in
       print_endline ("Pausing " ^ song_name ^ "...");
-      let file_name = Camlify.Queue.song_name_to_mp3 song_name in
-      (Thread.create (Camlify.Streamer.pause pipeline) file_name);
+      (Camlify.Streamer.pause pipeline);
       (step_r q)
       end
 
     | Stop ->
       begin
-      let song_name = Camlify.Queue.current_song_name q;
+      let song_name = Camlify.Queue.current_song_name q in
       print_endline ("Stopping " ^ song_name ^ "...");
-      let file_name = Camlify.Queue.song_name_to_mp3 song_name in
-      (Thread.create (Camlify.Streamer.stop pipeline) file_name);
+      let file_name = Camlify.Music_data.read_song_mp3_file song_name in
+      Camlify.Streamer.stop pipeline;
       (step_r q)
       end
 
@@ -105,7 +103,7 @@ let remove_dup lst = List.sort_uniq compare lst
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
-        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
+        let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
         Camlify.Streamer.play pipeline file_name;
         (step_r new_q)
       end
@@ -135,9 +133,9 @@ let remove_dup lst = List.sort_uniq compare lst
         (step_r new_q)
       end
 
-    | ChangeSongLike song_name, bool -> 
+    | ChangeSongLike song_name liked -> 
       begin
-      Camlify.Music_data.change_song_liked song_name (to_string bool);
+      Camlify.Music_data.change_song_liked song_name (to_string liked);
       (step_r q)
       end
 

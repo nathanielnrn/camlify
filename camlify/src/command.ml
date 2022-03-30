@@ -22,10 +22,10 @@ type command =
     | PreviousSong
     | AddSong of song_name
     | RemoveSong of song_name
-    | ChangeSongLike of (song_name, bool)
+    | ChangeSongLike of (song_name* bool)
     | ChangeSongArtist of song_name
     | ChangeSongAlbum of song_name
-    | ChangeSongYear of (song_name, year)
+    | ChangeSongYear of (song_name* int)
     | AddSongTag of song_name
     | RemoveSongTag of song_name
     | PlayArtist
@@ -73,8 +73,8 @@ let parse (str : string) : command =
             if (List.length tl < 2 || (List.length tl > 0 && ((List.nth (List.length tl -1) tl) <> "true") && (List.nth (List.length tl -1) tl) <> "false")) then raise Malformed 
             else 
                 begin
-                let bool = List.nth (List.length tl -1) tl;
-                ChangeSongLike (String.concat " " (List.filter (fun x -> x <> bool) tl), bool)
+                let liked = List.nth (List.length tl -1) tl;
+                ChangeSongLike (String.concat " " (List.filter (fun x -> x <> liked) tl), liked)
                 end
         else if String.equal hd "change_ar" then
             if List.length tl == 0 then raise Malformed 
