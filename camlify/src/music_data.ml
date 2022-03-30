@@ -1,3 +1,4 @@
+(* TODO: Implement according to music_data.mli *)
 open Yojson.Basic
 open Yojson.Basic.Util
 
@@ -207,12 +208,13 @@ let read_tags song =
 
 let rec delete_song (songs : song list) song = match songs with 
   | [] -> raise (UnknownSong song)
-  | h::t when h.name = song -> delete_song t song
+  | h::t when h.name = song -> t
   | h::t -> h :: delete_song t song
 
+(* just a helper for delete_song_from_playlist*)
 let rec delete_playlist (playlists : playlist list) playlist song= match playlists with 
-  | [] -> raise ((UnknownSong playlist))
-  | h::t when h.name = playlist -> {h with songs = delete_song h.songs song} :: delete_playlist t playlist song
+  | [] -> raise ((UnknownPlaylist playlist))
+  | h::t when h.name = playlist -> {h with songs = delete_song h.songs song} :: t
   | h::t -> h :: delete_playlist t playlist song
 
 
@@ -223,7 +225,7 @@ let delete_song_from_playlist playlist song = let j = Yojson.Basic.from_file fil
 
 let rec add_song_playlist (playlists : playlist list) playlist song= match playlists with 
   | [] -> raise ((UnknownSong playlist))
-  | h::t when h.name = playlist -> {h with songs = h.songs @ [ song ]} :: add_song_playlist t playlist song
+  | h::t when h.name = playlist -> {h with songs = h.songs @ [ song ]} :: t
   | h::t -> h :: add_song_playlist t playlist song
 
 
@@ -237,7 +239,7 @@ let add_song_to_playlist playlist song = let j = Yojson.Basic.from_file file in
 
 let rec modify_song f (songlst : song list) song = match songlst with
 | [] -> raise (UnknownSong song)
-| h::t when h.name = song -> (f h) :: modify_song f t song 
+| h::t when h.name = song -> (f h) :: t
 | h::t -> h :: modify_song f t song 
 
 let modify_song_and_write f song = let j = Yojson.Basic.from_file file in
@@ -255,7 +257,6 @@ let change_song_album song album = modify_song_and_write (fun sng -> {sng with a
 let change_song_year song year = modify_song_and_write (fun sng -> {sng with year = Some year}) song
 
 let add_song_tag song tag = modify_song_and_write (fun sng -> {sng with tags = (sng.tags)@ [ tag ]}) song
-
 
 let remove_song_tag song tag = modify_song_and_write (fun sng -> {sng with tags = List.filter (fun t-> t<>tag) sng.tags}) song
 
@@ -282,6 +283,7 @@ let test_write =
   let oc = open_out file in (* create or truncate file, return channel *)
     Printf.fprintf oc "%s\n" message; (* write something *)   
     close_out oc; 
+
 (*let rewrite_json = ()
   type t = {x: int; y: int} [@@deriving to_yojson]
   type u = {s: string; pos: t} [@@deriving to_yojson]
@@ -296,6 +298,8 @@ let test_write =
       year = None;
       tags = Some [];
     }
+
+
 let song2 ={
   name = "fly me to the caml";
   liked = true;
@@ -305,8 +309,10 @@ let song2 ={
   year = None;
   tags = Some [];
   }
+
 let playlist1 = {name = "bangers";
 songs = [song1;song2]
+
 }
 let x : interface = {all_songs = [song1;song2];
 playlists = [playlist1]}
