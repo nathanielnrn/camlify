@@ -3,7 +3,7 @@
 # Shared cache: disabled
 # Workspace root: /Users/bryanthwang/Desktop/3110final/camlify
 # Auto-detected concurrency: 16
-$ /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -config > /var/folders/g4/jz069gkj7z744kn5rj0rtqm80000gn/T/dune_809c98_output
+$ /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -config > /var/folders/g4/jz069gkj7z744kn5rj0rtqm80000gn/T/dune_e796b3_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -117,88 +117,19 @@ $ /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -config > /var/folders/g
 #      }
 #  }
 $ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -impl camlify/bin/main.ml) > _build/default/camlify/bin/.main.eobjs/main.ml.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -impl camlify/src/streamer.ml) > _build/default/camlify/src/.camlify.objs/streamer.ml.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -impl camlify/src/authors.ml) > _build/default/camlify/src/.camlify.objs/authors.ml.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -impl camlify/src/command.ml) > _build/default/camlify/src/.camlify.objs/command.ml.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -impl camlify/src/music_data.ml) > _build/default/camlify/src/.camlify.objs/music_data.ml.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -impl camlify/src/queue.ml) > _build/default/camlify/src/.camlify.objs/queue.ml.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -bin-annot -I camlify/src/.camlify.objs/byte -no-alias-deps -opaque -o camlify/src/.camlify.objs/byte/camlify.cmo -c -impl camlify/src/camlify.ml-gen)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -intf camlify/src/authors.mli) > _build/default/camlify/src/.camlify.objs/authors.mli.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -intf camlify/src/command.mli) > _build/default/camlify/src/.camlify.objs/command.mli.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -intf camlify/src/music_data.mli) > _build/default/camlify/src/.camlify.objs/music_data.mli.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -intf camlify/src/queue.mli) > _build/default/camlify/src/.camlify.objs/queue.mli.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt -modules -intf camlify/src/streamer.mli) > _build/default/camlify/src/.camlify.objs/streamer.mli.d
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -bin-annot -I camlify/src/.camlify.objs/byte -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/byte/camlify__Authors.cmi -c -intf camlify/src/authors.mli)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -bin-annot -I camlify/src/.camlify.objs/byte -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/byte/camlify__Command.cmi -c -intf camlify/src/command.mli)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -bin-annot -I camlify/src/.camlify.objs/byte -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/byte/camlify__Music_data.cmi -c -intf camlify/src/music_data.mli)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -bin-annot -I camlify/src/.camlify.objs/byte -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/byte/camlify__Queue.cmi -c -intf camlify/src/queue.mli)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -bin-annot -I camlify/src/.camlify.objs/byte -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/byte/camlify__Streamer.cmi -c -intf camlify/src/streamer.mli)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -I camlify/src/.camlify.objs/byte -I camlify/src/.camlify.objs/native -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -intf-suffix .ml -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/native/camlify__Queue.cmx -c -impl camlify/src/queue.ml)
-> File "camlify/src/queue.ml", line 17, characters 33-65:
-> 17 | let song_name_to_mp3 song_name = Music_data.song_name_to_mp3_file song_name Music_data.all_songs_objects
->                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> Error: Unbound value Music_data.song_name_to_mp3_file
+> File "camlify/bin/main.ml", line 142, characters 4-5:
+> 142 |     | ChangeSongAlbum song_name ->
+>           ^
+> Error: Syntax error
 [2]
 $ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -I camlify/src/.camlify.objs/byte -I camlify/src/.camlify.objs/native -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -intf-suffix .ml -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/native/camlify__Music_data.cmx -c -impl camlify/src/music_data.ml)
 > File "camlify/src/music_data.ml", line 1:
 > Error: The implementation camlify/src/music_data.ml
 >        does not match the interface camlify/src/.camlify.objs/byte/camlify__Music_data.cmi:
->        The value `remove_song_tag' is required but not provided
->        File "camlify/src/music_data.mli", line 59, characters 0-46:
->          Expected declaration
->        The value `add_song_tag' is required but not provided
->        File "camlify/src/music_data.mli", line 55, characters 0-43:
->          Expected declaration
->        The value `change_song_year' is required but not provided
->        File "camlify/src/music_data.mli", line 51, characters 0-44:
->          Expected declaration
 >        The value `change_song_album' is required but not provided
->        File "camlify/src/music_data.mli", line 47, characters 0-48:
->          Expected declaration
->        The value `change_song_artist' is required but not provided
->        File "camlify/src/music_data.mli", line 43, characters 0-49:
->          Expected declaration
->        The value `change_song_liked' is required but not provided
->        File "camlify/src/music_data.mli", line 38, characters 0-46:
->          Expected declaration
->        The value `delete_song_from_playlist' is required but not provided
->        File "camlify/src/music_data.mli", line 36, characters 0-56:
->          Expected declaration
->        The value `add_song_to_playlist' is required but not provided
->        File "camlify/src/music_data.mli", line 34, characters 0-51:
+>        File "camlify/src/music_data.mli", line 83, characters 1-49:
 >          Expected declaration
 >        The value `read_tags' is required but not provided
->        File "camlify/src/music_data.mli", line 30, characters 0-37:
->          Expected declaration
->        The value `read_song_year' is required but not provided
->        File "camlify/src/music_data.mli", line 27, characters 0-34:
->          Expected declaration
->        The value `read_song_album' is required but not provided
->        File "camlify/src/music_data.mli", line 24, characters 1-39:
->          Expected declaration
->        The value `read_song_artist' is required but not provided
->        File "camlify/src/music_data.mli", line 21, characters 1-40:
->          Expected declaration
->        The value `read_song_mp3_file' is required but not provided
->        File "camlify/src/music_data.mli", line 18, characters 1-42:
->          Expected declaration
->        The value `read_song_liked' is required but not provided
->        File "camlify/src/music_data.mli", line 14, characters 0-36:
+>        File "camlify/src/music_data.mli", line 54, characters 1-38:
 >          Expected declaration
 [2]
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -bin-annot -I camlify/bin/.main.eobjs/byte -no-alias-deps -opaque -o camlify/bin/.main.eobjs/byte/dune__exe.cmo -c -impl camlify/bin/.main.eobjs/dune__exe.ml-gen)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -bin-annot -I camlify/bin/.main.eobjs/byte -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -I camlify/src/.camlify.objs/byte -no-alias-deps -opaque -open Dune__exe -o camlify/bin/.main.eobjs/byte/dune__exe__Main.cmo -c -impl camlify/bin/main.ml)
-> File "camlify/bin/main.ml", line 159, characters 8-9:
-> 159 |       | _ -> failwith "TODO Add song, remove song"
->               ^
-> Warning 11 [redundant-case]: this match case is unused.
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -I camlify/bin/.main.eobjs/byte -I camlify/bin/.main.eobjs/native -intf-suffix .ml-gen -no-alias-deps -opaque -o camlify/bin/.main.eobjs/native/dune__exe.cmx -c -impl camlify/bin/.main.eobjs/dune__exe.ml-gen)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -I camlify/src/.camlify.objs/byte -I camlify/src/.camlify.objs/native -intf-suffix .ml-gen -no-alias-deps -opaque -o camlify/src/.camlify.objs/native/camlify.cmx -c -impl camlify/src/camlify.ml-gen)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -I camlify/src/.camlify.objs/byte -I camlify/src/.camlify.objs/native -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -intf-suffix .ml -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/native/camlify__Command.cmx -c -impl camlify/src/command.ml)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -I camlify/src/.camlify.objs/byte -I camlify/src/.camlify.objs/native -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -intf-suffix .ml -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/native/camlify__Streamer.cmx -c -impl camlify/src/streamer.ml)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -I camlify/src/.camlify.objs/byte -I camlify/src/.camlify.objs/native -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -intf-suffix .ml -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/native/camlify__Authors.cmx -c -impl camlify/src/authors.ml)
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -I camlify/bin/.main.eobjs/byte -I camlify/bin/.main.eobjs/native -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -I camlify/src/.camlify.objs/byte -I camlify/src/.camlify.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o camlify/bin/.main.eobjs/native/dune__exe__Main.cmx -c -impl camlify/bin/main.ml)
-> File "camlify/bin/main.ml", line 159, characters 8-9:
-> 159 |       | _ -> failwith "TODO Add song, remove song"
->               ^
-> Warning 11 [redundant-case]: this match case is unused.

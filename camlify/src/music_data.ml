@@ -204,9 +204,7 @@ let read_song_tags song =
         | h::t when h.name = song-> h.tags
         | h::t -> song_tags song  songlst in
           song_tags song iface.all_songs in
-            match read_song song with 
-              | Some lst -> lst
-              | None -> raise (UnknownInformation song)
+          read_song song 
 
 let rec delete_song (songs : song list) song = match songs with 
   | [] -> raise (UnknownSong song)

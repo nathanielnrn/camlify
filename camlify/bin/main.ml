@@ -62,13 +62,12 @@ let remove_dup lst = List.sort_uniq compare lst
     | Quit -> print_endline "Bye!"; Stdlib.exit 0;
 
     | Play song_name -> 
-      begin
       let res = Camlify.Queue.play_song_by_name song_name q in
+      begin
       match res with
       | Illegal -> 
         print_endline ("There is no such song as " ^ song_name); 
         (step_r q)
-
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
         let file_name = Camlify.Music_data.read_song_mp3_file song_name in
@@ -77,21 +76,17 @@ let remove_dup lst = List.sort_uniq compare lst
       end
 
     | Pause ->
-      begin
       let song_name = Camlify.Queue.current_song_name q in
       print_endline ("Pausing " ^ song_name ^ "...");
       (Camlify.Streamer.pause pipeline);
       (step_r q)
-      end
 
     | Stop ->
-      begin
       let song_name = Camlify.Queue.current_song_name q in
       print_endline ("Stopping " ^ song_name ^ "...");
       let file_name = Camlify.Music_data.read_song_mp3_file song_name in
       Camlify.Streamer.stop pipeline;
       (step_r q)
-      end
 
     | PlayIndex idx ->
       let res = Camlify.Queue.play_song_by_idx idx q in
@@ -133,50 +128,40 @@ let remove_dup lst = List.sort_uniq compare lst
         (step_r new_q)
       end
 
-    | ChangeSongLike song_name liked -> 
-      begin
-      Camlify.Music_data.change_song_liked song_name (to_string liked);
+    | ChangeSongLike (song_name, liked) -> 
+      let _ = Camlify.Music_data.change_song_liked song_name (to_string liked) in
       (step_r q)
-      end
 
     | ChangeSongArtist song_name ->
-      begin
-        print_endline "What is the name of the artist?"; print "> ";
-        let artist = read_line ();
-        Camlify.Music_data.change_song_artist song_name artist;
+        let _ = print_endline "What is the name of the artist?"in
+        let _ = print "> " in
+        let artist = read_line () in
+        Camlify.Music_data.change_song_artist song_name artist in
         (step_r q)
-      end
 
     | ChangeSongAlbum song_name ->
-      begin
-        print_endline "What is the name of the album?"; print "> ";
-        let album = read_line ();
-        change_song_album song_name album;
+        let _ = print_endline "What is the name of the album?"in 
+        let _ = print "> " in
+        let album = read_line () in
+        change_song_album song_name album in
         (step_r q)
-      end
 
     | ChangeSongYear (song_name, year) ->
-      begin
-      change_song_year song_name year;
+      let _ = change_song_year song_name year
       (step_r q)
-      end
 
     | AddSongTag song_name -> 
-      begin
-        print_endline "What is a new tag?"; print "> ";
-        let tag = read_line ();
-        add_song_tag song_name tag;
+        let _ = print_endline "What is a new tag?"in print "> " in
+        let tag = read_line () in
+        add_song_tag song_name tag in
         (step_r q)
-      end
 
     | RemoveSongTag song_name -> 
-      begin
-        print_endline "What is the tag?"; print "> ";
-        let tag = read_line ();
-        remove_song_tag song_name tag;
+        let _ = print_endline "What is the tag?"in print "> "in
+        let tag = read_line () in
+        remove_song_tag song_name tag in
         (step_r q)
-      end
-
+        
     | CreatePlayList pl_name ->
       let res = (Camlify.Queue.make_new_playlist pl_name q) in
       begin

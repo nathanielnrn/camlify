@@ -1,1 +1,1 @@
-camlify/src/streamer.mli:
+camlify/src/streamer.mli: Element Gstreamer Option

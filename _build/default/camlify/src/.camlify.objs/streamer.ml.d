@@ -1,1 +1,1 @@
-camlify/src/streamer.ml: Bus Element Filename Gstreamer Pipeline String Sys
+camlify/src/streamer.ml: Bus Element Filename Gstreamer Option Pipeline String Sys

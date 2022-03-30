@@ -7,19 +7,39 @@ open Camlify.Command
 (* TODO: update with interface to client using terminal,
  * see a2 bin/main.ml for direction *)
 
+let pipeline = Camlify.Streamer.get_pipeline
 let help_message : string = 
   "List of commands (note that the commands only run after the song ends):\n \
   help : print this message\n \
   quit : turn off this program\n \
   p [filename.mp3] : plays mp3 file with given filename\n \
+  pp : pause currently played mp3 file\n \
   pi [index] : plays mp3 file with given index in current playlist\n \
   pl : displays list of songs in current playlist\n \
   pls : displays list of all playlists\n \
   change_pl [playlist name] : change current playlist into given playlist\n \
+  change_l [filename.mp3] : change like of the song in the json file\n \
+  change_ar [filename.mp3] : change the artist of the song in the json file.\n \
+  An additional prompt is given to get the artist of song\n \
+  change_al [filename.mp3] : change the album of the song in the json file.\n \
+  An additional prompt is given to get the album of song\n \
+  change_y [filename.mp3] [year] : change the year of the song in the json file.\n \
+  add_tag [filename.mp3] : add a tag to the song in the json file.\n \
+  An additional prompt is given to get the new tag\n \
+  rm_tag [filename.mp3] : remove a tag to the song in the json file.\n \
+  An additional prompt is given to get the tag\n \
   name : displays name of current song\n \
   index : displays index of current song in current playlist\n \
   next : plays next song in current playlist\n \
-  prev : plays previous song in current playlist\n "
+  prev : plays previous song in current playlist\n 
+  play_artist : displays list of artist names and plays selected artist's songs \n \
+  play_album : displays list of album names and plays selected album's songs \n \
+  play_year : displays list of years and plays selected year's songs \n \
+  play_liked : plays all liked songs
+  play_tag : displays list of tag names and plays selected tag's songs \n \
+
+  "
+let remove_dup lst = List.sort_uniq compare lst
 
   (*add [filename.mp3] : add a song named filename.mp3 in current playlist\n \
   rm [filename.mp3 ]: remove song filename.mp3 in current playlist*)
@@ -42,20 +62,32 @@ let help_message : string =
     | Quit -> print_endline "Bye!"; Stdlib.exit 0;
 
     | Play song_name -> 
-
       let res = Camlify.Queue.play_song_by_name song_name q in
       begin
       match res with
       | Illegal -> 
         print_endline ("There is no such song as " ^ song_name); 
         (step_r q)
-
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
-        let file_name = Camlify.Queue.song_name_to_mp3 song_name in
-        let _ = Camlify.Streamer.play file_name in 
+        let file_name = Camlify.Music_data.read_song_mp3_file song_name in
+        ignore((Thread.create (Camlify.Streamer.play pipeline) file_name));
         (step_r new_q)
       end
+
+    | Pause ->
+      let song_name = Camlify.Queue.current_song_name q in
+      print_endline ("Pausing " ^ song_name ^ "...");
+      (Camlify.Streamer.pause pipeline);
+      (step_r q)
+
+    | Stop ->
+      let song_name = Camlify.Queue.current_song_name q in
+      print_endline ("Stopping " ^ song_name ^ "...");
+      let file_name = Camlify.Music_data.read_song_mp3_file song_name in
+      Camlify.Streamer.stop pipeline;
+      (step_r q)
+
     | PlayIndex idx ->
       let res = Camlify.Queue.play_song_by_idx idx q in
       begin
@@ -66,8 +98,8 @@ let help_message : string =
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
-        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
-        let _ = Camlify.Streamer.play file_name in  
+        let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
+        Camlify.Streamer.play pipeline file_name;
         (step_r new_q)
       end
 
@@ -80,9 +112,9 @@ let help_message : string =
       let song_index = Camlify.Queue.current_song_idx q in
     print_endline ("Current song index: " ^ (string_of_int song_index));
       (step_r q)
-    | CurrentPlayList -> let _ = print_endline (String.concat "\n" (Camlify.Queue.current_playlist q)) in 
+    | CurrentPlayList -> print_endline (String.concat "\n" (Camlify.Queue.current_playlist q));
       (step_r q)
-    | ViewPlaylists -> let _ = print_endline (String.concat "\n" Camlify.Music_data.list_of_playlist) in 
+    | ViewPlaylists -> print_endline (String.concat "\n" Camlify.Music_data.list_of_playlist);
       (step_r q)
     | ChangePlayList pl_name ->
       let res = (Camlify.Queue.select_playlist pl_name q) in
@@ -95,6 +127,41 @@ let help_message : string =
         print_endline ("Opening playlist " ^ pl_name ^ "…");
         (step_r new_q)
       end
+
+    | ChangeSongLike (song_name, liked) -> 
+      let _ = Camlify.Music_data.change_song_liked song_name (to_string liked) in
+      (step_r q)
+
+    | ChangeSongArtist song_name ->
+        let _ = print_endline "What is the name of the artist?"in
+        let _ = print "> " in
+        let artist = read_line () in
+        Camlify.Music_data.change_song_artist song_name artist in
+        (step_r q)
+
+    | ChangeSongAlbum song_name ->
+        let _ = print_endline "What is the name of the album?"in 
+        let _ = print "> " in
+        let album = read_line () in
+        change_song_album song_name album in
+        (step_r q)
+
+    | ChangeSongYear (song_name, year) ->
+      let _ = change_song_year song_name year
+      (step_r q)
+
+    | AddSongTag song_name -> 
+        let _ = print_endline "What is a new tag?"in print "> " in
+        let tag = read_line () in
+        add_song_tag song_name tag in
+        (step_r q)
+
+    | RemoveSongTag song_name -> 
+        let _ = print_endline "What is the tag?"in print "> "in
+        let tag = read_line () in
+        remove_song_tag song_name tag in
+        (step_r q)
+        
     | CreatePlayList pl_name ->
       let res = (Camlify.Queue.make_new_playlist pl_name q) in
       begin
@@ -116,8 +183,9 @@ let help_message : string =
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "…");
-        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
-        let _ = Camlify.Streamer.play file_name in  
+        let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
+        Camlify.Streamer.stop pipeline;
+        Camlify.Streamer.play pipeline file_name;
         (step_r new_q)
       end
     | PreviousSong ->
@@ -130,8 +198,8 @@ let help_message : string =
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
         print_endline ("Playing song " ^ new_song_name ^ "…");
-        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
-        let _ = Camlify.Streamer.play file_name in  
+        let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
+        Camlify.Streamer.play pipeline file_name;
         (step_r new_q)
       end
       | AddSong song_name ->
@@ -156,7 +224,85 @@ let help_message : string =
          print_endline (song_name ^ " removed from current playlist.");
          (step_r new_q)
         end
-      | _ -> failwith "TODO Add song, remove song"
+     | PlayArtist ->
+      begin
+      print_endline ("Names of all artists in this player :")
+      print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_artist Camlify.Music_data.all_songs))
+      print_endline "Select artist"; print "> ";
+      let artist = read_line ();
+      let res = (Camlify.Queue.select_playlist_by_artist artist q) in 
+        match res with
+        |Illegal ->
+          print_endline ("Artist named " ^artist^ " doesn't exist");
+          (step_r q)
+        |Legal new_q ->
+          print_endline("Playing songs by "^artist^"...");
+          (step r new_q)
+      (step_r q)
+      end
+      | PlayAlbum ->
+        begin
+        print_endline ("Names of all albums in this player :")
+        print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_album Camlify.Music_data.all_songs))
+        print_endline "Select album"; print "> ";
+        let album = read_line ();
+        let res = (Camlify.Queue.select_playlist_by_album album q) in 
+          match res with
+          |Illegal ->
+            print_endline ("Album named " ^album^ " doesn't exist");
+            (step_r q)
+          |Legal new_q ->
+            print_endline("Playing songs in "^album^"...");
+            (step r new_q)
+        (step_r q)
+        end
+      |PlayYear ->
+        begin
+        print_endline ("List of years of songs in this player :")
+        print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_year Camlify.Music_data.all_songs))
+        print_endline "Select year"; print "> ";
+        let year = read_line ();
+        let res = (Camlify.Queue.select_playlist_by_year (int_of_string year) q) in 
+          match res with
+          |Illegal ->
+            print_endline ("Songs in year " ^year^ " doesn't exist");
+            (step_r q)
+          |Legal new_q ->
+            print_endline("Playing songs from "^year^"...");
+            (step r new_q)
+        (step_r q)
+        end
+      |PlayLiked ->
+        begin
+        let res = (Camlify.Queue.select_playlist_by_liked q) in 
+          match res with
+          |Illegal ->
+            print_endline ("No songs are liked");
+            (step_r q)
+          |Legal new_q ->
+            print_endline("Playing liked songs...");
+            (step r new_q)
+        (step_r q)
+        end
+      
+      |PlayTag ->
+        begin
+        print_endline ("Names of all tags in this player :")
+        print_endline (String.concat ", " (remove_dup (List.flatten (List.map Camlify.Music_data.read_tags Camlify.Music_data.all_songs))))
+        print_endline "Select tag"; print "> ";
+        let tag = read_line ();
+        let res = (Camlify.Queue.select_playlist_by_tag tag q) in 
+          match res with
+          |Illegal ->
+            print_endline ("Tag named " ^tag^ " doesn't exist");
+            (step_r q)
+          |Legal new_q ->
+            print_endline("Playing songs with tag "^tag^"...");
+            (step r new_q)
+        (step_r q)
+        end
+
+      | _ -> failwith "TODO?"
   in
   step_r q
 
@@ -176,7 +322,7 @@ let main () =
   (* ANSITerminal.print_string [ ANSITerminal.red ] *)
   print_endline  "\n\nWelcome to Camlify \n";
   let playlist = choose_playlist() in
-  let _ = print_endline ("Opening playlist " ^ playlist ^ "...") in
+  print_endline ("Opening playlist " ^ playlist ^ "...");
   let q = Camlify.Queue.init_state playlist in
 
   step q
