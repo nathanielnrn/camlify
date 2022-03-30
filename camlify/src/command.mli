@@ -10,6 +10,7 @@ exception Malformed
 type command = 
     | Play of song_name
     | Pause
+    | Stop
     | PlayIndex of index
     | CurrentSongName
     | CurrentSongIndex
@@ -21,12 +22,17 @@ type command =
     | PreviousSong
     | AddSong of song_name
     | RemoveSong of song_name
-    | ChangeSongLike of (song_name, bool)
+    | ChangeSongLike of song_name* bool
     | ChangeSongArtist of song_name
     | ChangeSongAlbum of song_name
-    | ChangeSongYear of (song_name, year)
+    | ChangeSongYear of song_name* int
     | AddSongTag of song_name
     | RemoveSongTag of song_name
+    | PlayArtist
+    | PlayAlbum
+    | PlayYear
+    | PlayLiked
+    | PlayTag
     | Help
     | Quit
     | Idle

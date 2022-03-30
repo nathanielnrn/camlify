@@ -6,7 +6,8 @@
       "mp3 file": "all_falls_down.mp3",
       "artist": null,
       "album": null,
-      "year": null
+      "year": null,
+      "tags": []
     },
     {
       "name": "Break My Heart",
@@ -14,7 +15,11 @@
       "mp3 file": "break_my_heart.mp3",
       "artist": null,
       "album": null,
-      "year": null
+      "year": null,
+      "tags": [
+        "sad",
+        "banger"
+      ]
     },
     {
       "name": "Reptilia",
@@ -22,7 +27,8 @@
       "mp3 file": "reptilia.mp3",
       "artist": null,
       "album": null,
-      "year": null
+      "year": null,
+      "tags": []
     },
     {
       "name": "Sample 15s",
@@ -30,7 +36,8 @@
       "mp3 file": "sample-15s.mp3",
       "artist": null,
       "album": null,
-      "year": null
+      "year": null,
+      "tags": []
     },
     {
       "name": "fly me to the moon",
@@ -38,7 +45,8 @@
       "mp3 file": "yeet",
       "artist": null,
       "album": null,
-      "year": null
+      "year": null,
+      "tags": []
     },
     {
       "name": "fly me to the caml",
@@ -46,7 +54,8 @@
       "mp3 file": "yeet",
       "artist": null,
       "album": null,
-      "year": null
+      "year": null,
+      "tags": []
     }
   ],
   "playlists": [
@@ -59,7 +68,8 @@
           "mp3 file": "yeet",
           "artist": null,
           "album": null,
-          "year": null
+          "year": null,
+          "tags": []
         },
         {
           "name": "fly me to the caml",
@@ -67,7 +77,8 @@
           "mp3 file": "yeet",
           "artist": null,
           "album": null,
-          "year": null
+          "year": null,
+          "tags": []
         }
       ]
     },
@@ -80,7 +91,8 @@
           "mp3 file": "all_falls_down.mp3",
           "artist": null,
           "album": null,
-          "year": null
+          "year": null,
+          "tags": []
         },
         {
           "name": "Break My Heart",
@@ -88,7 +100,11 @@
           "mp3 file": "break_my_heart.mp3",
           "artist": null,
           "album": null,
-          "year": null
+          "year": null,
+          "tags": [
+            "sad",
+            "banger"
+          ]
         },
         {
           "name": "Reptilia",
@@ -96,7 +112,8 @@
           "mp3 file": "reptilia.mp3",
           "artist": null,
           "album": null,
-          "year": null
+          "year": null,
+          "tags": []
         },
         {
           "name": "Sample 15s",
@@ -104,7 +121,8 @@
           "mp3 file": "sample_15s.mp3",
           "artist": null,
           "album": null,
-          "year": null
+          "year": null,
+          "tags": []
         }
       ]
     }

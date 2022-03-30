@@ -7,7 +7,7 @@ open Camlify.Command
 (* TODO: update with interface to client using terminal,
  * see a2 bin/main.ml for direction *)
 
- let pipeline = Camlify.Streamer.get_pipeline
+let pipeline = Camlify.Streamer.get_pipeline
 let help_message : string = 
   "List of commands (note that the commands only run after the song ends):\n \
   help : print this message\n \
@@ -62,22 +62,30 @@ let remove_dup lst = List.sort_uniq compare lst
     | Quit -> print_endline "Bye!"; Stdlib.exit 0;
 
     | Play song_name -> 
-
       let res = Camlify.Queue.play_song_by_name song_name q in
       begin
       match res with
       | Illegal -> 
         print_endline ("There is no such song as " ^ song_name); 
         (step_r q)
-
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
-        let file_name = Camlify.Queue.song_name_to_mp3 song_name in
-        (Thread.create (Camlify.Streamer.play pipeline) file_name);
+        let file_name = Camlify.Music_data.read_song_mp3_file song_name in
+        ignore((Thread.create (Camlify.Streamer.play pipeline) file_name));
         (step_r new_q)
       end
 
-    | Pause -> (step_r q) (** TODO *)
+    | Pause ->
+      let song_name = Camlify.Queue.current_song_name q in
+      print_endline ("Pausing " ^ song_name ^ "...");
+      (Camlify.Streamer.pause pipeline);
+      (step_r q)
+
+    | Stop ->
+      let song_name = Camlify.Queue.current_song_name q in
+      print_endline ("Stopping " ^ song_name ^ "...");
+      Camlify.Streamer.stop pipeline;
+      (step_r q)
 
     | PlayIndex idx ->
       let res = Camlify.Queue.play_song_by_idx idx q in
@@ -89,7 +97,7 @@ let remove_dup lst = List.sort_uniq compare lst
       | Legal new_q ->
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
-        let file_name = Camlify.Queue.song_name_to_mp3 new_song_name in
+        let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
         Camlify.Streamer.play pipeline file_name;
         (step_r new_q)
       end
@@ -119,50 +127,43 @@ let remove_dup lst = List.sort_uniq compare lst
         (step_r new_q)
       end
 
-    | ChangeSongLike song_name, bool -> 
-      begin
-      Camlify.Music_data.change_song_liked song_name (to_string bool);
+    | ChangeSongLike ((song_name:playlist_name), (liked:bool)) -> 
+      Camlify.Music_data.change_song_liked song_name (liked);
       (step_r q)
-      end
 
-    | ChangeSongArtist song_name ->
-      begin
-        print_endline "What is the name of the artist?"; print "> ";
-        let artist = read_line ();
+    | ChangeSongArtist song_name ->(
+        print_endline "What is the name of the artist?";
+        print_string "> ";
+        let artist = read_line () in
         Camlify.Music_data.change_song_artist song_name artist;
         (step_r q)
-      end
-
+    )
     | ChangeSongAlbum song_name ->
-      begin
-        print_endline "What is the name of the album?"; print "> ";
-        let album = read_line ();
+        print_endline "What is the name of the album?";
+        print_string "> ";
+        let album = read_line () in
         change_song_album song_name album;
         (step_r q)
-      end
 
     | ChangeSongYear (song_name, year) ->
-      begin
-      change_song_year song_name year;
+      Camlify.Music_data.change_song_year song_name year;
       (step_r q)
-      end
 
     | AddSongTag song_name -> 
-      begin
-        print_endline "What is a new tag?"; print "> ";
-        let tag = read_line ();
-        add_song_tag song_name tag;
+        print_endline "What is a new tag?";
+        print_string "> ";
+        let tag = read_line () in
+        Camlify.Music_data.add_song_tag song_name tag;
         (step_r q)
-      end
 
     | RemoveSongTag song_name -> 
-      begin
-        print_endline "What is the tag?"; print "> ";
-        let tag = read_line ();
-        remove_song_tag song_name tag;
+        print_endline "What is the tag?";
+        print_string "> ";
+        let tag = read_line () in
+        Camlify.Music_data.remove_song_tag song_name tag;
         (step_r q)
-      end
 
+      
     | CreatePlayList pl_name ->
       let res = (Camlify.Queue.make_new_playlist pl_name q) in
       begin
@@ -225,12 +226,12 @@ let remove_dup lst = List.sort_uniq compare lst
          print_endline (song_name ^ " removed from current playlist.");
          (step_r new_q)
         end
-     |PlayArtist ->
+     | PlayArtist ->
       begin
-      print_endline ("Names of all artists in this player :")
-      print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_artist Camlify.Music_data.all_songs))
-      print_endline "Select artist"; print "> ";
-      let artist = read_line ();
+      print_endline ("Names of all artists in this player :");
+      print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_artist Camlify.Music_data.all_songs));
+      print_endline "Select artist"; print_string "> ";
+      let artist = read_line () in
       let res = (Camlify.Queue.select_playlist_by_artist artist q) in 
         match res with
         |Illegal ->
@@ -238,15 +239,16 @@ let remove_dup lst = List.sort_uniq compare lst
           (step_r q)
         |Legal new_q ->
           print_endline("Playing songs by "^artist^"...");
-          (step r new_q)
+          ignore((step_r new_q));
       (step_r q)
       end
-      |PlayAlbum ->
+      | PlayAlbum ->
         begin
-        print_endline ("Names of all albums in this player :")
-        print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_album Camlify.Music_data.all_songs))
-        print_endline "Select album"; print "> ";
-        let album = read_line ();
+        print_endline ("Names of all albums in this player :");
+        print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_album Camlify.Music_data.all_songs));
+        print_endline "Select album"; 
+        print_string "> ";
+        let album = read_line () in
         let res = (Camlify.Queue.select_playlist_by_album album q) in 
           match res with
           |Illegal ->
@@ -254,15 +256,15 @@ let remove_dup lst = List.sort_uniq compare lst
             (step_r q)
           |Legal new_q ->
             print_endline("Playing songs in "^album^"...");
-            (step r new_q)
+            ignore((step_r new_q));
         (step_r q)
         end
       |PlayYear ->
         begin
-        print_endline ("List of years of songs in this player :")
-        print_endline (String.concat ", " (List.map Camlify.Music_data.read_song_year Camlify.Music_data.all_songs))
-        print_endline "Select year"; print "> ";
-        let year = read_line ();
+        print_endline ("List of years of songs in this player :");
+        print_endline (String.concat ", " (List.map string_of_int (List.map Camlify.Music_data.read_song_year Camlify.Music_data.all_songs)));
+        print_endline "Select year"; print_string "> ";
+        let year = read_line () in
         let res = (Camlify.Queue.select_playlist_by_year (int_of_string year) q) in 
           match res with
           |Illegal ->
@@ -270,7 +272,7 @@ let remove_dup lst = List.sort_uniq compare lst
             (step_r q)
           |Legal new_q ->
             print_endline("Playing songs from "^year^"...");
-            (step r new_q)
+            ignore((step_r new_q));
         (step_r q)
         end
       |PlayLiked ->
@@ -282,16 +284,16 @@ let remove_dup lst = List.sort_uniq compare lst
             (step_r q)
           |Legal new_q ->
             print_endline("Playing liked songs...");
-            (step r new_q)
+            ignore((step_r new_q));
         (step_r q)
         end
       
       |PlayTag ->
         begin
-        print_endline ("Names of all tags in this player :")
-        print_endline (String.concat ", " (remove_dup (List.flatten (List.map Camlify.Music_data.read_tags Camlify.Music_data.all_songs))))
-        print_endline "Select tag"; print "> ";
-        let tag = read_line ();
+        print_endline ("Names of all tags in this player :");
+        print_endline (String.concat ", " (remove_dup (List.flatten (List.map Camlify.Music_data.read_tags Camlify.Music_data.all_songs))));
+        print_endline "Select tag"; print_string "> ";
+        let tag = read_line ()in
         let res = (Camlify.Queue.select_playlist_by_tag tag q) in 
           match res with
           |Illegal ->
@@ -299,11 +301,11 @@ let remove_dup lst = List.sort_uniq compare lst
             (step_r q)
           |Legal new_q ->
             print_endline("Playing songs with tag "^tag^"...");
-            (step r new_q)
+            ignore((step_r new_q));
         (step_r q)
         end
 
-      | _ -> failwith "TODO Add song, remove song"
+      | _ -> failwith "TODO?"
   in
   step_r q
 
