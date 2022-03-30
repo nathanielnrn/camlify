@@ -22,10 +22,10 @@ type command =
     | PreviousSong
     | AddSong of song_name
     | RemoveSong of song_name
-    | ChangeSongLike of (song_name* bool)
+    | ChangeSongLike of song_name* bool
     | ChangeSongArtist of song_name
     | ChangeSongAlbum of song_name
-    | ChangeSongYear of (song_name* int)
+    | ChangeSongYear of song_name* int
     | AddSongTag of song_name
     | RemoveSongTag of song_name
     | PlayArtist
