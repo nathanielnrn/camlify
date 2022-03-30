@@ -196,7 +196,7 @@ let read_song_year song =
             | Some i -> i
             | None -> raise (UnknownInformation song)
 
-let read_song_tags song = 
+let read_tags song = 
   let read_song song = let j = Yojson.Basic.from_file file in
     let iface = from_json j in
       let rec song_tags song  (songlst : song list) = match songlst with
@@ -250,6 +250,8 @@ let change_song_liked song like = modify_song_and_write (fun sng -> {sng with li
     
 
 let change_song_artist song artist = modify_song_and_write (fun sng -> {sng with artist = Some artist}) song
+
+let change_song_album song album = modify_song_and_write (fun sng -> {sng with album = Some album}) song
 
 let change_song_year song year = modify_song_and_write (fun sng -> {sng with year = Some year}) song
 

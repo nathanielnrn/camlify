@@ -140,7 +140,7 @@ let remove_dup lst = List.sort_uniq compare lst
         (step_r q)
 
     | ChangeSongAlbum song_name ->
-        let _ = print_endline "What is the name of the album?"in 
+        let _ = print_endline "What is the name of the album?" in 
         let _ = print "> " in
         let album = read_line () in
         change_song_album song_name album in

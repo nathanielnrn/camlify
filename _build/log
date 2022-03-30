@@ -3,7 +3,7 @@
 # Shared cache: disabled
 # Workspace root: /Users/bryanthwang/Desktop/3110final/camlify
 # Auto-detected concurrency: 16
-$ /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -config > /var/folders/g4/jz069gkj7z744kn5rj0rtqm80000gn/T/dune_e796b3_output
+$ /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlc.opt -config > /var/folders/g4/jz069gkj7z744kn5rj0rtqm80000gn/T/dune_ded426_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -121,15 +121,4 @@ $ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamldep.opt 
 > 142 |     | ChangeSongAlbum song_name ->
 >           ^
 > Error: Syntax error
-[2]
-$ (cd _build/default && /Users/bryanthwang/.opam/cs3110-2021fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66-67 -warn-error -a+31 -g -I camlify/src/.camlify.objs/byte -I camlify/src/.camlify.objs/native -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/biniou -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/easy-format -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/gstreamer -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/ocaml/threads -I /Users/bryanthwang/.opam/cs3110-2021fa/lib/yojson -intf-suffix .ml -no-alias-deps -opaque -open Camlify -o camlify/src/.camlify.objs/native/camlify__Music_data.cmx -c -impl camlify/src/music_data.ml)
-> File "camlify/src/music_data.ml", line 1:
-> Error: The implementation camlify/src/music_data.ml
->        does not match the interface camlify/src/.camlify.objs/byte/camlify__Music_data.cmi:
->        The value `change_song_album' is required but not provided
->        File "camlify/src/music_data.mli", line 83, characters 1-49:
->          Expected declaration
->        The value `read_tags' is required but not provided
->        File "camlify/src/music_data.mli", line 54, characters 1-38:
->          Expected declaration
 [2]
