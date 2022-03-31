@@ -153,8 +153,8 @@ let read_song_mp3_file song = let j = Yojson.Basic.from_file file in
   let iface = from_json j in
       let rec song_mp3 song  (songlst : song list) = match songlst with
     | [] -> raise (UnknownSong song)
-    | h::t when h.name = song-> h.mp3_file
-    | h::t -> song_mp3 song  songlst in
+    | h::t when h.name = song -> h.mp3_file
+    | h::t -> song_mp3 song  t in
     song_mp3 song iface.all_songs
   
 let read_song_artist song = 
