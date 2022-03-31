@@ -136,9 +136,9 @@ let all_songs_objects : song list =
 
 let rec song_name_to_mp3_file song_name (lst:song list)=
   match lst with 
-  |[] -> ""
-  |h::t -> if h.name = song_name then h.mp3_file 
-  else song_name_to_mp3_file song_name t
+  |[] -> raise (UnknownSong song_name)
+  |h::t when h.name = song_name -> h.mp3_file 
+  |h::t -> song_name_to_mp3_file song_name t
 
 let read_song_liked song = let j = Yojson.Basic.from_file file in
   let iface = from_json j in
@@ -168,8 +168,6 @@ let read_song_artist song =
             match read_song song with 
           | Some s -> s
           | None -> raise (UnknownInformation song)
-
-            
 
 
 let read_song_album song = 
