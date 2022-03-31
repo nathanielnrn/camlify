@@ -212,10 +212,11 @@ let remove_dup lst = List.sort_uniq compare lst
         print_endline ("There is no song named " ^ song_name);
          (step_r q)
         | Legal new_q ->
+         Camlify.Music_data.add_song_to_playlist (Camlify.Queue.current_playlist_name new_q) song_name;
          print_endline (song_name ^ " added to current playlist.");
          (step_r new_q)
         end
-      | RemoveSong song_name ->
+      | RemoveSong (song_name:string) ->
         let res = Camlify.Queue.remove_song_from_playlist song_name q in
         begin
         match res with
@@ -223,6 +224,7 @@ let remove_dup lst = List.sort_uniq compare lst
         print_endline ("There is no song named " ^ song_name);
          (step_r q)
         | Legal new_q ->
+         Camlify.Music_data.delete_song_from_playlist ((Camlify.Queue.current_playlist_name new_q):string) (song_name:string);
          print_endline (song_name ^ " removed from current playlist.");
          (step_r new_q)
         end

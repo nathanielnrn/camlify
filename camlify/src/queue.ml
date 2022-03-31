@@ -27,6 +27,8 @@ let init_state selected_playlist=
 
 let current_song_name st = st.current_song_name
 
+let current_playlist_name st = st.current_playlist_name
+
 let current_song_idx st = st.current_song_idx
 
 let current_playlist st = st.current_playlist
