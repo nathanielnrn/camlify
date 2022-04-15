@@ -48,7 +48,7 @@ let parse (str : string) : command =
         else if String.equal hd "p" then
             if List.length tl == 0 then raise Malformed
             else (Play (String.concat " " tl))
-        else if String.equal hd "pp" then
+        else if String.equal hd "pause" then
             if List.length tl != 0 then raise Malformed 
             else Pause
         else if String.equal hd "s" then

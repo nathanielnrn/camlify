@@ -13,7 +13,7 @@ let help_message : string =
   help : print this message\n \
   quit : turn off this program\n \
   p [filename.mp3] : plays mp3 file with given filename\n \
-  pp : pause currently played mp3 file\n \
+  pause : pause currently played mp3 file\n \
   pi [index] : plays mp3 file with given index in current playlist\n \
   pl : displays list of songs in current playlist\n \
   pls : displays list of all playlists\n \
@@ -98,7 +98,7 @@ let remove_dup lst = List.sort_uniq compare lst
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
         let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
-        Camlify.Streamer.play pipeline file_name;
+        ignore((Thread.create (Camlify.Streamer.play pipeline) file_name));
         (step_r new_q)
       end
 
@@ -175,6 +175,7 @@ let remove_dup lst = List.sort_uniq compare lst
         print_endline ("Create new playlist " ^ pl_name ^ "…");
         (step_r new_q)
       end
+
     | NextSong ->
       let res = Camlify.Queue.next_song q in
       begin
@@ -187,9 +188,10 @@ let remove_dup lst = List.sort_uniq compare lst
       print_endline ("Playing song " ^ new_song_name ^ "…");
         let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
         Camlify.Streamer.stop pipeline;
-        Camlify.Streamer.play pipeline file_name;
+        ignore(Thread.create (Camlify.Streamer.play pipeline) file_name);
         (step_r new_q)
       end
+
     | PreviousSong ->
       let res = Camlify.Queue.prev_song q in
       begin
@@ -201,9 +203,10 @@ let remove_dup lst = List.sort_uniq compare lst
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
         print_endline ("Playing song " ^ new_song_name ^ "…");
         let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
-        Camlify.Streamer.play pipeline file_name;
+        ignore(Thread.create (Camlify.Streamer.play pipeline) file_name);
         (step_r new_q)
       end
+
       | AddSong song_name ->
         let res = Camlify.Queue.add_song_to_playlist song_name q in
         begin
@@ -216,6 +219,7 @@ let remove_dup lst = List.sort_uniq compare lst
          print_endline (song_name ^ " added to current playlist.");
          (step_r new_q)
         end
+
       | RemoveSong (song_name:string) ->
         let res = Camlify.Queue.remove_song_from_playlist song_name q in
         begin
@@ -228,6 +232,7 @@ let remove_dup lst = List.sort_uniq compare lst
          print_endline (song_name ^ " removed from current playlist.");
          (step_r new_q)
         end
+
      | PlayArtist ->
       begin
       print_endline ("Names of all artists in this player :");
@@ -244,6 +249,7 @@ let remove_dup lst = List.sort_uniq compare lst
           ignore((step_r new_q));
       (step_r q)
       end
+
       | PlayAlbum ->
         begin
         print_endline ("Names of all albums in this player :");
@@ -261,6 +267,7 @@ let remove_dup lst = List.sort_uniq compare lst
             ignore((step_r new_q));
         (step_r q)
         end
+
       |PlayYear ->
         begin
         print_endline ("List of years of songs in this player :");
@@ -277,6 +284,7 @@ let remove_dup lst = List.sort_uniq compare lst
             ignore((step_r new_q));
         (step_r q)
         end
+
       |PlayLiked ->
         begin
         let res = (Camlify.Queue.select_playlist_by_liked q) in 
@@ -314,7 +322,7 @@ let remove_dup lst = List.sort_uniq compare lst
 let rec choose_playlist () : string = 
   print_endline "Choose Playlist:";
   print_endline ((String.concat "\n" Camlify.Music_data.list_of_playlist) ^ "\n");
-  print_string "> ";
+  print_string  "> ";
   let playlist = match read_line () with
     | exception End_of_file -> let _ = print_endline "Empty input :(" in choose_playlist ()
     | some_str -> 
