@@ -43,17 +43,13 @@ let rec reduce_filepath s n =
 
 
 let play pipeline file_name =
-  (* if !current_song = file_name then
-    ignore (Element.set_state (get !pipeline) State_playing)
-
-  else *)
-    begin
-
+match Element.get_state (get !pipeline) with
+|(_, Element.State_paused, _) -> ignore(Element.set_state (get !pipeline) Element.State_playing);
+| _ ->
+  begin
   (*Create file path code*)
   (*Replaces spaces with %20*)
   let file_path = data_dir_uri ^ file_name |> String.split_on_char ' ' |> String.concat "%20" in
-  
-  
   (*GStreamer initialization and running code
   See Gstreamer tutorials for explanations. Important one is pipeline*)
   
@@ -65,7 +61,6 @@ let play pipeline file_name =
   (* current_song := file_name; *)
 
   ignore (Element.set_state (get !pipeline) State_playing);
-
 
   let bus = Bus.of_element (get !pipeline) in
     

@@ -13,7 +13,7 @@ let help_message : string =
   help : print this message\n \
   quit : turn off this program\n \
   p [filename.mp3] : plays mp3 file with given filename\n \
-  pp : pause currently played mp3 file\n \
+  pause : pause currently played mp3 file\n \
   pi [index] : plays mp3 file with given index in current playlist\n \
   pl : displays list of songs in current playlist\n \
   pls : displays list of all playlists\n \
