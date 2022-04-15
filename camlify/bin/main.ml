@@ -175,6 +175,7 @@ let remove_dup lst = List.sort_uniq compare lst
         print_endline ("Create new playlist " ^ pl_name ^ "…");
         (step_r new_q)
       end
+
     | NextSong ->
       let res = Camlify.Queue.next_song q in
       begin
@@ -190,6 +191,7 @@ let remove_dup lst = List.sort_uniq compare lst
         ignore(Thread.create (Camlify.Streamer.play pipeline) file_name);
         (step_r new_q)
       end
+
     | PreviousSong ->
       let res = Camlify.Queue.prev_song q in
       begin
@@ -204,6 +206,7 @@ let remove_dup lst = List.sort_uniq compare lst
         ignore(Thread.create (Camlify.Streamer.play pipeline) file_name);
         (step_r new_q)
       end
+
       | AddSong song_name ->
         let res = Camlify.Queue.add_song_to_playlist song_name q in
         begin
@@ -216,6 +219,7 @@ let remove_dup lst = List.sort_uniq compare lst
          print_endline (song_name ^ " added to current playlist.");
          (step_r new_q)
         end
+
       | RemoveSong (song_name:string) ->
         let res = Camlify.Queue.remove_song_from_playlist song_name q in
         begin
@@ -228,6 +232,7 @@ let remove_dup lst = List.sort_uniq compare lst
          print_endline (song_name ^ " removed from current playlist.");
          (step_r new_q)
         end
+
      | PlayArtist ->
       begin
       print_endline ("Names of all artists in this player :");
@@ -244,6 +249,7 @@ let remove_dup lst = List.sort_uniq compare lst
           ignore((step_r new_q));
       (step_r q)
       end
+
       | PlayAlbum ->
         begin
         print_endline ("Names of all albums in this player :");
@@ -261,6 +267,7 @@ let remove_dup lst = List.sort_uniq compare lst
             ignore((step_r new_q));
         (step_r q)
         end
+
       |PlayYear ->
         begin
         print_endline ("List of years of songs in this player :");
@@ -277,6 +284,7 @@ let remove_dup lst = List.sort_uniq compare lst
             ignore((step_r new_q));
         (step_r q)
         end
+        
       |PlayLiked ->
         begin
         let res = (Camlify.Queue.select_playlist_by_liked q) in 
