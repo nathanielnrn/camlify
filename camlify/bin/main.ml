@@ -284,7 +284,7 @@ let remove_dup lst = List.sort_uniq compare lst
             ignore((step_r new_q));
         (step_r q)
         end
-        
+
       |PlayLiked ->
         begin
         let res = (Camlify.Queue.select_playlist_by_liked q) in 
@@ -322,7 +322,7 @@ let remove_dup lst = List.sort_uniq compare lst
 let rec choose_playlist () : string = 
   print_endline "Choose Playlist:";
   print_endline ((String.concat "\n" Camlify.Music_data.list_of_playlist) ^ "\n");
-  print_string "> ";
+  print_string  "> ";
   let playlist = match read_line () with
     | exception End_of_file -> let _ = print_endline "Empty input :(" in choose_playlist ()
     | some_str -> 

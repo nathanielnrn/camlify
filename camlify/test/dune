@@ -1,2 +1,3 @@
-(test
- (name camlify))
+(executable
+ (name main)
+ (libraries Camlify ounit2))
