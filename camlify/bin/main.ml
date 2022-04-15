@@ -98,7 +98,7 @@ let remove_dup lst = List.sort_uniq compare lst
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "...");
         let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
-        Camlify.Streamer.play pipeline file_name;
+        ignore((Thread.create (Camlify.Streamer.play pipeline) file_name));
         (step_r new_q)
       end
 
@@ -187,7 +187,7 @@ let remove_dup lst = List.sort_uniq compare lst
       print_endline ("Playing song " ^ new_song_name ^ "…");
         let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
         Camlify.Streamer.stop pipeline;
-        Camlify.Streamer.play pipeline file_name;
+        ignore(Thread.create (Camlify.Streamer.play pipeline) file_name);
         (step_r new_q)
       end
     | PreviousSong ->
@@ -201,7 +201,7 @@ let remove_dup lst = List.sort_uniq compare lst
         let new_song_name : string = Camlify.Queue.current_song_name new_q in
         print_endline ("Playing song " ^ new_song_name ^ "…");
         let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
-        Camlify.Streamer.play pipeline file_name;
+        ignore(Thread.create (Camlify.Streamer.play pipeline) file_name);
         (step_r new_q)
       end
       | AddSong song_name ->
