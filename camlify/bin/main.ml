@@ -70,6 +70,8 @@ let remove_dup lst = List.sort_uniq compare lst
         (step_r q)
       | Legal new_q -> 
         print_endline ("Playing " ^ song_name ^ "...");
+        (* TODO: should this logic be here? Might be better in either in queue or streamer? Verdict: should probably add a string ref in streamer*)
+        if song_name = Camlify.Queue.current_song_name q then () else Camlify.Streamer.stop pipeline;
         let file_name = Camlify.Music_data.read_song_mp3_file song_name in
         ignore((Thread.create (Camlify.Streamer.play pipeline) file_name));
         (step_r new_q)

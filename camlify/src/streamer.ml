@@ -41,33 +41,37 @@ let rec reduce_filepath s n =
     ref (Some (Pipeline.create "audio_pipeline"))
 
 
+  (*Helper function that creates a new streamer of ifle name, only should be
+      called if pipeline is not paused*)
+  let play_new pipeline file_name = 
+    let file_path = data_dir_uri ^ file_name |> String.split_on_char ' ' |> String.concat "%20" in
+    (*GStreamer initialization and running code
+    See Gstreamer tutorials for explanations. Important one is pipeline*)
+    
+    (*Replace uri=file:../data/samples-15s.mp3*)
+    (*linux: file:///home/nate/cs3110/camlify/camlify/data/sample-15s.mp3*)
+    (*windows: file:///home/navarro/cs3110/camlify/camlify/data/sample-15s.mp3*)
+
+    pipeline := Some (Pipeline.parse_launch ("playbin uri=file://" ^ file_path));
+    (* current_song := file_name; *)
+
+    ignore (Element.set_state (get !pipeline) State_playing);
+
+    let bus = Bus.of_element (get !pipeline) in
+      
+    match Bus.timed_pop_filtered bus [Bus.(`End_of_stream); Bus.(`Error)] with
+    |{payload=Bus.(`Error s); _} -> raise (Error s)
+    |_ -> ()
 
 let play pipeline file_name =
-match Element.get_state (get !pipeline) with
-|(_, Element.State_paused, _) -> ignore(Element.set_state (get !pipeline) Element.State_playing);
-| _ ->
-  begin
-  (*Create file path code*)
-  (*Replaces spaces with %20*)
-  let file_path = data_dir_uri ^ file_name |> String.split_on_char ' ' |> String.concat "%20" in
-  (*GStreamer initialization and running code
-  See Gstreamer tutorials for explanations. Important one is pipeline*)
-  
-  (*Replace uri=file:../data/samples-15s.mp3*)
-  (*linux: file:///home/nate/cs3110/camlify/camlify/data/sample-15s.mp3*)
-  (*windows: file:///home/navarro/cs3110/camlify/camlify/data/sample-15s.mp3*)
-
-  pipeline := Some (Pipeline.parse_launch ("playbin uri=file://" ^ file_path));
-  (* current_song := file_name; *)
-
-  ignore (Element.set_state (get !pipeline) State_playing);
-
-  let bus = Bus.of_element (get !pipeline) in
-    
-  match Bus.timed_pop_filtered bus [Bus.(`End_of_stream); Bus.(`Error)] with
-  |{payload=Bus.(`Error s); _} -> raise (Error s)
-  |_ -> ()
-end
+  match !pipeline with
+  |None -> play_new pipeline file_name
+  |Some pl ->
+    begin
+      match Element.get_state pl with
+      |(_, Element.State_paused, _) -> ignore(Element.set_state pl Element.State_playing);
+      | _ -> play_new pipeline file_name
+    end
 
 
 
@@ -78,9 +82,10 @@ end
     
     
     (**Todo: should throw an exception if pipeline not instantiated (maybe)?*)
-    let stop pipeline = 
-      if !pipeline = None then (print_endline "No current pipeline_instance"; failwith "shouldn't happen for now")
-      else ignore (Element.set_state (get !pipeline) Element.State_null);
+    let stop pipeline =
+      match !pipeline with
+      | Some pl -> ignore (Element.set_state pl Element.State_null);
+      | _ -> ();
       pipeline := None
 
   
