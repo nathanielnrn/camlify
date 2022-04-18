@@ -51,9 +51,9 @@ let help_message : string =
 
 let remove_dup lst = List.sort_uniq compare lst
 
-(* add [filename.mp3] : add a song named filename.mp3 in current
-   playlist\n \ rm [filename.mp3 ]: remove song filename.mp3 in current
-   playlist *)
+(*add [filename.mp3] : add a song named filename.mp3 in current
+  playlist\n \ rm [filename.mp3 ]: remove song filename.mp3 in current
+  playlist*)
 (* new_pl [playlist name] : create new playlist with given name\n \ *)
 let step (q : Camlify.Queue.t) =
   let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
@@ -88,6 +88,11 @@ let step (q : Camlify.Queue.t) =
             step_r q
         | Legal new_q ->
             print_endline ("Playing " ^ song_name ^ "...");
+            (* TODO: should this logic be here? Might be better in
+               either in queue or streamer? Verdict: should probably add
+               a string ref in streamer*)
+            if song_name = Camlify.Queue.current_song_name q then ()
+            else Camlify.Streamer.stop pipeline;
             let file_name =
               Camlify.Music_data.read_song_mp3_file song_name
             in
