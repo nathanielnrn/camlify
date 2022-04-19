@@ -61,16 +61,16 @@ let remove_dup lst = List.sort_uniq compare lst
 
     | Quit -> print_endline "Bye!"; Stdlib.exit 0;
 
-    | Play song_name -> 
-      let res = Camlify.Queue.play_song_by_name song_name q in
+    | Play song_name -> print_endline "playing song";
+      let res = print_endline "res!!!"; Camlify.Queue.play_song_by_name song_name q in
       begin
       match res with
       | Illegal -> 
         print_endline ("There is no such song as " ^ song_name); 
         (step_r q)
-      | Legal new_q -> 
+      | Legal new_q -> print_endline "Legal!";
         print_endline ("Playing " ^ song_name ^ "...");
-        let file_name = Camlify.Music_data.read_song_mp3_file song_name in
+        let file_name = print_endline "filename??"; Camlify.Music_data.read_song_mp3_file song_name in
         ignore((Thread.create (Camlify.Streamer.play pipeline) file_name));
         (step_r new_q)
       end
@@ -187,7 +187,7 @@ let remove_dup lst = List.sort_uniq compare lst
       print_endline ("Playing song " ^ new_song_name ^ "…");
         let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
         Camlify.Streamer.stop pipeline;
-        Camlify.Streamer.play pipeline file_name;
+        ignore((Thread.create (Camlify.Streamer.play pipeline) file_name));
         (step_r new_q)
       end
     | PreviousSong ->

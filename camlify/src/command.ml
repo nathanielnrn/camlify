@@ -37,7 +37,7 @@ type command =
     | Quit
     | Idle
 
-let parse (str : string) : command = 
+let parse (str : string) : command = print_endline "parsing";
     if String.length str = 0 then raise Empty else
     match (String.split_on_char ' ' str) with
     | [] -> raise Malformed
@@ -47,7 +47,7 @@ let parse (str : string) : command =
             else Quit
         else if String.equal hd "p" then
             if List.length tl == 0 then raise Malformed
-            else (Play (String.concat " " tl))
+            else (print_endline "hi1"; Play (String.concat " " tl))
         else if String.equal hd "pp" then
             if List.length tl != 0 then raise Malformed 
             else Pause

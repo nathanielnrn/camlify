@@ -148,14 +148,29 @@ let read_song_liked song = let j = Yojson.Basic.from_file file in
   | h::t -> song_liked song  songlst in
   song_liked song iface.all_songs
 
+let read_song_component f song = let j = Yojson.Basic.from_file file in
+  let iface = from_json j in
+      let rec read_song song  (songlst : song list) =   match songlst with
+    | [] -> raise (UnknownSong song)
+    | h::t when h.name = song -> f h
+    | h::t -> read_song song  t in
+    read_song song iface.all_songs
+
+let option_to_useful component song = match component with 
+| Some s -> s 
+| None -> raise (UnknownInformation song)
+
 
 let read_song_mp3_file song = let j = Yojson.Basic.from_file file in
   let iface = from_json j in
-      let rec song_mp3 song  (songlst : song list) = match songlst with
+      let rec song_mp3 song  (songlst : song list) =  match songlst with
     | [] -> raise (UnknownSong song)
     | h::t when h.name = song -> h.mp3_file
     | h::t -> song_mp3 song  t in
     song_mp3 song iface.all_songs
+
+(*TODO: test this and delete the above*)
+let read_song_mp3_file song = read_song_component (fun sng -> sng.mp3_file) song
   
 let read_song_artist song = 
   let read_song song = let j = Yojson.Basic.from_file file in
@@ -170,6 +185,10 @@ let read_song_artist song =
           | None -> raise (UnknownInformation song)
 
 
+(*TODO: test this and delete the above*)
+let read_song_artist song = option_to_useful (read_song_component (fun sng -> sng.artist) song) song
+
+
 let read_song_album song = 
   let read_song song = let j = Yojson.Basic.from_file file in
     let iface = from_json j in
@@ -182,6 +201,9 @@ let read_song_album song =
               | Some s -> s
               | None -> raise (UnknownInformation song)
 
+(*TODO: test this and delete the above*)
+let read_song_album song = option_to_useful (read_song_component (fun sng -> sng.album) song) song
+
 let read_song_year song = 
   let read_song song = let j = Yojson.Basic.from_file file in
     let iface = from_json j in
@@ -193,6 +215,11 @@ let read_song_year song =
           match read_song song with 
             | Some i -> i
             | None -> raise (UnknownInformation song)
+
+
+(*TODO: test this and delete the above*)
+let read_song_year song = option_to_useful (read_song_component (fun sng -> sng.year) song) song      
+      
 
 let read_tags song = 
   let read_song song = let j = Yojson.Basic.from_file file in
