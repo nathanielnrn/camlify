@@ -63,7 +63,7 @@
           "name": "All Falls Down",
           "liked": false,
           "mp3 file": "all_falls_down.mp3",
-          "artist": null,
+          "artist": "diego",
           "album": null,
           "year": null,
           "tags": []
@@ -72,7 +72,7 @@
           "name": "Break My Heart",
           "liked": false,
           "mp3 file": "break_my_heart.mp3",
-          "artist": null,
+          "artist": "diego",
           "album": null,
           "year": null,
           "tags": []
@@ -81,7 +81,7 @@
           "name": "Reptilia",
           "liked": false,
           "mp3 file": "reptilia.mp3",
-          "artist": null,
+          "artist": "diego",
           "album": null,
           "year": null,
           "tags": []
@@ -90,7 +90,7 @@
           "name": "fly me to the moon",
           "liked": true,
           "mp3 file": "yeet",
-          "artist": null,
+          "artist": "diego",
           "album": null,
           "year": null,
           "tags": []
@@ -104,7 +104,7 @@
           "name": "All Falls Down",
           "liked": false,
           "mp3 file": "all_falls_down.mp3",
-          "artist": null,
+          "artist": "diego",
           "album": null,
           "year": null,
           "tags": []
@@ -113,7 +113,7 @@
           "name": "Break My Heart",
           "liked": false,
           "mp3 file": "break_my_heart.mp3",
-          "artist": null,
+          "artist": "diego",
           "album": null,
           "year": null,
           "tags": []
@@ -122,7 +122,7 @@
           "name": "Reptilia",
           "liked": false,
           "mp3 file": "reptilia.mp3",
-          "artist": null,
+          "artist": "diego",
           "album": null,
           "year": null,
           "tags": []
@@ -131,7 +131,7 @@
           "name": "Sample 15s",
           "liked": false,
           "mp3 file": "sample-15s.mp3",
-          "artist": null,
+          "artist": "diego",
           "album": null,
           "year": null,
           "tags": []
