@@ -24,6 +24,11 @@ let init_state_song_name_test
     (init_state playlist_name |> current_song_name)
     ~printer:String.escaped
 
+let result_to_t result =
+  match result with
+  | Legal t -> t
+  | _ -> raise (Failure "Something's wrong")
+
 (*Tests queue functions*)
 let queue_tests =
   [
@@ -46,6 +51,60 @@ let queue_tests =
       assert_equal
         [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
         (init_state "Playlist one" |> current_playlist) );
+    ( "current_song_idx(play_song_by_name(\"Reptilia\" (init_state \
+       Playlist one))) = 2"
+    >:: fun _ ->
+      assert_equal 2
+        (init_state "Playlist one"
+        |> play_song_by_name "Reptilia"
+        |> result_to_t |> current_song_idx) );
+    ( "current_song_idx(next_song (next_song(next_song(init_state \
+       Playlist one))) = 3"
+    >:: fun _ ->
+      assert_equal 3
+        (init_state "Playlist one"
+        |> next_song |> result_to_t |> next_song |> result_to_t
+        |> next_song |> result_to_t |> current_song_idx) );
+    ( "current_song_idx(next_song(next_song \
+       (next_song(next_song(init_state Playlist one)))) =0"
+    >:: fun _ ->
+      assert_equal 0
+        (init_state "Playlist one"
+        |> next_song |> result_to_t |> next_song |> result_to_t
+        |> next_song |> result_to_t |> next_song |> result_to_t
+        |> current_song_idx) );
+    ( "current_song_idx(next_song(next_song(next_song(next_song \
+       (next_song(next_song(init_state Playlist one)))))) =2"
+    >:: fun _ ->
+      assert_equal 2
+        (init_state "Playlist one"
+        |> next_song |> result_to_t |> next_song |> result_to_t
+        |> next_song |> result_to_t |> next_song |> result_to_t
+        |> next_song |> result_to_t |> next_song |> result_to_t
+        |> current_song_idx) );
+    ( "current_song_idx(prev_song (prev_song(prev_song(init_state \
+       Playlist one))) = 1"
+    >:: fun _ ->
+      assert_equal 1
+        (init_state "Playlist one"
+        |> prev_song |> result_to_t |> prev_song |> result_to_t
+        |> prev_song |> result_to_t |> current_song_idx) );
+    ( "current_song_idx(prev_song(prev_song(prev_song \
+       (prev_song(prev_song(init_state Playlist one))))) = 3"
+    >:: fun _ ->
+      assert_equal 3
+        (init_state "Playlist one"
+        |> prev_song |> result_to_t |> prev_song |> result_to_t
+        |> prev_song |> result_to_t |> prev_song |> result_to_t
+        |> prev_song |> result_to_t |> current_song_idx) );
+    ( "current_song_name(prev_song(prev_song(prev_song \
+       (prev_song(prev_song(init_state Playlist one))))) = 3"
+    >:: fun _ ->
+      assert_equal "Sample 15s"
+        (init_state "Playlist one"
+        |> prev_song |> result_to_t |> prev_song |> result_to_t
+        |> prev_song |> result_to_t |> prev_song |> result_to_t
+        |> prev_song |> result_to_t |> current_song_name) );
   ]
 
 let list_to_message (lst : string list) : string =
