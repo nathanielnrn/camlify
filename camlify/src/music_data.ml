@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 (* TODO: Implement according to music_data.mli *)
-=======
->>>>>>> 9afba092a6600f449ac8b3351c7a6f755cb4a8c1
-=======
-(* TODO: Implement according to music_data.mli *)
->>>>>>> 805a313ec7f132d1f859b2cbd4d0adbd89049195
 open Yojson.Basic
 open Yojson.Basic.Util
 
@@ -335,68 +328,6 @@ let rec modify_song f (songlst : song list) song =
   | h :: t when h.name = song -> f h :: t
   | h :: t -> h :: modify_song f t song
 
-<<<<<<< HEAD
-        
-(*let rec to_interface (interface : interface) : Yojson.Basic.t = 
-  `Assoc [("playlists",(match interface.playlists with
-  | [] -> `List []
-  | h::t -> [List]*)
-  
-(*let file = "interface.json"
-let message = "Hello!"
-let test_write =  
-  (* Write message to file *)
-  let oc = open_out file in (* create or truncate file, return channel *)
-    Printf.fprintf oc "%s\n" message; (* write something *)   
-    close_out oc; 
-(*let rewrite_json = ()
-  type t = {x: int; y: int} [@@deriving to_yojson]
-  type u = {s: string; pos: t} [@@deriving to_yojson]
-  let () = print_endline (Yojson.Safe.pretty_to_string (u_to_yojson {s= "hello"; pos={x= 1; y= 2}})) 
-  
-  let song1 ={
-      name = "fly me to the moon";
-      liked = true;
-      mp3_file = "yeet";
-      artist = None;
-      album = None;
-      year = None;
-      tags = Some [];
-    }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 9afba092a6600f449ac8b3351c7a6f755cb4a8c1
-let song2 ={
-  name = "fly me to the caml";
-  liked = true;
-  mp3_file = "yeet";
-  artist = None;
-  album = None;
-  year = None;
-  tags = Some [];
-  }
-<<<<<<< HEAD
-
-let playlist1 = {name = "bangers";
-songs = [song1;song2]
-
-=======
-let playlist1 = {name = "bangers";
-songs = [song1;song2]
->>>>>>> 9afba092a6600f449ac8b3351c7a6f755cb4a8c1
-}
-let x : interface = {all_songs = [song1;song2];
-playlists = [playlist1]}
-let to_x = to_interface x
-let pushed = Yojson.pretty_to_string to_x
-<<<<<<< HEAD
-*)*)
-=======
-*)*)
->>>>>>> 9afba092a6600f449ac8b3351c7a6f755cb4a8c1
-=======
 let modify_song_and_write f song =
   let j = Yojson.Basic.from_file file in
   let iface = from_json j in
@@ -439,22 +370,14 @@ let remove_song_tag song tag =
 (*let file = "interface.json" let message = "Hello!" let test_write = (*
   Write message to file *) let oc = open_out file in (* create or
   truncate file, return channel *) Printf.fprintf oc "%s\n" message; (*
-  write something *) close_out oc;
-
-  (*let rewrite_json = () type t = {x: int; y: int} [@@deriving
-  to_yojson] type u = {s: string; pos: t} [@@deriving to_yojson] let ()
-  = print_endline (Yojson.Safe.pretty_to_string (u_to_yojson {s=
-  "hello"; pos={x= 1; y= 2}}))
-
-  let song1 ={ name = "fly me to the moon"; liked = true; mp3_file =
-  "yeet"; artist = None; album = None; year = None; tags = Some []; }
-
+  write something *) close_out oc; (*let rewrite_json = () type t = {x:
+  int; y: int} [@@deriving to_yojson] type u = {s: string; pos: t}
+  [@@deriving to_yojson] let () = print_endline
+  (Yojson.Safe.pretty_to_string (u_to_yojson {s= "hello"; pos={x= 1; y=
+  2}})) let song1 ={ name = "fly me to the moon"; liked = true; mp3_file
+  = "yeet"; artist = None; album = None; year = None; tags = Some []; }
   let song2 ={ name = "fly me to the caml"; liked = true; mp3_file =
   "yeet"; artist = None; album = None; year = None; tags = Some []; }
-
-  let playlist1 = {name = "bangers"; songs = [song1;song2]
-
-  } let x : interface = {all_songs = [song1;song2]; playlists =
-  [playlist1]} let to_x = to_interface x let pushed =
-  Yojson.pretty_to_string to_x *)*)
->>>>>>> 805a313ec7f132d1f859b2cbd4d0adbd89049195
+  let playlist1 = {name = "bangers"; songs = [song1;song2] } let x :
+  interface = {all_songs = [song1;song2]; playlists = [playlist1]} let
+  to_x = to_interface x let pushed = Yojson.pretty_to_string to_x *)*)

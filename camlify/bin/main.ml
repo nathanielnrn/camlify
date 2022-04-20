@@ -1,23 +1,8 @@
-<<<<<<< HEAD
-
-open Yojson
-=======
-(* open Camlify.Music_data
-open Camlify.Queue
-open Camlify.Streamer *)
-(* open Camlify.Command *)
->>>>>>> Stashed changes
-=======
-(* open Camlify.Music_data
-=======
-
-=======
->>>>>>> 805a313ec7f132d1f859b2cbd4d0adbd89049195
 open Camlify.Music_data
->>>>>>> 820a90b5d722e406bb6ea47dd6b2828384e8cbe3
 open Camlify.Queue
 open Camlify.Streamer
 open Camlify.Command
+
 (* TODO: update with interface to client using terminal,
  * see a2 bin/main.ml for direction *)
 
@@ -66,32 +51,6 @@ let help_message : string =
 
 let remove_dup lst = List.sort_uniq compare lst
 
-<<<<<<< HEAD
-  (*add [filename.mp3] : add a song named filename.mp3 in current playlist\n \
-  rm [filename.mp3 ]: remove song filename.mp3 in current playlist*)
-  (* new_pl [playlist name] : create new playlist with given name\n \  *)
- let step (q: Camlify.Queue.t) =
-
-  let rec step_r (q: Camlify.Queue.t) : Camlify.Queue.t = 
-    print_string "> ";
-    
-    let cmd : Camlify.Command.command = match read_line () with
-    | exception End_of_file -> Quit
-
-    | command -> try (Camlify.Command.parse command) with
-      | Camlify.Command.Empty -> let _ = print_endline "Please write anything..." in Idle
-      | Camlify.Command.Malformed -> let _ = print_endline "Wrong command input" in Idle in
-
-    | command -> try (parse command) with
-      | Empty -> let _ = print_endline "Please write anything..." in Idle
-      | Malformed -> let _ = print_endline "Wrong command input" in Idle in
-
-
-    match cmd with
-    | Idle -> (step_r q)
-
-    | Help -> print_endline help_message; (step_r q)
-=======
 (*add [filename.mp3] : add a song named filename.mp3 in current
   playlist\n \ rm [filename.mp3 ]: remove song filename.mp3 in current
   playlist*)
@@ -99,7 +58,6 @@ let remove_dup lst = List.sort_uniq compare lst
 let step (q : Camlify.Queue.t) =
   let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
     print_string "> ";
->>>>>>> 805a313ec7f132d1f859b2cbd4d0adbd89049195
 
     let cmd : Camlify.Command.command =
       match read_line () with
@@ -204,18 +162,8 @@ let step (q : Camlify.Queue.t) =
         Camlify.Music_data.change_song_artist song_name artist;
         step_r q
     | ChangeSongAlbum song_name ->
-<<<<<<< HEAD
-<<<<<<< HEAD
-        let _ = print_endline "What is the name of the album?" in 
-        let _ = print "> " in
-=======
         print_endline "What is the name of the album?";
         print_string "> ";
->>>>>>> ec42c6930d343aee32793a6404ffb44df2e7dfd6
-=======
-        print_endline "What is the name of the album?";
-        print_string "> ";
->>>>>>> 805a313ec7f132d1f859b2cbd4d0adbd89049195
         let album = read_line () in
         change_song_album song_name album;
         step_r q
@@ -275,6 +223,7 @@ let step (q : Camlify.Queue.t) =
             let file_name =
               Camlify.Music_data.read_song_mp3_file new_song_name
             in
+            Camlify.Streamer.stop pipeline;
             ignore
               (Thread.create (Camlify.Streamer.play pipeline) file_name);
             step_r new_q)
@@ -427,18 +376,4 @@ let main () =
   step q
 
 (* Execute the mp3. *)
-let _ = 
-  print_endline "here at least2";
-
-  main ()
-
-  let q = Camlify.Queue.init_state ("Playlist one") in (** hope Camlify.Music_data.init_state returns Camlify.Music_data.t  *)
-  (* ANSITerminal.print_string [ ANSITerminal.red ] *)
-  print_endline  "\n\nWelcome to Camlify \n";
-  print_endline "Commands you can use:";
-  print_endline "play [name_of_song.mp3]";
-  step q
-
-(* Execute the mp3. *)
 let _ = main ()
-

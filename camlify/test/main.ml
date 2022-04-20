@@ -114,7 +114,9 @@ let list_to_message (lst : string list) : string =
   ^ " }"
 
 let test_select_playlist name playlist_name expected_output =
-  test name (select_playlist playlist_name) expected_output
+  test name
+    (Camlify.Music_data.select_playlist playlist_name)
+    expected_output
 
 (*Tests music_data functions*)
 let music_data_tests =

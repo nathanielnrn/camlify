@@ -1,15 +1,4 @@
-<<<<<<< HEAD
-
-(* TODO: Implement based on queue.mli *)
-
-print_endline "here at least3";
-
-
-type t =
-{
-=======
 type t = {
->>>>>>> 805a313ec7f132d1f859b2cbd4d0adbd89049195
   current_song_name : string;
   current_song_mp3_file : string;
   current_song_idx : int;
@@ -26,13 +15,7 @@ let rec remove_element element lst =
       if h = element then remove_element element t
       else h :: remove_element element t
 
-<<<<<<< HEAD
-let init_state selected_playlist=
-print_endline "h9";
-print_endline (List.nth (Music_data.select_playlist selected_playlist) 0);
-=======
 let init_state selected_playlist =
->>>>>>> 805a313ec7f132d1f859b2cbd4d0adbd89049195
   {
     current_song_name =
       List.nth (Music_data.select_playlist selected_playlist) 0;
