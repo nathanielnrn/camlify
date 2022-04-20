@@ -18,6 +18,7 @@ type command =
   | CreatePlayList of playlist_name
   | NextSong
   | PreviousSong
+  | Shuffle
   | AddSong of song_name
   | RemoveSong of song_name
   | ChangeSongLike of song_name * bool
@@ -107,6 +108,8 @@ let parse (str : string) : command =
           if List.length tl != 0 then raise Malformed else NextSong
         else if String.equal hd "prev" then
           if List.length tl != 0 then raise Malformed else PreviousSong
+        else if String.equal hd "shuffle" then
+          if List.length tl != 0 then raise Malformed else Shuffle
         else if String.equal hd "add" then
           if List.length tl == 0 then raise Malformed
           else AddSong (String.concat " " tl)

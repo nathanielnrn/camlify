@@ -37,6 +37,7 @@ let help_message : string =
   \ index : displays index of current song in current playlist\n\
   \ next : plays next song in current playlist\n\
   \ prev : plays previous song in current playlist\n\
+  \ shuffle : plays random song in current playlist\n\
   \ \n\
   \  play_artist : displays list of artist names and plays selected \
    artist's songs \n\
@@ -214,6 +215,24 @@ let step (q : Camlify.Queue.t) =
         match res with
         | Illegal ->
             print_endline "There is no previous song in the queue.";
+            step_r q
+        | Legal new_q ->
+            let new_song_name : string =
+              Camlify.Queue.current_song_name new_q
+            in
+            print_endline ("Playing song " ^ new_song_name ^ "…");
+            let file_name =
+              Camlify.Music_data.read_song_mp3_file new_song_name
+            in
+            Camlify.Streamer.stop pipeline;
+            ignore
+              (Thread.create (Camlify.Streamer.play pipeline) file_name);
+            step_r new_q)
+    | Shuffle -> (
+        let res = Camlify.Queue.random_song q in
+        match res with
+        | Illegal ->
+            print_endline "There is no song in the queue.";
             step_r q
         | Legal new_q ->
             let new_song_name : string =
