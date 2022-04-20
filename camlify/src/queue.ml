@@ -83,7 +83,7 @@ let next_song st =
   else play_song_by_idx (current_song_idx st + 1) st
 
 let prev_song st =
-  if play_song_by_idx (current_song_idx st - 1) st = Illegal then
+  if current_song_idx st - 1 < 0 then
     play_song_by_idx (List.length st.current_playlist - 1) st
   else play_song_by_idx (current_song_idx st - 1) st
 

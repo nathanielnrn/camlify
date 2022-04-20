@@ -30,6 +30,22 @@ let queue_tests =
     init_state_song_name_test
       "First song of Playlist one is \"All Falls Down\"" "Playlist one"
       "All Falls Down";
+    init_state_song_name_test
+      "First song of Playlist zero is \"All Falls Down\""
+      "Playlist zero" "All Falls Down";
+    ( "current_playlist__name (init_state Playlist one) = \"Playlist \
+       one\""
+    >:: fun _ ->
+      assert_equal "Playlist one"
+        (init_state "Playlist one" |> current_playlist_name) );
+    ( "current_song_idx (init_state Playlist one) = 0" >:: fun _ ->
+      assert_equal 0 (init_state "Playlist one" |> current_song_idx) );
+    ( "current_playlist (init_state Playlist one) = [\"All Falls \
+       Down\"; \"Break My Heart\"; \"Reptilia\"; \"Sample 15s\"]"
+    >:: fun _ ->
+      assert_equal
+        [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
+        (init_state "Playlist one" |> current_playlist) );
   ]
 
 let list_to_message (lst : string list) : string =
