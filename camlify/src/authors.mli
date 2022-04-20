@@ -10,8 +10,7 @@
 
 (** CS 3110 Spring 2022 Assignment MS1 : Alpha
 
-    @author Sarah Ha (nh285), Bryant Hwang (bh487), Nathaniel Navarro (nrn25), Diego Khayat (hdk35)
-*)
+    @author Sarah Ha (nh285), Bryant Hwang (bh487), Nathaniel Navarro (nrn25), Diego Khayat (hdk35) *)
 
 (************************************************************
 
@@ -30,9 +29,9 @@
 
  ************************************************************)
 
- val hours_worked_nh285 : int
- val hours_worked_bh487 : int
- val hours_worked_nrn25 : int
- val hours_worked_hdk35 : int
- (** [hours_worked] is the number of hours you worked on this assignment. *)
- 
+val hours_worked_nh285 : int
+val hours_worked_bh487 : int
+val hours_worked_nrn25 : int
+
+val hours_worked_hdk35 : int
+(** [hours_worked] is the number of hours you worked on this assignment. *)
