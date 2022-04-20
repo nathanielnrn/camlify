@@ -18,6 +18,7 @@ type command =
   | CreatePlayList of playlist_name
   | NextSong
   | PreviousSong
+  | Shuffle
   | AddSong of song_name
   | RemoveSong of song_name
   | ChangeSongLike of song_name * bool
@@ -107,6 +108,8 @@ let parse (str : string) : command =
           if List.length tl != 0 then raise Malformed else NextSong
         else if String.equal hd "prev" then
           if List.length tl != 0 then raise Malformed else PreviousSong
+        else if String.equal hd "shuffle" then
+          if List.length tl != 0 then raise Malformed else Shuffle
         else if String.equal hd "add" then
           if List.length tl == 0 then raise Malformed
           else AddSong (String.concat " " tl)
@@ -115,15 +118,15 @@ let parse (str : string) : command =
           else RemoveSong (String.concat " " tl)
         else if String.equal hd "pls" then
           if List.length tl != 0 then raise Malformed else ViewPlaylists
-        else if String.equal hd "pl_ar" then
+        else if String.equal hd "play_artist" then
           if List.length tl != 0 then raise Malformed else PlayArtist
-        else if String.equal hd "pl_al" then
+        else if String.equal hd "play_album" then
           if List.length tl != 0 then raise Malformed else PlayAlbum
-        else if String.equal hd "pl_y" then
+        else if String.equal hd "play_year" then
           if List.length tl != 0 then raise Malformed else PlayYear
-        else if String.equal hd "pl_l" then
+        else if String.equal hd "play_liked" then
           if List.length tl != 0 then raise Malformed else PlayLiked
-        else if String.equal hd "pl_t" then
+        else if String.equal hd "play_tag" then
           if List.length tl != 0 then raise Malformed else PlayTag
         else if String.equal hd "help" then
           if List.length tl != 0 then raise Malformed else Help

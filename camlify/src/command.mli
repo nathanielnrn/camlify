@@ -18,6 +18,7 @@ type command =
   | CreatePlayList of playlist_name
   | NextSong
   | PreviousSong
+  | Shuffle
   | AddSong of song_name
   | RemoveSong of song_name
   | ChangeSongLike of song_name * bool
