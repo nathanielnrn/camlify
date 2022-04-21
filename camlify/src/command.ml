@@ -1,5 +1,3 @@
-print_endline "here at least4";
-
 type song_name = string
 type playlist_name = string
 type index = int
