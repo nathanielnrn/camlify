@@ -225,8 +225,6 @@ let step (q : Camlify.Queue.t) =
               Camlify.Music_data.read_song_mp3_file new_song_name
             in
             Camlify.Streamer.stop pipeline;
-<<<<<<< HEAD
-=======
             ignore
               (Thread.create (Camlify.Streamer.play pipeline) file_name);
             step_r new_q)
@@ -245,7 +243,6 @@ let step (q : Camlify.Queue.t) =
               Camlify.Music_data.read_song_mp3_file new_song_name
             in
             Camlify.Streamer.stop pipeline;
->>>>>>> 4957f72b03bee48424b415c1c425218fc0da4e24
             ignore
               (Thread.create (Camlify.Streamer.play pipeline) file_name);
             step_r new_q)
