@@ -64,71 +64,40 @@ let queue_tests =
     queue_test "Playlist one name is \"Playlist one\"" "Playlist one"
       (init_state "Playlist one" |> current_playlist_name)
       Fun.id;
-    queue_test "current_song_idx (init_state Playlist one) = 0" 0
+    queue_test "Current song of initial state 0" 0
       (init_state "Playlist one" |> current_song_idx)
       string_of_int;
-    queue_test
-      "current_playlist (init_state Playlist one) = [\"All Falls \
-       Down\"; \"Break My Heart\"; \"Reptilia\"; \"Sample 15s\"]"
+    queue_test "Current playlist of playlist one"
       [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
       (init_state "Playlist one" |> current_playlist)
       list_to_message;
-    queue_test
-      "current_song_idx(play_song_by_name(\"Reptilia\" (init_state \
-       Playlist one))) = 2"
-      2
+    queue_test "Current song of play by name 'Reptilia' is 2" 2
       (init_state "Playlist one"
       |> play_song_by_name "Reptilia"
       |> result_to_t |> current_song_idx)
       string_of_int;
-    queue_test
-      "current_song_idx(play_song_by_name(\"Reptilia\" (init_state \
-       Playlist one))) = 2"
-      2
-      (init_state "Playlist one"
-      |> play_song_by_name "Reptilia"
-      |> result_to_t |> current_song_idx)
-      string_of_int;
-    queue_test
-      "current_song_idx(next_song (next_song(next_song(init_state \
-       Playlist one))) = 3"
-      3
+    queue_test "Song id of 3 nexts is 3" 3
       (init_state "Playlist one"
       |> next |> next |> next |> current_song_idx)
       string_of_int;
-    queue_test
-      "current_song_idx(next_song(next_song \
-       (next_song(next_song(init_state Playlist one)))) = 0"
-      0
+    queue_test "song id loops after 4 nexts " 0
       (init_state "Playlist one"
       |> next |> next |> next |> next |> current_song_idx)
       string_of_int;
-    queue_test
-      "current_song_idx(next_song(next_song(next_song(next_song \
-       (next_song(next_song(init_state Playlist one)))))) = 2"
-      2
+    queue_test "song id loops after 6 nexts" 2
       (init_state "Playlist one"
       |> next |> next |> next |> next |> next |> next
       |> current_song_idx)
       string_of_int;
-    queue_test
-      "current_song_idx(prev_song (prev_song(prev_song(init_state \
-       Playlist one))) = 1"
-      1
+    queue_test "Prev song loops and is 1" 1
       (init_state "Playlist one"
       |> prev |> prev |> prev |> current_song_idx)
       string_of_int;
-    queue_test
-      "current_song_idx(prev_song(prev_song(prev_song \
-       (prev_song(prev_song(init_state Playlist one))))) = 3"
-      3
+    queue_test "Prev song loops 3 3" 3
       (init_state "Playlist one"
       |> prev |> prev |> prev |> prev |> prev |> current_song_idx)
       string_of_int;
-    queue_test
-      "current_song_name(prev_song(prev_song(prev_song \
-       (prev_song(prev_song(init_state Playlist one))))) = 3"
-      "Sample 15s"
+    queue_test "Prev loop name is correct" "Sample 15s"
       (init_state "Playlist one"
       |> prev |> prev |> prev |> prev |> prev |> current_song_name)
       Fun.id;
