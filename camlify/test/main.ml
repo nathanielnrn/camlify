@@ -15,29 +15,23 @@ let test
   name >:: fun _ ->
   assert_equal expected_output called_function ~printer:printer_function
 
-<<<<<<< HEAD
 let list_to_message_int (lst : int list) : string =
   (lst
   |> List.map (fun i -> string_of_int i)
   |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
   ^ " }"
 
-=======
->>>>>>> 4957f72b03bee48424b415c1c425218fc0da4e24
 let list_to_message (lst : string list) : string =
   (lst
   |> List.map (fun s -> String.escaped s)
   |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
   ^ " }"
-<<<<<<< HEAD
-=======
 
 (* Default expectation of output is an int *)
 let queue_test (name : string) expected_output called_function printer_f
     : test =
   name >:: fun _ ->
   assert_equal expected_output called_function ~printer:printer_f
->>>>>>> 4957f72b03bee48424b415c1c425218fc0da4e24
 
 let init_state_song_name_test
     (name : string)
@@ -148,16 +142,16 @@ let queue_tests =
       Fun.id;
   ]
 
-<<<<<<< HEAD
 let test_select_playlist name expected_output playlist_name =
   test name expected_output
     (Camlify.Music_data.select_playlist playlist_name)
+    list_to_message
 
 let test_list_of_playlist name list_of_playlists =
-  test name list_of_playlists list_of_playlist
+  test name list_of_playlists list_of_playlist list_to_message
 
 let test_all_songs name list_of_songs =
-  test name list_of_songs all_songs
+  test name list_of_songs all_songs list_to_message
 
 let test_read_songs_liked name liked song_name =
   test name liked (read_song_liked song_name) string_of_bool
@@ -180,20 +174,23 @@ let test_read_tags name expected_tags song_name =
   test name expected_tags (read_tags song_name) list_to_message
 
 (*test cases not done*)
-=======
-let test_select_playlist name playlist_name expected_output =
-  test name (select_playlist playlist_name) expected_output
->>>>>>> 4957f72b03bee48424b415c1c425218fc0da4e24
 
 (*Tests music_data functions*)
+
+(*TODO: add more tests for the same function. For example: look at:
+  [test_read_songs_liked "All falls down is not liked" false "All Falls
+  Down";].
+
+  You can write the same exact line under for a different song. Look in
+  the json file to find another song that is liked/ disliked*)
+
 let music_data_tests =
   [
     test_select_playlist "testing Playlist one song names correct"
       [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
-      "Playlist one" list_to_message;
+      "Playlist one";
     test_list_of_playlist "list of playlist returns correctly"
-      [ "Playlist zero"; "Playlist one" ]
-      list_to_message;
+      [ "Playlist zero"; "Playlist one" ];
     test_all_songs "all songs"
       [
         "All Falls Down";
@@ -202,8 +199,17 @@ let music_data_tests =
         "Sample 15s";
         "fly me to the moon";
         "fly me to the caml";
-      ]
-      list_to_message;
+      ];
+    test_read_songs_liked "All falls down is not liked" false
+      "All Falls Down";
+    test_read_song_mp3_file "mp3 file of All falls is not liked"
+      "all_falls_down.mp3" "All Falls Down";
+    test_read_song_album "album of all falls down is Ka" "Ka"
+      "All Falls Down";
+    read_song_year "song year of all falls down is 2004" 2004
+      "All Falls Down";
+    test_read_tags "tags of all songs is rap and old" [ "old"; "rap" ]
+      "All Falls Down";
   ]
 
 let suite =
