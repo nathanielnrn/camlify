@@ -3,34 +3,30 @@ open Option
 (* TODO: Populate. This file take in a file using gstreamer and
  * makes audio play on a computer *)
 
+(**Behavior -> functions take in a ref option and mutates that ref to
+   contain latest and greatest pipeline*)
 
- (**Behavior -> functions take in a ref option and mutate that ref to contain latest and greatist pipeline*)
+(* Returns tags of files val tags_of_file : file -> tag list
 
+   val strings_of_tags : tag list -> string list *)
 
- type file
+val play : Element.t Option.t ref -> string -> unit
+(** [play pipeline file_name] Plays audio based on string of a file.
+    file_name must be of form ["<name>.mp3"] and is expected to be in
+    the /data/ directory mutates the passed in pipeline Example: Should
+    be called in main via (Thread.create (Camlify.Streamer.play
+    pipeline) file_name)*)
 
- type streamer
- 
- type tag
+val pause : Element.t Option.t ref -> unit
+(** [pause pipeline] Pauses currently playing from pipeline, throws an
+    exception otherwise (TBD what kind) Does not (seem) to need to be in
+    a thread*)
 
- (*Returns tags of files*)
- val tags_of_file : file -> tag list
+(**[stop pipeline] stops currently playing stream or does nothing
+   because there is none Does not (seem) to need to be in a thread*)
 
- val strings_of_tags : tag list -> string list
+val stop : Element.t Option.t ref -> unit
+val get_pipeline : Element.t Option.t ref
 
- (**Plays audio based on string of a file. File must be of form ["<name>.mp3"] and is expected to be in the /data/ directory
- returns the current pipeline of the playing song*)
- val play : Element.t Option.t ref-> string -> unit
-
- (**Pauses currently playing song, throws an exception otherwise (TBD what kind)*)
- val pause : Element.t Option.t ref -> unit
-
- (**Stops currently playing stream or does nothing because there is none*)
- val stop : Element.t Option.t ref -> unit
-
- val get_pipeline : Element.t Option.t ref
-
-
- (*[parse song] Takes in an mp3 file and parses data.
- Outputs this data in standardized format*)
- val parse  : 'a -> 'b
+(*TODO: [parse song] Takes in an mp3 file and parses data. Outputs this
+  data in standardized format*)
