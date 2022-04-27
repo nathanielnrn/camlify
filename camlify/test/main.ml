@@ -103,6 +103,13 @@ let queue_tests =
       Fun.id;
   ]
 
+(* ================================================================== *)
+(* Music data test helper functions *)
+
+(* test exceptions *)
+let test_raise_exception name f expected_exception =
+  name >:: fun _ -> assert_raises expected_exception f
+
 let test_select_playlist name expected_output playlist_name =
   test name expected_output
     (Camlify.Music_data.select_playlist playlist_name)
@@ -153,6 +160,10 @@ let music_data_tests =
         "fly me to the caml";
       ]
       list_to_message;
+    (* TODO: Fails, raises NotFound exception, need to check why. *)
+    test_raise_exception "add non existent song"
+      (fun _ -> add_song_to_playlist "Not a real song" "Playlist one")
+      (UnknownSong "Not a real song");
   ]
 
 let suite =
