@@ -15,29 +15,17 @@ let test
   name >:: fun _ ->
   assert_equal expected_output called_function ~printer:printer_function
 
-<<<<<<< HEAD
-let list_to_message_int (lst : int list) : string =
-  (lst
-  |> List.map (fun i -> string_of_int i)
-  |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
-  ^ " }"
-
-=======
->>>>>>> 4957f72b03bee48424b415c1c425218fc0da4e24
 let list_to_message (lst : string list) : string =
   (lst
   |> List.map (fun s -> String.escaped s)
   |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
   ^ " }"
-<<<<<<< HEAD
-=======
 
 (* Default expectation of output is an int *)
 let queue_test (name : string) expected_output called_function printer_f
     : test =
   name >:: fun _ ->
   assert_equal expected_output called_function ~printer:printer_f
->>>>>>> 4957f72b03bee48424b415c1c425218fc0da4e24
 
 let init_state_song_name_test
     (name : string)
@@ -146,68 +134,65 @@ let queue_tests =
       (init_state "Playlist one"
       |> prev |> prev |> prev |> prev |> prev |> current_song_name)
       Fun.id;
-  ]
-
-<<<<<<< HEAD
-let test_select_playlist name expected_output playlist_name =
-  test name expected_output
-    (Camlify.Music_data.select_playlist playlist_name)
-
-let test_list_of_playlist name list_of_playlists =
-  test name list_of_playlists list_of_playlist
-
-let test_all_songs name list_of_songs =
-  test name list_of_songs all_songs
-
-let test_read_songs_liked name liked song_name =
-  test name liked (read_song_liked song_name) string_of_bool
-
-let test_read_song_mp3_file name expected_mp3_file song_name =
-  test name expected_mp3_file
-    (read_song_mp3_file song_name)
-    String.escaped
-
-let test_read_song_artist name expected_artist song_name =
-  test name expected_artist (read_song_artist song_name) String.escaped
-
-let test_read_song_album name expected_album song_name =
-  test name expected_album (read_song_album song_name) String.escaped
-
-let read_song_year name expected_year song_name =
-  test name expected_year (read_song_year song_name) string_of_int
-
-let test_read_tags name expected_tags song_name =
-  test name expected_tags (read_tags song_name) list_to_message
-
-(*test cases not done*)
-=======
-let test_select_playlist name playlist_name expected_output =
-  test name (select_playlist playlist_name) expected_output
->>>>>>> 4957f72b03bee48424b415c1c425218fc0da4e24
-
-(*Tests music_data functions*)
-let music_data_tests =
-  [
-    test_select_playlist "testing Playlist one song names correct"
-      [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
-      "Playlist one" list_to_message;
-    test_list_of_playlist "list of playlist returns correctly"
-      [ "Playlist zero"; "Playlist one" ]
+    queue_test
+      "select_playlist_by_artist \"Dua Lipa\" (init_state Playlist \
+       one) = [\"Break My Heart\"]"
+      [ "Break My Heart" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_artist "Dua Lipa"
+      |> result_to_t |> current_playlist)
       list_to_message;
-    test_all_songs "all songs"
+    queue_test
+      "select_playlist_by_album \"Ka\" (init_state Playlist one) = \
+       [\"All Falls Down\"]"
+      [ "All Falls Down" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_album "Ka"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test
+      "select_playlist_by_liked (init_state Playlist one) = [\"All \
+       Falls Down\"]"
       [
-        "All Falls Down";
         "Break My Heart";
         "Reptilia";
-        "Sample 15s";
         "fly me to the moon";
         "fly me to the caml";
       ]
+      (init_state "Playlist one"
+      |> select_playlist_by_liked |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test
+      "select_playlist_by_year 2004 (init_state Playlist one) = [\"All \
+       Falls Down\"]"
+      [ "All Falls Down" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_year 2004
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test
+      "select_playlist_by_tag \"old\" (init_state Playlist one) = \
+       [\"All Falls Down\"; \"Reptilia\";\"Sample 15s\";\"fly me to \
+       the moon\"]"
+      [
+        "All Falls Down"; "Reptilia"; "Sample 15s"; "fly me to the moon";
+      ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "old"
+      |> result_to_t |> current_playlist)
       list_to_message;
   ]
 
-let suite =
-  "test suite for Camlify"
-  >::: List.flatten [ queue_tests; music_data_tests ]
+let test_select_playlist name playlist_name expected_output =
+  test name (select_playlist playlist_name) expected_output
 
+(*Tests music_data functions*)
+(*** let music_data_tests = [ test_select_playlist "testing Playlist one
+  song names correct" [ "All Falls Down"; "Break My Heart"; "Reptilia";
+  "Sample 15s" ] "Playlist one" list_to_message; test_list_of_playlist
+  "list of playlist returns correctly" [ "Playlist zero"; "Playlist one"
+  ] list_to_message; test_all_songs "all songs" [ "All Falls Down";
+  "Break My Heart"; "Reptilia"; "Sample 15s"; "fly me to the moon"; "fly
+  me to the caml"; ] list_to_message; ] *)
+let suite = "test suite for Camlify" >::: List.flatten [ queue_tests ]
 let _ = run_test_tt_main suite
