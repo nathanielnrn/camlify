@@ -60,6 +60,7 @@ let play_song_by_name song_name st =
       }
   with
   | Not_found -> Illegal
+  | _ -> Illegal
 
 let play_song_by_idx idx st =
   try
@@ -76,6 +77,7 @@ let play_song_by_idx idx st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let next_song st =
   if play_song_by_idx (current_song_idx st + 1) st = Illegal then
@@ -106,6 +108,7 @@ let add_song_to_playlist song_name st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let remove_song_from_playlist song_name st =
   try
@@ -123,6 +126,7 @@ let remove_song_from_playlist song_name st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let make_new_playlist playlist_name st =
   try
@@ -172,6 +176,7 @@ let select_playlist playlist_name st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let select_playlist_by_artist artist st =
   try
@@ -200,6 +205,7 @@ let select_playlist_by_artist artist st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let select_playlist_by_album album st =
   try
@@ -228,6 +234,7 @@ let select_playlist_by_album album st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let select_playlist_by_year year st =
   try
@@ -256,6 +263,7 @@ let select_playlist_by_year year st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let select_playlist_by_liked st =
   try
@@ -284,6 +292,7 @@ let select_playlist_by_liked st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let select_playlist_by_tag tag st =
   try
@@ -312,6 +321,7 @@ let select_playlist_by_tag tag st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let delete_playlist playlist_name st =
   try
@@ -330,6 +340,7 @@ let delete_playlist playlist_name st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
 
 let add_new_song song_name st =
   try
@@ -348,6 +359,7 @@ let add_new_song song_name st =
           list_of_playlist = st.list_of_playlist;
           list_of_all_songs = st.list_of_all_songs @ [ song_name ];
         }
+  | _ -> Illegal
 
 let remove_song_from_all_songs song_name st =
   try
@@ -365,3 +377,4 @@ let remove_song_from_all_songs song_name st =
       }
   with
   | Failure x -> Illegal
+  | _ -> Illegal
