@@ -363,7 +363,6 @@ let remove_song_tag song tag =
       { sng with tags = List.filter (fun t -> t <> tag) sng.tags })
     song
 
-<<<<<<< HEAD
 (* Helper function which traverses to /data and returns a string list of
    .mp3 files string in list is of form '<song_name>.mp3'*)
 
@@ -377,11 +376,9 @@ let get_dir_songs () : string list =
 (*let rec to_interface (interface : interface) : Yojson.Basic.t = `Assoc
   [("playlists",(match interface.playlists with | [] -> `List [] | h::t
   -> [List]*)
-=======
 (*(*let rec to_interface (interface : interface) : Yojson.Basic.t =
   `Assoc [("playlists",(match interface.playlists with | [] -> `List []
   | h::t -> [List]*)
->>>>>>> 08e3475729fb52cfd49bb7ad984173b94dfe6676
 
   (*let file = "interface.json" let message = "Hello!" let test_write =
   (* Write message to file *) let oc = open_out file in (* create or
