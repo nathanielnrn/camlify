@@ -15,29 +15,23 @@ let test
   name >:: fun _ ->
   assert_equal expected_output called_function ~printer:printer_function
 
-<<<<<<< HEAD
-=======
 let list_to_message_int (lst : int list) : string =
   (lst
   |> List.map (fun i -> string_of_int i)
   |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
   ^ " }"
 
->>>>>>> 9c197c5... adds some test cases
 let list_to_message (lst : string list) : string =
   (lst
   |> List.map (fun s -> String.escaped s)
   |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
   ^ " }"
-<<<<<<< HEAD
 
 (* Default expectation of output is an int *)
 let queue_test (name : string) expected_output called_function printer_f
     : test =
   name >:: fun _ ->
   assert_equal expected_output called_function ~printer:printer_f
-=======
->>>>>>> 9c197c5... adds some test cases
 
 let init_state_song_name_test
     (name : string)
