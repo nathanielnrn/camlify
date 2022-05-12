@@ -144,16 +144,67 @@ let queue_tests =
       list_to_message;
   ]
 
-let test_select_playlist name playlist_name expected_output =
-  test name (select_playlist playlist_name) expected_output
+(* ================================================================== *)
+(* Music data test helper functions *)
 
+(* test exceptions *)
+let test_raise_exception name f expected_exception =
+  name >:: fun _ -> assert_raises expected_exception f
+
+let test_select_playlist name expected_output playlist_name =
+  test name expected_output
+    (Camlify.Music_data.select_playlist playlist_name)
+
+let test_list_of_playlist name list_of_playlists =
+  test name list_of_playlists list_of_playlist
+
+let test_all_songs name list_of_songs =
+  test name list_of_songs all_songs
+
+let test_read_songs_liked name liked song_name =
+  test name liked (read_song_liked song_name) string_of_bool
+
+let test_read_song_mp3_file name expected_mp3_file song_name =
+  test name expected_mp3_file
+    (read_song_mp3_file song_name)
+    String.escaped
+
+let test_read_song_artist name expected_artist song_name =
+  test name expected_artist (read_song_artist song_name) String.escaped
+
+let test_read_song_album name expected_album song_name =
+  test name expected_album (read_song_album song_name) String.escaped
+
+let read_song_year name expected_year song_name =
+  test name expected_year (read_song_year song_name) string_of_int
+
+let test_read_tags name expected_tags song_name =
+  test name expected_tags (read_tags song_name) list_to_message
+
+(*test cases not done*)
 (*Tests music_data functions*)
-(*let music_data_tests = [ test_select_playlist "testing Playlist one
-  song names correct" [ "All Falls Down"; "Break My Heart"; "Reptilia";
-  "Sample 15s" ] "Playlist one" list_to_message; test_list_of_playlist
-  "list of playlist returns correctly" [ "Playlist zero"; "Playlist one"
-  ] list_to_message; test_all_songs "all songs" [ "All Falls Down";
-  "Break My Heart"; "Reptilia"; "Sample 15s"; "fly me to the moon"; "fly
-  me to the caml"; ] list_to_message; ] let suite = "test suite for
-  Camlify" >::: List.flatten [ queue_tests ] let _ = run_test_tt_main
-  suite*)
+let music_data_tests =
+  [
+    test_select_playlist "testing Playlist one song names correct"
+      [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
+      "Playlist one" list_to_message;
+    test_list_of_playlist "list of playlist returns correctly"
+      [ "Playlist zero"; "Playlist one" ]
+      list_to_message;
+    test_all_songs "all songs"
+      [
+        "All Falls Down";
+        "Break My Heart";
+        "Reptilia";
+        "Sample 15s";
+        "fly me to the moon";
+        "fly me to the caml";
+      ]
+      list_to_message;
+  ]
+
+let suite =
+  "test suite for Camlify"
+  >::: List.flatten [ queue_tests; music_data_tests ]
+
+let _ = run_test_tt_main suite

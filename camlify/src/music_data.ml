@@ -363,12 +363,12 @@ let remove_song_tag song tag =
       { sng with tags = List.filter (fun t -> t <> tag) sng.tags })
     song
 
-(*let rec to_interface (interface : interface) : Yojson.Basic.t = `Assoc
-  [("playlists",(match interface.playlists with | [] -> `List [] | h::t
-  -> [List]*)
+(*(*let rec to_interface (interface : interface) : Yojson.Basic.t =
+  `Assoc [("playlists",(match interface.playlists with | [] -> `List []
+  | h::t -> [List]*)
 
-(*let file = "interface.json" let message = "Hello!" let test_write = (*
-  Write message to file *) let oc = open_out file in (* create or
+  (*let file = "interface.json" let message = "Hello!" let test_write =
+  (* Write message to file *) let oc = open_out file in (* create or
   truncate file, return channel *) Printf.fprintf oc "%s\n" message; (*
   write something *) close_out oc; (*let rewrite_json = () type t = {x:
   int; y: int} [@@deriving to_yojson] type u = {s: string; pos: t}
@@ -380,4 +380,4 @@ let remove_song_tag song tag =
   "yeet"; artist = None; album = None; year = None; tags = Some []; }
   let playlist1 = {name = "bangers"; songs = [song1;song2] } let x :
   interface = {all_songs = [song1;song2]; playlists = [playlist1]} let
-  to_x = to_interface x let pushed = Yojson.pretty_to_string to_x *)*)
+  to_x = to_interface x let pushed = Yojson.pretty_to_string to_x *)*)*)
