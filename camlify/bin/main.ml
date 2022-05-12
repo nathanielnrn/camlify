@@ -275,7 +275,8 @@ let step (q : Camlify.Queue.t) =
         print_endline
           (String.concat ", "
              (List.map Camlify.Music_data.read_song_artist
-                Camlify.Music_data.all_songs));
+                Camlify.Music_data.all_songs
+             |> remove_dup));
         print_endline "Select artist";
         print_string "> ";
         let artist = read_line () in
@@ -294,7 +295,8 @@ let step (q : Camlify.Queue.t) =
         print_endline
           (String.concat ", "
              (List.map Camlify.Music_data.read_song_album
-                Camlify.Music_data.all_songs));
+                Camlify.Music_data.all_songs
+             |> remove_dup));
         print_endline "Select album";
         print_string "> ";
         let album = read_line () in
@@ -314,7 +316,8 @@ let step (q : Camlify.Queue.t) =
           (String.concat ", "
              (List.map string_of_int
                 (List.map Camlify.Music_data.read_song_year
-                   Camlify.Music_data.all_songs)));
+                   Camlify.Music_data.all_songs)
+             |> remove_dup));
         print_endline "Select year";
         print_string "> ";
         let year = read_line () in
