@@ -15,6 +15,12 @@ let test
   name >:: fun _ ->
   assert_equal expected_output called_function ~printer:printer_function
 
+let list_to_message_int (lst : int list) : string =
+  (lst
+  |> List.map (fun i -> string_of_int i)
+  |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
+  ^ " }"
+
 let list_to_message (lst : string list) : string =
   (lst
   |> List.map (fun s -> String.escaped s)
