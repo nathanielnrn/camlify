@@ -3,3 +3,5 @@ play:
 	
 test:
 	OCAMLRUNPARAM=b dune exec test/main.exe
+
+.PHONY: all test clean
