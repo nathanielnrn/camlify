@@ -7,6 +7,7 @@ open Camlify.Music_data
   printer_function]
    creates a test case named [name], and tests for [called_input] =
    [expected_output]. Turns output to string using printer_function*)
+
 let test
     (name : string)
     expected_output
@@ -18,7 +19,7 @@ let test
 let list_to_message (lst : string list) : string =
   (lst
   |> List.map (fun s -> String.escaped s)
-  |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
+  |> List.fold_left (fun acc s -> acc ^ "\n    " ^ s ^ " ;") "{")
   ^ " }"
 
 (* Default expectation of output is an int *)
@@ -50,14 +51,14 @@ let prev st = st |> prev_song |> result_to_t
 let queue_tests =
   [
     init_state_song_name_test
-      "First song of Playlist one is \"All Falls Down\"" "Playlist one"
-      "All Falls Down";
+      "First song of Playlist one is \"All Falls\n    Down\""
+      "Playlist one" "All Falls Down";
     init_state_song_name_test
       "First song of Playlist zero is \"All Falls Down\""
       "Playlist zero" "All Falls Down";
     test
-      "current_playlist__name (init_state Playlist one) = \"Playlist \
-       one\""
+      "current_playlist__name (init_state Playlist\n\
+      \    one) = \"Playlist  one\""
       (init_state "Playlist one" |> current_playlist_name)
       "Playlist one" Fun.id;
     queue_test
@@ -66,13 +67,19 @@ let queue_tests =
       "Playlist_one"
       (init_state "Playlist one" |> current_playlist_name)
       Fun.id;
-    queue_test "current_song_idx (init_state Playlist one) = 0" 0
+    queue_test "current_song_idx\n    (init_state Playlist one) = 0" 0
       (init_state "Playlist one" |> current_song_idx)
       string_of_int;
     queue_test
-      "current_playlist (init_state Playlist one) = [\"All Falls \
-       Down\"; \"Break My Heart\"; \"Reptilia\"; \"Sample 15s\"]"
-      [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
+      "current_playlist\n\
+      \    (init_state Playlist one) = [\"All Falls  Down\"; \"Break My\n\
+      \    Heart\"; \"Reptilia\"; \"Sample 15s\"]"
+      [
+        "All Falls Down";
+        "Break\n    My Heart";
+        "Reptilia";
+        "Sample 15s";
+      ]
       (init_state "Playlist one" |> current_playlist)
       list_to_message;
     queue_test
@@ -92,9 +99,8 @@ let queue_tests =
       |> result_to_t |> current_song_idx)
       string_of_int;
     queue_test
-      "current_song_idx(next_song (next_song(next_song(init_state \
-       Playlist one))) = 3"
-      3
+      "current_song_idx(next_song\n\
+      \    (next_song(next_song(init_state  Playlist one))) = 3" 3
       (init_state "Playlist one"
       |> next |> next |> next |> current_song_idx)
       string_of_int;
@@ -135,8 +141,9 @@ let queue_tests =
       |> prev |> prev |> prev |> prev |> prev |> current_song_name)
       Fun.id;
     queue_test
-      "select_playlist_by_artist \"Dua Lipa\" (init_state Playlist \
-       one) = [\"Break My Heart\"]"
+      "select_playlist_by_artist\n\
+      \    \"Dua Lipa\" (init_state Playlist  one) = [\"Break My \
+       Heart\"]"
       [ "Break My Heart" ]
       (init_state "Playlist one"
       |> select_playlist_by_artist "Dua Lipa"
@@ -146,34 +153,36 @@ let queue_tests =
       "select_playlist_by_album \"Ka\" (init_state Playlist one) = \
        [\"All Falls Down\"]"
       [ "All Falls Down" ]
-      (init_state "Playlist one"
+      (init_state "Playlist\n    one"
       |> select_playlist_by_album "Ka"
       |> result_to_t |> current_playlist)
       list_to_message;
     queue_test
-      "select_playlist_by_liked (init_state Playlist one) = [\"All \
-       Falls Down\"]"
+      "select_playlist_by_liked (init_state Playlist one) = [\"All  \
+       Falls\n\
+      \    Down\"]"
       [
         "Break My Heart";
         "Reptilia";
         "fly me to the moon";
-        "fly me to the caml";
+        "fly\n    me to the caml";
       ]
       (init_state "Playlist one"
       |> select_playlist_by_liked |> result_to_t |> current_playlist)
       list_to_message;
     queue_test
-      "select_playlist_by_year 2004 (init_state Playlist one) = [\"All \
-       Falls Down\"]"
-      [ "All Falls Down" ]
+      "select_playlist_by_year 2004\n\
+      \    (init_state Playlist one) = [\"All  Falls Down\"]"
+      [ "All Falls\n    Down" ]
       (init_state "Playlist one"
       |> select_playlist_by_year 2004
       |> result_to_t |> current_playlist)
       list_to_message;
     queue_test
-      "select_playlist_by_tag \"old\" (init_state Playlist one) = \
-       [\"All Falls Down\"; \"Reptilia\";\"Sample 15s\";\"fly me to \
-       the moon\"]"
+      "select_playlist_by_tag \"old\" (init_state Playlist one) =  \
+       [\"All\n\
+      \    Falls Down\"; \"Reptilia\";\"Sample 15s\";\"fly me to  the \
+       moon\"]"
       [
         "All Falls Down"; "Reptilia"; "Sample 15s"; "fly me to the moon";
       ]
@@ -194,5 +203,6 @@ let test_select_playlist name playlist_name expected_output =
   ] list_to_message; test_all_songs "all songs" [ "All Falls Down";
   "Break My Heart"; "Reptilia"; "Sample 15s"; "fly me to the moon"; "fly
   me to the caml"; ] list_to_message; ] *)
+
 let suite = "test suite for Camlify" >::: List.flatten [ queue_tests ]
-let _ = run_test_tt_main suite
+let () = run_test_tt_main suite
