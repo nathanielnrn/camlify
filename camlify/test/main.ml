@@ -1,0 +1,221 @@
+open OUnit2
+open Camlify.Queue
+open Camlify.Music_data
+
+(** Testing is largely implemented as follows: Glass box testing was
+    used for the most part, largely because our test cases use dynamic
+    data that we need to know the contents of in order to properly test
+    for.
+
+    This made it more difficult to use black box/property testing. To
+    that end we had 2 test benches that had different data sets, and
+    manually input our expected result in our tests.
+
+    Our Music_Data, Command, and Queue module are all tested using Ounit
+    in this test file, while our Main (interface) and Streamer modules
+    were user tested by us. Main and Streamer could not feasibly be
+    tested using Ounit (as far as we are aware) due to main being
+    responsible for outputting to terminal, while Streamer largely makes
+    calls to external libraries, making testing difficult. This being
+    said, some helper functions in Streamer are tested, mainly as a
+    result of test driven development.
+
+    Our tests ensure that Queue and Music_Data, the modules responsible
+    for manipulating and changing the state of our data and music by
+    testing for edge cases, expected cases, and by specifically catching
+    known bugs that arose during implementation. *)
+
+(*TODO: Add Command tests*)
+
+(**A general test
+   case.[test expected_output called_function 
+  printer_function]
+   creates a test case named [name], and tests for [called_input] =
+   [expected_output]. Turns output to string using printer_function*)
+let test
+    (name : string)
+    expected_output
+    called_function
+    printer_function : test =
+  name >:: fun _ ->
+  assert_equal expected_output called_function ~printer:printer_function
+
+let list_to_message_int (lst : int list) : string =
+  (lst
+  |> List.map (fun i -> string_of_int i)
+  |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
+  ^ " }"
+
+let list_to_message (lst : string list) : string =
+  (lst
+  |> List.map (fun s -> String.escaped s)
+  |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
+  ^ " }"
+
+(* Default expectation of output is an int *)
+let queue_test (name : string) expected_output called_function printer_f
+    : test =
+  name >:: fun _ ->
+  assert_equal expected_output called_function ~printer:printer_f
+
+let init_state_song_name_test
+    (name : string)
+    (playlist_name : string)
+    (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (init_state playlist_name |> current_song_name)
+    ~printer:String.escaped
+
+let result_to_t result =
+  match result with
+  | Legal t -> t
+  | _ -> raise (Failure "Something's wrong")
+
+let next st = st |> next_song |> result_to_t
+let prev st = st |> prev_song |> result_to_t
+
+(* let rec next_count n nxt = next_count (n-1) (next nxt) *)
+
+(*Tests queue functions*)
+let queue_tests =
+  [
+    init_state_song_name_test
+      "First song of Playlist one is \"All Falls Down\"" "Playlist one"
+      "All Falls Down";
+    init_state_song_name_test
+      "First song of Playlist zero is \"All Falls Down\""
+      "Playlist zero" "All Falls Down";
+    queue_test "Playlist one name is \"Playlist one\"" "Playlist one"
+      (init_state "Playlist one" |> current_playlist_name)
+      Fun.id;
+    queue_test "Current song of initial state 0" 0
+      (init_state "Playlist one" |> current_song_idx)
+      string_of_int;
+    queue_test "Current playlist of playlist one"
+      [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
+      (init_state "Playlist one" |> current_playlist)
+      list_to_message;
+    queue_test "Current song of play by name 'Reptilia' is 2" 2
+      (init_state "Playlist one"
+      |> play_song_by_name "Reptilia"
+      |> result_to_t |> current_song_idx)
+      string_of_int;
+    queue_test "Song id of 3 nexts is 3" 3
+      (init_state "Playlist one"
+      |> next |> next |> next |> current_song_idx)
+      string_of_int;
+    queue_test "song id loops after 4 nexts " 0
+      (init_state "Playlist one"
+      |> next |> next |> next |> next |> current_song_idx)
+      string_of_int;
+    queue_test "song id loops after 6 nexts" 2
+      (init_state "Playlist one"
+      |> next |> next |> next |> next |> next |> next
+      |> current_song_idx)
+      string_of_int;
+    queue_test "Prev song loops and is 1" 1
+      (init_state "Playlist one"
+      |> prev |> prev |> prev |> current_song_idx)
+      string_of_int;
+    queue_test "Prev song loops 3 3" 3
+      (init_state "Playlist one"
+      |> prev |> prev |> prev |> prev |> prev |> current_song_idx)
+      string_of_int;
+    queue_test "Prev loop name is correct" "Sample 15s"
+      (init_state "Playlist one"
+      |> prev |> prev |> prev |> prev |> prev |> current_song_name)
+      Fun.id;
+  ]
+  [@ocamlformat "disable=true"]
+  (*Tests that currently cause issues and need to be put back in normal
+    list of tests*)
+  (* let tests_to_be_tested = [ queue_test "select_playlist_by_artist
+     \"Dua Lipa\" (init_state Playlist \ one) = [\"Break My Heart\"]" [
+     "Break My Heart" ] (init_state "Playlist one" |>
+     select_playlist_by_artist "Dua Lipa" |> result_to_t |>
+     current_playlist) list_to_message; queue_test
+     "select_playlist_by_album \"Ka\" (init_state Playlist one) = \
+     [\"All Falls Down\"]" [ "All Falls Down" ] (init_state "Playlist
+     one" |> select_playlist_by_album "Ka" |> result_to_t |>
+     current_playlist) list_to_message; queue_test
+     "select_playlist_by_liked (init_state Playlist one) = [\"All \
+     Falls Down\"]" [ "Break My Heart"; "Reptilia"; "fly me to the
+     moon"; "fly me to the caml"; ] (init_state "Playlist one" |>
+     select_playlist_by_liked |> result_to_t |> current_playlist)
+     list_to_message; queue_test "select_playlist_by_year 2004
+     (init_state Playlist one) = [\"All \ Falls Down\"]" [ "All Falls
+     Down" ] (init_state "Playlist one" |> select_playlist_by_year 2004
+     |> result_to_t |> current_playlist) list_to_message; queue_test
+     "select_playlist_by_tag \"old\" (init_state Playlist one) = \
+     [\"All Falls Down\"; \"Reptilia\";\"Sample 15s\";\"fly me to \ the
+     moon\"]" [ "All Falls Down"; "Reptilia"; "Sample 15s"; "fly me to
+     the moon"; ] (init_state "Playlist one" |> select_playlist_by_tag
+     "old" |> result_to_t |> current_playlist) list_to_message; ] *)
+  [@ocamlformat "disable=false"]
+
+(* ================================================================== *)
+(* Music data test helper functions *)
+
+(* test exceptions *)
+let test_raise_exception name f expected_exception =
+  name >:: fun _ -> assert_raises expected_exception f
+
+let test_select_playlist name expected_output playlist_name =
+  test name expected_output
+    (Camlify.Music_data.select_playlist playlist_name)
+
+let test_list_of_playlist name list_of_playlists =
+  test name list_of_playlists list_of_playlist
+
+let test_all_songs name list_of_songs =
+  test name list_of_songs all_songs
+
+let test_read_songs_liked name liked song_name =
+  test name liked (read_song_liked song_name) string_of_bool
+
+let test_read_song_mp3_file name expected_mp3_file song_name =
+  test name expected_mp3_file
+    (read_song_mp3_file song_name)
+    String.escaped
+
+let test_read_song_artist name expected_artist song_name =
+  test name expected_artist (read_song_artist song_name) String.escaped
+
+let test_read_song_album name expected_album song_name =
+  test name expected_album (read_song_album song_name) String.escaped
+
+let read_song_year name expected_year song_name =
+  test name expected_year (read_song_year song_name) string_of_int
+
+let test_read_tags name expected_tags song_name =
+  test name expected_tags (read_tags song_name) list_to_message
+
+(*test cases not done*)
+(*Tests music_data functions*)
+let music_data_tests =
+  [
+    test_select_playlist "testing Playlist one song names correct"
+      [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
+      "Playlist one" list_to_message;
+    test_list_of_playlist "list of playlist returns correctly"
+      [ "Playlist zero"; "Playlist one" ]
+      list_to_message;
+    test_all_songs "all songs"
+      [
+        "All Falls Down";
+        "Break My Heart";
+        "Reptilia";
+        "Sample 15s";
+        "fly me to the moon";
+        "fly me to the caml";
+      ]
+      list_to_message;
+    test "dynamic dir loading" [ "" ] (get_dir_songs ()) list_to_message;
+  ]
+
+let suite =
+  "test suite for Camlify"
+  >::: List.flatten [ queue_tests; music_data_tests ]
+
+let _ = run_test_tt_main suite

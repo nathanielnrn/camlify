@@ -4,31 +4,37 @@
       "name": "All Falls Down",
       "liked": false,
       "mp3 file": "all_falls_down.mp3",
-      "artist": null,
-      "album": null,
-      "year": null,
-      "tags": []
+      "artist": "Kanye",
+      "album": "Ka",
+      "year": 2004,
+      "tags": [
+        "old",
+        "rap"
+      ]
     },
     {
       "name": "Break My Heart",
-      "liked": false,
+      "liked": true,
       "mp3 file": "break_my_heart.mp3",
-      "artist": null,
-      "album": null,
-      "year": null,
+      "artist": "Dua Lipa",
+      "album": "Du",
+      "year": 2020,
       "tags": [
-        "sad",
-        "banger"
+        "new",
+        "sad"
       ]
     },
     {
       "name": "Reptilia",
-      "liked": false,
+      "liked": true,
       "mp3 file": "reptilia.mp3",
-      "artist": null,
-      "album": null,
-      "year": null,
-      "tags": []
+      "artist": "the Strokes",
+      "album": "th",
+      "year": 2003,
+      "tags": [
+        "old",
+        "banger"
+      ]
     },
     {
       "name": "Sample 15s",
@@ -37,21 +43,31 @@
       "artist": null,
       "album": null,
       "year": null,
-      "tags": []
+      "tags": [
+        "sample",
+        "sad",
+        "rap",
+        "good",
+        "new",
+        "old"
+      ]
     },
     {
       "name": "fly me to the moon",
       "liked": true,
       "mp3 file": "yeet",
-      "artist": null,
-      "album": null,
-      "year": null,
-      "tags": []
+      "artist": "Frank Sinatra",
+      "album": "Fr",
+      "year": 1954,
+      "tags": [
+        "old",
+        "good"
+      ]
     },
     {
       "name": "fly me to the caml",
       "liked": true,
-      "mp3 file": "yeet",
+      "mp3 file": "caml.mp3",
       "artist": null,
       "album": null,
       "year": null,
@@ -66,31 +82,37 @@
           "name": "All Falls Down",
           "liked": false,
           "mp3 file": "all_falls_down.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
-          "tags": []
+          "artist": "Kanye",
+          "album": "Ka",
+          "year": 2004,
+          "tags": [
+            "old",
+            "rap"
+          ]
         },
         {
           "name": "Break My Heart",
-          "liked": false,
+          "liked": true,
           "mp3 file": "break_my_heart.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
+          "artist": "Dua Lipa",
+          "album": "Du",
+          "year": 2020,
           "tags": [
-            "sad",
-            "banger"
+            "new",
+            "sad"
           ]
         },
         {
           "name": "Reptilia",
-          "liked": false,
+          "liked": true,
           "mp3 file": "reptilia.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
-          "tags": []
+          "artist": "the Strokes",
+          "album": "th",
+          "year": 2003,
+          "tags": [
+            "old",
+            "banger"
+          ]
         }
       ]
     },
@@ -101,31 +123,37 @@
           "name": "All Falls Down",
           "liked": false,
           "mp3 file": "all_falls_down.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
-          "tags": []
+          "artist": "Kanye",
+          "album": "Ka",
+          "year": 2004,
+          "tags": [
+            "old",
+            "rap"
+          ]
         },
         {
           "name": "Break My Heart",
-          "liked": false,
+          "liked": true,
           "mp3 file": "break_my_heart.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
+          "artist": "Dua Lipa",
+          "album": "Du",
+          "year": 2020,
           "tags": [
-            "sad",
-            "banger"
+            "new",
+            "sad"
           ]
         },
         {
           "name": "Reptilia",
-          "liked": false,
+          "liked": true,
           "mp3 file": "reptilia.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
-          "tags": []
+          "artist": "the Strokes",
+          "album": "th",
+          "year": 2003,
+          "tags": [
+            "old",
+            "banger"
+          ]
         },
         {
           "name": "Sample 15s",
@@ -134,7 +162,14 @@
           "artist": null,
           "album": null,
           "year": null,
-          "tags": []
+          "tags": [
+            "sample",
+            "sad",
+            "rap",
+            "good",
+            "new",
+            "old"
+          ]
         }
       ]
     }

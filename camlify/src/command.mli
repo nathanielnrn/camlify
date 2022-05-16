@@ -1,11 +1,10 @@
 type song_name = string
-
 type playlist_name = string
-
 type index = int
 
 exception Empty
 exception Malformed
+
 
 type command = 
     | Play of song_name
@@ -39,4 +38,3 @@ type command =
     | Idle
 
 val parse : string -> command
-
