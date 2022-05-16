@@ -8,6 +8,11 @@ type t = {
   list_of_all_songs : string list;
 }
 
+let filter_null cat e =
+  try cat e with
+  | Music_data.UnknownInformation s -> ""
+  | s -> cat e
+
 let rec remove_element element lst =
   match lst with
   | [] -> []
@@ -220,7 +225,7 @@ let select_playlist_by_album album st =
         current_song_name =
           List.nth
             (List.filter
-               (fun x -> album = Music_data.read_song_artist x)
+               (fun x -> album = Music_data.read_song_album x)
                Music_data.all_songs)
             0;
         current_song_mp3_file =

@@ -50,7 +50,14 @@ let help_message : string =
   \ \n\
   \  "
 
+let filter_null cat e =
+  try cat e with
+  | UnknownInformation s -> ""
+  | s -> cat e
+
 let remove_dup lst = List.sort_uniq compare lst
+let remove_empty lst = List.filter (fun x -> String.length x > 0) lst
+let remove_zero lst = List.filter (fun x -> int_of_string x > 0) lst
 
 (*add [filename.mp3] : add a song named filename.mp3 in current
   playlist\n \ rm [filename.mp3 ]: remove song filename.mp3 in current
@@ -150,9 +157,27 @@ let step (q : Camlify.Queue.t) =
         | Illegal ->
             print_endline ("There is no playlist named " ^ pl_name);
             step_r q
-        | Legal new_q ->
+        | Legal new_q -> (
             print_endline ("Opening playlist " ^ pl_name ^ "…");
-            step_r new_q)
+            let res = Camlify.Queue.play_song_by_idx 0 new_q in
+            match res with
+            | Illegal ->
+                print_endline
+                  ("There is no such index as " ^ string_of_int 0);
+                step_r q
+            | Legal new_q ->
+                let new_song_name : string =
+                  Camlify.Queue.current_song_name new_q
+                in
+                print_endline ("Playing song " ^ new_song_name ^ "...");
+                let file_name =
+                  Camlify.Music_data.read_song_mp3_file new_song_name
+                in
+                ignore
+                  (Thread.create
+                     (Camlify.Streamer.play pipeline)
+                     file_name);
+                step_r new_q))
     | ChangeSongLike ((song_name : playlist_name), (liked : bool)) ->
         Camlify.Music_data.change_song_liked song_name liked;
         step_r q
@@ -276,19 +301,41 @@ let step (q : Camlify.Queue.t) =
           (String.concat ", "
              (List.map Camlify.Music_data.read_song_artist
                 Camlify.Music_data.all_songs
-             |> remove_dup));
+             |> remove_dup |> remove_empty));
         print_endline "Select artist";
         print_string "> ";
         let artist = read_line () in
         let res = Camlify.Queue.select_playlist_by_artist artist q in
-        match res with
-        | Illegal ->
-            print_endline ("Artist named " ^ artist ^ " doesn't exist");
-            step_r q
-        | Legal new_q ->
-            print_endline ("Playing songs by " ^ artist ^ "...");
-            ignore (step_r new_q);
-            step_r q
+        if artist = "" then (
+          print_endline "You didn't type anything";
+          step_r q)
+        else
+          match res with
+          | Illegal ->
+              print_endline ("Artist named " ^ artist ^ " doesn't exist");
+              step_r q
+          | Legal new_q -> (
+              print_endline ("Playing songs by " ^ artist ^ "...");
+              Camlify.Streamer.stop pipeline;
+              let res = Camlify.Queue.play_song_by_idx 0 new_q in
+              match res with
+              | Illegal ->
+                  print_endline
+                    ("There is no such index as " ^ string_of_int 0);
+                  step_r q
+              | Legal new_q2 ->
+                  let new_song_name : string =
+                    Camlify.Queue.current_song_name new_q2
+                  in
+                  print_endline ("Playing song " ^ new_song_name ^ "...");
+                  let file_name =
+                    Camlify.Music_data.read_song_mp3_file new_song_name
+                  in
+                  ignore
+                    (Thread.create
+                       (Camlify.Streamer.play pipeline)
+                       file_name);
+                  step_r new_q2)
       end
     | PlayAlbum -> begin
         print_endline "Names of all albums in this player :";
@@ -296,19 +343,41 @@ let step (q : Camlify.Queue.t) =
           (String.concat ", "
              (List.map Camlify.Music_data.read_song_album
                 Camlify.Music_data.all_songs
-             |> remove_dup));
+             |> remove_dup |> remove_empty));
         print_endline "Select album";
         print_string "> ";
         let album = read_line () in
         let res = Camlify.Queue.select_playlist_by_album album q in
-        match res with
-        | Illegal ->
-            print_endline ("Album named " ^ album ^ " doesn't exist");
-            step_r q
-        | Legal new_q ->
-            print_endline ("Playing songs in " ^ album ^ "...");
-            ignore (step_r new_q);
-            step_r q
+        if album = "" then (
+          print_endline "You didn't type anything";
+          step_r q)
+        else
+          match res with
+          | Illegal ->
+              print_endline ("Album named " ^ album ^ " doesn't exist");
+              step_r q
+          | Legal new_q -> (
+              print_endline ("Playing songs in " ^ album ^ "...");
+              Camlify.Streamer.stop pipeline;
+              let res = Camlify.Queue.play_song_by_idx 0 new_q in
+              match res with
+              | Illegal ->
+                  print_endline
+                    ("There is no such index as " ^ string_of_int 0);
+                  step_r q
+              | Legal new_q2 ->
+                  let new_song_name : string =
+                    Camlify.Queue.current_song_name new_q2
+                  in
+                  print_endline ("Playing song " ^ new_song_name ^ "...");
+                  let file_name =
+                    Camlify.Music_data.read_song_mp3_file new_song_name
+                  in
+                  ignore
+                    (Thread.create
+                       (Camlify.Streamer.play pipeline)
+                       file_name);
+                  step_r new_q2)
       end
     | PlayYear -> begin
         print_endline "List of years of songs in this player :";
@@ -317,21 +386,47 @@ let step (q : Camlify.Queue.t) =
              (List.map string_of_int
                 (List.map Camlify.Music_data.read_song_year
                    Camlify.Music_data.all_songs)
-             |> remove_dup));
+             |> remove_dup |> remove_zero));
         print_endline "Select year";
         print_string "> ";
         let year = read_line () in
-        let res =
-          Camlify.Queue.select_playlist_by_year (int_of_string year) q
-        in
-        match res with
-        | Illegal ->
-            print_endline ("Songs in year " ^ year ^ " doesn't exist");
-            step_r q
-        | Legal new_q ->
-            print_endline ("Playing songs from " ^ year ^ "...");
-            ignore (step_r new_q);
-            step_r q
+        if year = "" then (
+          print_endline "You didn't type anything";
+          step_r q)
+        else
+          let res =
+            try
+              Camlify.Queue.select_playlist_by_year (int_of_string year)
+                q
+            with
+            | _ -> Illegal
+          in
+          match res with
+          | Illegal ->
+              print_endline ("Songs in year " ^ year ^ " doesn't exist");
+              step_r q
+          | Legal new_q -> (
+              print_endline ("Playing songs from " ^ year ^ "...");
+              Camlify.Streamer.stop pipeline;
+              let res = Camlify.Queue.play_song_by_idx 0 new_q in
+              match res with
+              | Illegal ->
+                  print_endline
+                    ("There is no such index as " ^ string_of_int 0);
+                  step_r q
+              | Legal new_q2 ->
+                  let new_song_name : string =
+                    Camlify.Queue.current_song_name new_q2
+                  in
+                  print_endline ("Playing song " ^ new_song_name ^ "...");
+                  let file_name =
+                    Camlify.Music_data.read_song_mp3_file new_song_name
+                  in
+                  ignore
+                    (Thread.create
+                       (Camlify.Streamer.play pipeline)
+                       file_name);
+                  step_r new_q2)
       end
     | PlayLiked -> begin
         let res = Camlify.Queue.select_playlist_by_liked q in
@@ -339,10 +434,28 @@ let step (q : Camlify.Queue.t) =
         | Illegal ->
             print_endline "No songs are liked";
             step_r q
-        | Legal new_q ->
+        | Legal new_q -> (
             print_endline "Playing liked songs...";
-            ignore (step_r new_q);
-            step_r q
+            Camlify.Streamer.stop pipeline;
+            let res = Camlify.Queue.play_song_by_idx 0 new_q in
+            match res with
+            | Illegal ->
+                print_endline
+                  ("There is no such index as " ^ string_of_int 0);
+                step_r q
+            | Legal new_q2 ->
+                let new_song_name : string =
+                  Camlify.Queue.current_song_name new_q2
+                in
+                print_endline ("Playing song " ^ new_song_name ^ "...");
+                let file_name =
+                  Camlify.Music_data.read_song_mp3_file new_song_name
+                in
+                ignore
+                  (Thread.create
+                     (Camlify.Streamer.play pipeline)
+                     file_name);
+                step_r new_q2)
       end
     | PlayTag -> begin
         print_endline "Names of all tags in this player :";
@@ -360,10 +473,28 @@ let step (q : Camlify.Queue.t) =
         | Illegal ->
             print_endline ("Tag named " ^ tag ^ " doesn't exist");
             step_r q
-        | Legal new_q ->
+        | Legal new_q -> (
             print_endline ("Playing songs with tag " ^ tag ^ "...");
-            ignore (step_r new_q);
-            step_r q
+            Camlify.Streamer.stop pipeline;
+            let res = Camlify.Queue.play_song_by_idx 0 new_q in
+            match res with
+            | Illegal ->
+                print_endline
+                  ("There is no such index as " ^ string_of_int 0);
+                step_r q
+            | Legal new_q2 ->
+                let new_song_name : string =
+                  Camlify.Queue.current_song_name new_q2
+                in
+                print_endline ("Playing song " ^ new_song_name ^ "...");
+                let file_name =
+                  Camlify.Music_data.read_song_mp3_file new_song_name
+                in
+                ignore
+                  (Thread.create
+                     (Camlify.Streamer.play pipeline)
+                     file_name);
+                step_r new_q2)
       end
     | _ -> failwith "TODO?"
   in
@@ -394,8 +525,21 @@ let main () =
   let playlist = choose_playlist () in
   print_endline ("Opening playlist " ^ playlist ^ "...");
   let q = Camlify.Queue.init_state playlist in
-
-  step q
+  let res = Camlify.Queue.play_song_by_idx 0 q in
+  match res with
+  | Illegal ->
+      print_endline ("There is no such index as " ^ string_of_int 0);
+      step q
+  | Legal new_q ->
+      let new_song_name : string =
+        Camlify.Queue.current_song_name new_q
+      in
+      print_endline ("Playing song " ^ new_song_name ^ "...");
+      let file_name =
+        Camlify.Music_data.read_song_mp3_file new_song_name
+      in
+      ignore (Thread.create (Camlify.Streamer.play pipeline) file_name);
+      step new_q
 
 (* Execute the mp3. *)
 let _ = main ()
