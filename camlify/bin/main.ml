@@ -113,32 +113,28 @@ let step (q : Camlify.Queue.t) =
         Camlify.Streamer.pause pipeline;
         step_r q
     | Stop ->
-      let song_name = Camlify.Queue.current_song_name q in
-      print_endline ("Stopping " ^ song_name ^ "...");
-      Camlify.Streamer.stop pipeline;
-      (step_r q)
-
-    | Continue ->
         let song_name = Camlify.Queue.current_song_name q in
-        print_endline ("Continuing " ^ song_name ^ "...");
-        Camlify.Streamer.continue pipeline;
-        (step_r q)
-        
-    | PlayIndex idx ->
-      let res = Camlify.Queue.play_song_by_idx idx q in
-      begin
-      match res with
-      | Illegal ->
-        print_endline ("There is no such index as " ^ (string_of_int idx));
-        (step_r q)
-      | Legal new_q ->
-        let new_song_name : string = Camlify.Queue.current_song_name new_q in
-      print_endline ("Playing song " ^ new_song_name ^ "...");
-        let file_name = Camlify.Music_data.read_song_mp3_file new_song_name in
-        Camlify.Streamer.play pipeline file_name;
-        (step_r new_q)
-      end
-
+        print_endline ("Stopping " ^ song_name ^ "...");
+        Camlify.Streamer.stop pipeline;
+        step_r q
+    | PlayIndex idx -> (
+        let res = Camlify.Queue.play_song_by_idx idx q in
+        match res with
+        | Illegal ->
+            print_endline
+              ("There is no such index as " ^ string_of_int idx);
+            step_r q
+        | Legal new_q ->
+            let new_song_name : string =
+              Camlify.Queue.current_song_name new_q
+            in
+            print_endline ("Playing song " ^ new_song_name ^ "...");
+            let file_name =
+              Camlify.Music_data.read_song_mp3_file new_song_name
+            in
+            ignore
+              (Thread.create (Camlify.Streamer.play pipeline) file_name);
+            step_r new_q)
     | CurrentSongName ->
         let song_name = Camlify.Queue.current_song_name q in
         print_endline ("Current song: " ^ song_name);
