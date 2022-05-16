@@ -162,7 +162,7 @@ let read_song_liked song =
     match songlst with
     | [] -> raise (UnknownSong song)
     | h :: t when h.name = song -> h.liked
-    | h :: t -> song_liked song songlst
+    | h :: t -> song_liked song t
   in
   song_liked song iface.all_songs
 
@@ -210,7 +210,7 @@ let read_song_artist song =
       match songlst with
       | [] -> raise (UnknownSong song)
       | h :: t when h.name = song -> h.artist
-      | h :: t -> song_artist song songlst
+      | h :: t -> song_artist song t
     in
     song_artist song iface.all_songs
   in
@@ -232,7 +232,7 @@ let read_song_album song =
       match songlst with
       | [] -> raise (UnknownSong song)
       | h :: t when h.name = song -> h.album
-      | h :: t -> song_album song songlst
+      | h :: t -> song_album song t
     in
     song_album song iface.all_songs
   in
@@ -254,7 +254,7 @@ let read_song_year song =
       match songlst with
       | [] -> raise (UnknownSong song)
       | h :: t when h.name = song -> h.year
-      | h :: t -> song_year song songlst
+      | h :: t -> song_year song t
     in
     song_year song iface.all_songs
   in
@@ -276,7 +276,7 @@ let read_tags song =
       match songlst with
       | [] -> raise (UnknownSong song)
       | h :: t when h.name = song -> h.tags
-      | h :: t -> song_tags song songlst
+      | h :: t -> song_tags song t
     in
     song_tags song iface.all_songs
   in
