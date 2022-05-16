@@ -32,6 +32,7 @@ open Camlify.Music_data
   printer_function]
    creates a test case named [name], and tests for [called_input] =
    [expected_output]. Turns output to string using printer_function*)
+
 let test
     (name : string)
     expected_output
@@ -49,7 +50,7 @@ let list_to_message_int (lst : int list) : string =
 let list_to_message (lst : string list) : string =
   (lst
   |> List.map (fun s -> String.escaped s)
-  |> List.fold_left (fun acc s -> acc ^ " " ^ s ^ " ;") "{")
+  |> List.fold_left (fun acc s -> acc ^ "\n    " ^ s ^ " ;") "{")
   ^ " }"
 
 (* Default expectation of output is an int *)
@@ -81,8 +82,8 @@ let prev st = st |> prev_song |> result_to_t
 let queue_tests =
   [
     init_state_song_name_test
-      "First song of Playlist one is \"All Falls Down\"" "Playlist one"
-      "All Falls Down";
+      "First song of Playlist one is \"All Falls\n    Down\""
+      "Playlist one" "All Falls Down";
     init_state_song_name_test
       "First song of Playlist zero is \"All Falls Down\""
       "Playlist zero" "All Falls Down";
@@ -208,7 +209,7 @@ let music_data_tests =
         "Reptilia";
         "Sample 15s";
         "fly me to the moon";
-        "fly me to the caml";
+        "fly\n    me to the caml";
       ]
       list_to_message;
     test "dynamic dir loading" [ "" ] (get_dir_songs ()) list_to_message;
