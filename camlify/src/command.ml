@@ -9,6 +9,7 @@ type command =
   | Play of song_name
   | Pause
   | Stop
+  | Continue
   | PlayIndex of index
   | CurrentSongName
   | CurrentSongIndex
@@ -18,7 +19,6 @@ type command =
   | CreatePlayList of playlist_name
   | NextSong
   | PreviousSong
-  | Shuffle
   | AddSong of song_name
   | RemoveSong of song_name
   | ChangeSongLike of song_name * bool
@@ -50,6 +50,8 @@ let parse (str : string) : command =
         else if String.equal hd "pause" then
           if List.length tl != 0 then raise Malformed else Pause
         else if String.equal hd "s" then
+          if List.length tl != 0 then raise Malformed else Stop
+        else if String.equal hd "c" then
           if List.length tl != 0 then raise Malformed else Stop
         else if String.equal hd "pi" then
           if List.length tl != 1 then raise Malformed
