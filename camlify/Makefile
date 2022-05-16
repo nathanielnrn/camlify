@@ -7,4 +7,7 @@ test:
 doc:
 	dune build @doc
 
+build:
+	dune build
+
 .PHONY: all test clean
