@@ -2,6 +2,31 @@ open OUnit2
 open Camlify.Queue
 open Camlify.Music_data
 
+(** Testing is largely implemented as follows: Glass box testing was
+    used for the most part, largely because our test cases use dynamic
+    data that we need to know the contents of in order to properly test
+    for.
+
+    This made it more difficult to use black box/property testing. To
+    that end we had 2 test benches that had different data sets, and
+    manually input our expected result in our tests.
+
+    Our Music_Data, Command, and Queue module are all tested using Ounit
+    in this test file, while our Main (interface) and Streamer modules
+    were user tested by us. Main and Streamer could not feasibly be
+    tested using Ounit (as far as we are aware) due to main being
+    responsible for outputting to terminal, while Streamer largely makes
+    calls to external libraries, making testing difficult. This being
+    said, some helper functions in Streamer are tested, mainly as a
+    result of test driven development.
+
+    Our tests ensure that Queue and Music_Data, the modules responsible
+    for manipulating and changing the state of our data and music by
+    testing for edge cases, expected cases, and by specifically catching
+    known bugs that arose during implementation. *)
+
+(*TODO: Add Command tests*)
+
 (**A general test
    case.[test expected_output called_function 
   printer_function]
