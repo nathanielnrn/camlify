@@ -22,11 +22,15 @@ val pause : Element.t Option.t ref -> unit
     exception otherwise (TBD what kind) Does not (seem) to need to be in
     a thread*)
 
+val stop : Element.t Option.t ref -> unit
 (**[stop pipeline] stops currently playing stream or does nothing
    because there is none Does not (seem) to need to be in a thread*)
 
-val stop : Element.t Option.t ref -> unit
 val get_pipeline : Element.t Option.t ref
+
+val data_dir_uri : string
+(** Returns path of data dir ending with / i.e [".../data/"] based on
+    execution path**)
 
 (*TODO: [parse song] Takes in an mp3 file and parses data. Outputs this
   data in standardized format*)

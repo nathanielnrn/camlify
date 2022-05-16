@@ -370,6 +370,16 @@ let remove_song_tag song tag =
       { sng with tags = List.filter (fun t -> t <> tag) sng.tags })
     song
 
+(* Helper function which traverses to /data and returns a string list of
+   .mp3 files string in list is of form '<song_name>.mp3'*)
+
+let get_dir_songs () : string list =
+  let data_path = Streamer.data_dir_uri in
+  let song_names = Sys.readdir data_path |> Array.to_list in
+  List.filter
+    (fun file_name -> Filename.extension file_name = ".mp3")
+    song_names
+
 (*let rec to_interface (interface : interface) : Yojson.Basic.t = `Assoc
   [("playlists",(match interface.playlists with | [] -> `List [] | h::t
   -> [List]*)
