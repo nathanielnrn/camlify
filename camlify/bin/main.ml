@@ -429,6 +429,12 @@ let step (q : Camlify.Queue.t) =
                   step_r new_q2)
       end
     | PlayLiked -> begin
+        print_endline "List of all songs liked in this player :";
+        print_endline
+          (String.concat ", "
+             (List.filter Camlify.Music_data.read_song_liked
+                Camlify.Music_data.all_songs
+             |> remove_dup));
         let res = Camlify.Queue.select_playlist_by_liked q in
         match res with
         | Illegal ->

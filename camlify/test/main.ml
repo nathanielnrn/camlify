@@ -82,8 +82,8 @@ let prev st = st |> prev_song |> result_to_t
 let queue_tests =
   [
     init_state_song_name_test
-      "First song of Playlist one is \"All Falls\n    Down\""
-      "Playlist one" "All Falls Down";
+      "First song of Playlist one is \"All Falls Down\"" "Playlist one"
+      "All Falls Down";
     init_state_song_name_test
       "First song of Playlist zero is \"All Falls Down\""
       "Playlist zero" "All Falls Down";
@@ -127,6 +127,17 @@ let queue_tests =
       (init_state "Playlist one"
       |> prev |> prev |> prev |> prev |> prev |> current_song_name)
       Fun.id;
+    queue_test "select_playlist_by_artist
+     \"Dua Lipa\" (init_state Playlist \ one) = [\"Break My Heart\"]" [
+     "Break My Heart"] (init_state "Playlist one" |>
+     select_playlist_by_artist "Dua Lipa" |> result_to_t |>
+     current_playlist) list_to_message;
+     queue_test
+     "select_playlist_by_liked (init_state Playlist one) = [\"All \
+     Falls Down\"]" [ "Break My Heart"; "Reptilia"; "fly me to the
+     moon"; "fly me to the caml"; ] (init_state "Playlist one" |>
+     select_playlist_by_liked |> result_to_t |> current_playlist)
+     list_to_message; 
   ]
   [@ocamlformat "disable=true"]
   (*Tests that currently cause issues and need to be put back in normal
@@ -209,10 +220,10 @@ let music_data_tests =
         "Reptilia";
         "Sample 15s";
         "fly me to the moon";
-        "fly\n    me to the caml";
+        "fly me to the caml";
       ]
       list_to_message;
-    test "dynamic dir loading" [ "" ] (get_dir_songs ()) list_to_message;
+    (**test "dynamic dir loading" [ "" ] (get_dir_songs ()) list_to_message;*)
   ]
 
 let suite =
