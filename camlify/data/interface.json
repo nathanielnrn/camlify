@@ -7,10 +7,7 @@
       "artist": "Kanye",
       "album": "Ka",
       "year": 2004,
-      "tags": [
-        "old",
-        "rap"
-      ]
+      "tags": [ "old", "rap" ]
     },
     {
       "name": "Break My Heart",
@@ -19,12 +16,7 @@
       "artist": "Dua Lipa",
       "album": "Du",
       "year": 2020,
-      "tags": [
-        "new",
-        "sad",
-        "",
-        "[\"great\"]"
-      ]
+      "tags": [ "new", "sad", "", "[\"great\"]" ]
     },
     {
       "name": "Reptilia",
@@ -33,10 +25,7 @@
       "artist": "the Strokes",
       "album": "th",
       "year": 2003,
-      "tags": [
-        "old",
-        "banger"
-      ]
+      "tags": [ "old", "banger" ]
     },
     {
       "name": "Sample 15s",
@@ -45,14 +34,7 @@
       "artist": null,
       "album": null,
       "year": null,
-      "tags": [
-        "sample",
-        "sad",
-        "rap",
-        "good",
-        "new",
-        "old"
-      ]
+      "tags": [ "sample", "sad", "rap", "good", "new", "old" ]
     },
     {
       "name": "fly me to the moon",
@@ -61,10 +43,7 @@
       "artist": "Frank Sinatra",
       "album": "Fr",
       "year": 1954,
-      "tags": [
-        "old",
-        "good"
-      ]
+      "tags": [ "old", "good" ]
     },
     {
       "name": "fly me to the caml",
@@ -87,10 +66,7 @@
           "artist": "Kanye",
           "album": "Ka",
           "year": 2004,
-          "tags": [
-            "old",
-            "rap"
-          ]
+          "tags": [ "old", "rap" ]
         },
         {
           "name": "Break My Heart",
@@ -99,10 +75,7 @@
           "artist": "Dua Lipa",
           "album": "Du",
           "year": 2020,
-          "tags": [
-            "new",
-            "sad"
-          ]
+          "tags": [ "new", "sad" ]
         },
         {
           "name": "Reptilia",
@@ -111,10 +84,7 @@
           "artist": "the Strokes",
           "album": "th",
           "year": 2003,
-          "tags": [
-            "old",
-            "banger"
-          ]
+          "tags": [ "old", "banger" ]
         }
       ]
     },
@@ -128,10 +98,7 @@
           "artist": "Kanye",
           "album": "Ka",
           "year": 2004,
-          "tags": [
-            "old",
-            "rap"
-          ]
+          "tags": [ "old", "rap" ]
         },
         {
           "name": "Break My Heart",
@@ -140,10 +107,7 @@
           "artist": "Dua Lipa",
           "album": "Du",
           "year": 2020,
-          "tags": [
-            "new",
-            "sad"
-          ]
+          "tags": [ "new", "sad" ]
         },
         {
           "name": "Reptilia",
@@ -152,10 +116,7 @@
           "artist": "the Strokes",
           "album": "th",
           "year": 2003,
-          "tags": [
-            "old",
-            "banger"
-          ]
+          "tags": [ "old", "banger" ]
         },
         {
           "name": "Sample 15s",
@@ -164,14 +125,7 @@
           "artist": null,
           "album": null,
           "year": null,
-          "tags": [
-            "sample",
-            "sad",
-            "rap",
-            "good",
-            "new",
-            "old"
-          ]
+          "tags": [ "sample", "sad", "rap", "good", "new", "old" ]
         }
       ]
     }

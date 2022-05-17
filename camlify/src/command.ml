@@ -21,7 +21,7 @@ type command =
   | Shuffle
   | AddSong of song_name
   | RemoveSong of song_name
-  | ChangeSongLike of song_name * bool
+  | ChangeSongLike of song_name
   | ChangeSongArtist of song_name
   | ChangeSongAlbum of song_name
   | ChangeSongYear of song_name * int
@@ -58,7 +58,7 @@ let parse' (str : string) : command =
         | "index", [] -> CurrentSongIndex
         | "pl", [] -> CurrentPlayList
         | "change_pl", _ :: _ -> ChangePlayList (String.concat " " t)
-        (*TODO: change_l*)
+        | "change_l", _ :: _ -> ChangeSongLike (String.concat " " t)
         | "change_ar", _ :: _ -> ChangeSongArtist (String.concat " " t)
         | _ -> raise Malformed
       end
@@ -94,17 +94,8 @@ let parse (str : string) : command =
           if List.length tl == 0 then raise Malformed
           else ChangePlayList (String.concat " " tl)
         else if String.equal hd "change_l" then
-          if
-            List.length tl < 2
-            || List.length tl > 0
-               && List.nth tl (List.length tl - 1) <> "true"
-               && List.nth tl (List.length tl - 1) <> "false"
-          then raise Malformed
-          else
-            let liked = List.nth tl (List.length tl - 1) in
-            ChangeSongLike
-              ( String.concat " " (List.filter (fun x -> x <> liked) tl),
-                String.equal liked "true" )
+          if List.length tl == 0 then raise Malformed
+          else ChangeSongLike (String.concat " " tl)
         else if String.equal hd "change_ar" then
           if List.length tl == 0 then raise Malformed
           else ChangeSongArtist (String.concat " " tl)
