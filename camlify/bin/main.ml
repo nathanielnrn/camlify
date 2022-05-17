@@ -112,6 +112,9 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
   | ChangePlayList pl_name -> h_change_playList pl_name q
   | ChangeSongLike song_name ->
       change_song_liked song_name (not (read_song_liked song_name));
+      (match read_song_liked song_name with
+      | true -> print_endline (song_name ^ " is liked")
+      | false -> print_endline (song_name ^ " is unliked"));
       step_r q
   | ChangeSongArtist song_name ->
       print_endline "What is the name of the artist?";
