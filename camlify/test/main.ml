@@ -97,10 +97,84 @@ let queue_tests =
       [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
       (init_state "Playlist one" |> current_playlist)
       list_to_message;
+    queue_test "Songs with artist Dua Lipa is Break My Heart"
+      [ "Break My Heart" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_artist "Dua Lipa"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test "Songs in album Du is Break My Heart"
+      [ "Break My Heart" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_album "Du"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test "Songs from year 2004 is All Falls Down"
+      [ "All Falls Down" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_year 2004
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test
+      "Songs that are liked are Break My Heart, Reptilia, fly me to \
+       the moon, fly me to the caml"
+      [
+        "Break My Heart";
+        "Reptilia";
+        "fly me to the moon";
+        "fly me to the caml";
+      ]
+      (init_state "Playlist one"
+      |> select_playlist_by_liked |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test "Songs with the tag banger is Reptilia" [ "Reptilia" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "banger"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test
+      "Songs with the tag good is Sample 15s, fly me to the moon"
+      [ "Sample 15s"; "fly me to the moon" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "good"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test "Songs with the tag good is Break My Heart, Sample 15s"
+      [ "Break My Heart"; "Sample 15s" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "new"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test
+      "Songs with the tag good is All Falls Down, Reptilia, Sample \
+       15s, fly me to the moon"
+      [
+        "All Falls Down"; "Reptilia"; "Sample 15s"; "fly me to the moon";
+      ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "old"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test "Songs with the tag good is All Falls Down, Sample 15s"
+      [ "All Falls Down"; "Sample 15s" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "rap"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test "Songs with the tag good is Break My Heart, Sample 15s"
+      [ "Break My Heart"; "Sample 15s" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "sad"
+      |> result_to_t |> current_playlist)
+      list_to_message;
     queue_test "Current song of play by name 'Reptilia' is 2" 2
       (init_state "Playlist one"
       |> play_song_by_name "Reptilia"
       |> result_to_t |> current_song_idx)
+      string_of_int;
+    queue_test "Current song idx is 1" 1
+      (init_state "Playlist one"
+      |> play_song_by_idx 1 |> result_to_t |> current_song_idx)
       string_of_int;
     queue_test "Song id of 3 nexts is 3" 3
       (init_state "Playlist one"
