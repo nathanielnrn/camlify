@@ -37,3 +37,5 @@ type command =
   | Idle
 
 val parse' : string -> command
+(**Uses pattern matching vs else if trees to continue implementing
+   compare to [parse] below and match correct output with match*)
