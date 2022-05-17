@@ -3,6 +3,8 @@ open Camlify.Queue
 open Camlify.Streamer
 open Camlify.Command
 
+let () = load_data ()
+
 (* TODO: update with interface to client using terminal,
  * see a2 bin/main.ml for direction *)
 

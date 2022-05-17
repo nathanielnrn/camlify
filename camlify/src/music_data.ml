@@ -6,7 +6,7 @@ exception UnknownSong of string
 exception UnknownInformation of string
 exception UnknownPlaylist of string
 
-let file = "data/interface.json"
+let file = "data/data.json"
 let data = Yojson.Basic.from_file file
 
 type song = {
@@ -98,11 +98,13 @@ let rec to_interface (interface : interface) : Yojson.t =
       ("playlists", `List (interface.playlists |> List.map to_playlist));
     ]
 
+let file' = "data/data.json"
+
 let update_json iface =
   let pushed = Yojson.pretty_to_string (to_interface iface) in
-  let oc = open_out file in
-  Printf.fprintf oc "%s\n" pushed;
-  close_out oc
+  let out_chan = open_out file' in
+  Printf.fprintf out_chan "%s\n" pushed;
+  close_out out_chan
 
 let slist_to_snames (slist : song list) =
   List.map (fun (s : song) -> s.name) slist
@@ -379,6 +381,61 @@ let get_dir_songs () : string list =
   List.filter
     (fun file_name -> Filename.extension file_name = ".mp3")
     song_names
+
+(*pair of (song name, mp3 name) from a get_dir_song list*)
+let seperate_song_mp3 dat =
+  let rec sep i s acc =
+    if i >= String.length s then failwith "got to end of string"
+    else
+      let c = String.get s i in
+      if c = '.' then acc else sep (i + 1) s (acc ^ Char.escaped c)
+  in
+  (sep 0 dat "", dat)
+
+(*creates a list of songs from list of data strings from get_dir_song*)
+let rec songs_to_interface slist : song list =
+  match slist with
+  | (sname, mp3) :: t ->
+      {
+        name = sname;
+        liked = false;
+        mp3_file = mp3;
+        artist = None;
+        album = None;
+        year = None;
+        tags = [];
+      }
+      :: songs_to_interface t
+  | [] -> []
+
+let interface_from_song_list slist : interface =
+  { all_songs = slist; playlists = [] }
+
+let load_data () =
+  get_dir_songs ()
+  |> List.map seperate_song_mp3
+  |> songs_to_interface |> interface_from_song_list |> update_json
+
+(* let () = (* Write message to file *) let oc = open_out file' in (*
+   create or truncate file, return channel *) Printf.fprintf oc "%s\n"
+   pushed; (* write something *) close_out oc
+
+   (*COPPIED CODE CHECK IF THAT IS OK*) let () = (* Write message to
+   file *) let oc = open_out file' in (* create or truncate file, return
+   channel *) Printf.fprintf oc "%s\n" message; (* write something *)
+   close_out oc; (* flush and close the channel *)
+
+   (* Read file and display the first line *) let ic = open_in file' in
+   try let line = input_line ic in (* read line, discard \n *)
+   print_endline line; (* write the result to stdout *) flush stdout; (*
+   write on the underlying device now *) close_in ic (* close the input
+   channel *) with e -> (* some unexpected exception occurs *)
+   close_in_noerr ic; (* emergency closing *) raise e (* exit with
+   error: files are closed but channels are not flushed *)
+
+   let x = Yojson.Basic.pretty_to_string j
+
+   let () = print_endline x*)
 
 (*let rec to_interface (interface : interface) : Yojson.Basic.t = `Assoc
   [("playlists",(match interface.playlists with | [] -> `List [] | h::t
