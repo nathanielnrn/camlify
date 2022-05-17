@@ -8,11 +8,13 @@ type t = {
   list_of_all_songs : string list;
 }
 
+(**helper function that filters out null elements*)
 let filter_null cat e =
   try cat e with
   | Music_data.UnknownInformation s -> ""
   | s -> cat e
 
+(**helper function that removes element from lst*)
 let rec remove_element element lst =
   match lst with
   | [] -> []
@@ -43,8 +45,10 @@ type result =
   | Legal of t
   | Illegal
 
+(**helper function to remove duplicates from lst*)
 let remove_dup lst = List.sort_uniq compare lst
 
+(**helper function that finds index e in lst*)
 let rec find_idx e lst =
   match lst with
   | [] -> 0
