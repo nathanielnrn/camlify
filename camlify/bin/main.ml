@@ -38,8 +38,9 @@ let help_message : string =
   \ next : plays next song in current playlist\n\
   \ prev : plays previous song in current playlist\n\
   \ shuffle : plays random song in current playlist\n\
-  \ \n\
-  \  play_artist : displays list of artist names and plays selected \
+  \ add [song_name] : adds [song_name] to currently located playlist\n\
+  \ rm[song_name] : removes [song_name] to currently located playlist\n\
+  \    play_artist : displays list of artist names and plays selected \
    artist's songs \n\
   \ play_album : displays list of album names and plays selected \
    album's songs \n\
@@ -59,7 +60,7 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
     match read_line () with
     | exception End_of_file -> Quit
     | command -> begin
-        try parse command with
+        try parse' command with
         | Empty ->
             let _ = print_endline "Please write anything..." in
             Idle
@@ -129,6 +130,9 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       change_song_album song_name album;
       step_r q
   | ChangeSongYear (song_name, year) ->
+      print_endline
+        ("The year of " ^ song_name ^ " has been changed to "
+       ^ string_of_int year);
       change_song_year song_name year;
       step_r q
   | AddSongTag song_name ->
