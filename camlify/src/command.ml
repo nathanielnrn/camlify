@@ -36,8 +36,35 @@ type command =
   | Quit
   | Idle
 
+let make_play_index i =
+  try PlayIndex (int_of_string i) with
+  | Failure _ -> raise Malformed
+
+(*Uses pattern matching versus else if trees to continue implementing
+  compare to [parse] below and match correct output with match*)
+let parse' (str : string) : command =
+  if str = "" then raise Empty
+  else
+    match String.split_on_char ' ' str with
+    | [] -> raise Malformed
+    | h :: t -> begin
+        match (h, t) with
+        | "quit", [] -> Quit
+        | "p", _ :: _ -> Play (String.concat " " t)
+        | "pause", [] -> Pause
+        | "s", [] -> Stop
+        | "pi", [ i ] -> make_play_index i
+        | "name", [] -> CurrentSongName
+        | "index", [] -> CurrentSongIndex
+        | "pl", [] -> CurrentPlayList
+        | "change_pl", _ :: _ -> ChangePlayList (String.concat " " t)
+        (*TODO: change_l*)
+        | "change_ar", _ :: _ -> ChangeSongArtist (String.concat " " t)
+        | _ -> raise Malformed
+      end
+
 let parse (str : string) : command =
-  if String.length str = 0 then raise Empty
+  if str = "" then raise Empty
   else
     match String.split_on_char ' ' str with
     | [] -> raise Malformed

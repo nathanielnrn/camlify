@@ -37,3 +37,6 @@ type command =
   | Idle
 
 val parse : string -> command
+
+(*TODO: Delete parse'*)
+val parse' : string -> command

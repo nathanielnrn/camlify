@@ -2,6 +2,7 @@ open OUnit2
 open Camlify.Queue
 open Camlify.Music_data
 open Camlify.Streamer
+open Camlify.Command
 
 (** Testing is largely implemented as follows: Glass box testing was
     used for the most part, largely because our test cases use dynamic
@@ -365,8 +366,52 @@ let streamer_tests =
       string_of_bool;
   ]
 
+(* TODO: delete*)
+let new_parse = true
+
+let test_command
+    (command_string : string)
+    (command : Camlify.Command.command) : test =
+  "parsing " ^ command_string >:: fun _ ->
+  assert_equal command
+    ((if new_parse then parse' else parse) command_string)
+
+let test_bad_command (command_string : string) : test =
+  "bad command " ^ command_string >:: fun _ ->
+  assert_raises Malformed (fun _ ->
+      (if new_parse then parse' else parse) command_string)
+
+let command_tests =
+  [
+    test_command "quit" Quit;
+    test_bad_command "quit All Falls Down";
+    test_command "p All Falls Down" (Play "All Falls Down");
+    test_bad_command "p";
+    test_command "pause" Pause;
+    test_bad_command "pause song name";
+    test_command "s" Stop;
+    test_bad_command "s song name";
+    test_command "pi 7" (PlayIndex 7);
+    test_bad_command "pi huh";
+    test_command "name" CurrentSongName;
+    test_bad_command "name     ";
+    test_bad_command "name skk 77";
+    test_bad_command "name   s   ";
+    test_command "index" CurrentSongIndex;
+    test_bad_command "index 4";
+    test_command "pl" CurrentPlayList;
+    test_bad_command "pl new playlist";
+    test_command "change_pl playist 2" (ChangePlayList "playist 2");
+    test_bad_command "change_pl";
+    test_command "change_ar 22 t" (ChangeSongArtist "22 t");
+    test_bad_command "change_ar";
+  ]
+
 let suite =
   "test suite for Camlify"
-  >::: List.flatten [ queue_tests; music_data_tests; streamer_tests ]
+  >::: List.flatten
+         [
+           queue_tests; music_data_tests; streamer_tests; command_tests;
+         ]
 
 let _ = run_test_tt_main suite
