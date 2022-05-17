@@ -9,9 +9,6 @@ type tag = string list
 (* let pipeline_instance = ref None *)
 (* let current_song = ref "" *)
 
-(*TODO: implement*)
-let tags_of_file f = []
-let strings_of_tags l = [ "To implement" ]
 (*Relative location of data directory which contains mp3 files.contents
   in Unix this is "../data/"*)
 
@@ -79,18 +76,13 @@ let play pipeline file_name =
 
 (**Todo: should throw an exception if pipeline not instantiated*)
 let pause pipeline =
-  if !pipeline = None then failwith "Should not be called before play"
-  else ignore (Element.set_state (get !pipeline) Element.State_paused)
+  match !pipeline with
+  | None -> failwith "Should not be called before play"
+  | Some pl -> ignore (Element.set_state pl Element.State_paused)
 
-(**Todo: should throw an exception if pipeline not instantiated (maybe)?*)
 let stop pipeline =
   match !pipeline with
   | Some pl -> ignore (Element.set_state pl Element.State_null)
-  | _ ->
-      ();
-      pipeline := None
+  | _ -> pipeline := None
 
 let get_pipeline = ref None
-
-(*TODO: See mli file spec*)
-let parse _ = failwith "Not yet implemented"

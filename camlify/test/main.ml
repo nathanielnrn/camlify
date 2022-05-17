@@ -1,6 +1,7 @@
 open OUnit2
 open Camlify.Queue
 open Camlify.Music_data
+open Camlify.Streamer
 
 (** Testing is largely implemented as follows: Glass box testing was
     used for the most part, largely because our test cases use dynamic
@@ -309,8 +310,25 @@ let music_data_tests =
       list_to_message;
   ]
 
+let streamer_tests =
+  [
+    test "data dir uri"
+      "/home/navarro/cs3110/camlify/_build/default/camlify/data/"
+      data_dir_uri Fun.id;
+    test "get_pipeline" true
+      (Option.is_none !get_pipeline)
+      string_of_bool;
+    test_raise_exception "pause fails correctly"
+      (fun () -> pause get_pipeline)
+      (Failure "Should not be called before play");
+    test "stop works" true
+      (stop get_pipeline;
+       Option.is_none !get_pipeline)
+      string_of_bool;
+  ]
+
 let suite =
   "test suite for Camlify"
-  >::: List.flatten [ queue_tests; music_data_tests ]
+  >::: List.flatten [ queue_tests; music_data_tests; streamer_tests ]
 
 let _ = run_test_tt_main suite
