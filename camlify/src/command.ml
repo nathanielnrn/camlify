@@ -60,6 +60,8 @@ let parse' (str : string) : command =
         | "change_pl", _ :: _ -> ChangePlayList (String.concat " " t)
         | "change_l", _ :: _ -> ChangeSongLike (String.concat " " t)
         | "change_ar", _ :: _ -> ChangeSongArtist (String.concat " " t)
+        | "change_al", _ :: _ -> ChangeSongAlbum (String.concat " " t)
+        | "change_y", _ :: _ -> ChangeSongYear
         | _ -> raise Malformed
       end
 

@@ -13,7 +13,7 @@ let help_message : string =
    ends):\n\
   \ help : print this message\n\
   \ quit : turn off this program\n\
-  \ p [filename.mp3] : plays mp3 file with given filename\n\
+  \ p [song_name] : plays mp3 file with given filename\n\
   \ pause : pause currently played mp3 file\n\
   \ pi [index] : plays mp3 file with given index in current playlist\n\
   \ pl : displays list of songs in current playlist\n\
@@ -21,17 +21,17 @@ let help_message : string =
   \ change_pl [playlist name] : change current playlist into given \
    playlist\n\
   \ change_l [song_name]: change like state of the song in the json file\n\
-  \ change_ar [filename.mp3] : change the artist of the song in the \
-   json file.\n\
+  \ change_ar [song_name] : change the artist of the song in the json \
+   file.\n\
   \ An additional prompt is given to get the artist of song\n\
-  \ change_al [filename.mp3] : change the album of the song in the \
-   json file.\n\
+  \ change_al [song_name] : change the album of the song in the json \
+   file.\n\
   \ An additional prompt is given to get the album of song\n\
-  \ change_y [filename.mp3] [year] : change the year of the song in \
-   the json file.\n\
-  \ add_tag [filename.mp3] : add a tag to the song in the json file.\n\
+  \ change_y [song_name] [year] : change the year of the song in the \
+   json file.\n\
+  \ add_tag [song_name] : add a tag to the song in the json file.\n\
   \ An additional prompt is given to get the new tag\n\
-  \ rm_tag [filename.mp3] : remove a tag to the song in the json file.\n\
+  \ rm_tag [song_name] : remove a tag to the song in the json file.\n\
   \ An additional prompt is given to get the tag\n\
   \ name : displays name of current song\n\
   \ index : displays index of current song in current playlist\n\
