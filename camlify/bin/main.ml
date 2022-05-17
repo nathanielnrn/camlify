@@ -20,7 +20,7 @@ let help_message : string =
   \ pls : displays list of all playlists\n\
   \ change_pl [playlist name] : change current playlist into given \
    playlist\n\
-  \ change_l [filename.mp3] : change like of the song in the json file\n\
+  \ change_l [song_name]: change like state of the song in the json file\n\
   \ change_ar [filename.mp3] : change the artist of the song in the \
    json file.\n\
   \ An additional prompt is given to get the artist of song\n\
@@ -110,8 +110,8 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       print_endline (String.concat "\n" list_of_playlist);
       step_r q
   | ChangePlayList pl_name -> h_change_playList pl_name q
-  | ChangeSongLike ((song_name : playlist_name), (liked : bool)) ->
-      change_song_liked song_name liked;
+  | ChangeSongLike song_name ->
+      change_song_liked song_name (not (read_song_liked song_name));
       step_r q
   | ChangeSongArtist song_name ->
       print_endline "What is the name of the artist?";
