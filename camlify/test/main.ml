@@ -257,8 +257,7 @@ let test_raise_exception name f expected_exception =
   name >:: fun _ -> assert_raises expected_exception f
 
 let test_select_playlist name expected_output playlist_name =
-  test name expected_output
-    (Camlify.Music_data.select_playlist playlist_name)
+  test name expected_output (select_playlist playlist_name)
 
 let test_list_of_playlist name list_of_playlists =
   test name list_of_playlists list_of_playlist
@@ -280,7 +279,7 @@ let test_read_song_artist name expected_artist song_name =
 let test_read_song_album name expected_album song_name =
   test name expected_album (read_song_album song_name) String.escaped
 
-let read_song_year name expected_year song_name =
+let test_read_song_year name expected_year song_name =
   test name expected_year (read_song_year song_name) string_of_int
 
 let test_read_tags name expected_tags song_name =
@@ -308,6 +307,45 @@ let music_data_tests =
         "fly me to the caml";
       ]
       list_to_message;
+    test_read_song_artist "All Falls Down" "Kanye" "All Falls Down";
+    test_read_song_artist "Break My Heart" "Dua Lipa" "Break My Heart";
+    test_read_song_artist "Sample 15s" "" "Sample 15s";
+    test_read_song_album "Sample 15s" "" "Sample 15s";
+    test_read_song_album "All Falls Down" "Ka" "All Falls Down";
+    test_read_song_album "Break My Heart" "Du" "Break My Heart";
+    test_read_songs_liked "Break My Heart" true "Break My Heart";
+    test_read_songs_liked "Sample 15s" false "Sample 15s";
+    test_read_song_year "Break My Heart" 2020 "Break My Heart";
+    test_read_song_year "Sample 15s" 0 "Sample 15s";
+    test_read_tags "All Falls Down" [ "old"; "rap" ] "All Falls Down";
+    test_read_tags "Break My Heart"
+      [ "new"; "sad"; ""; {|["great"]|} ]
+      "Break My Heart";
+    test_read_tags "Fly me to the caml" [] "fly me to the caml";
+    test_read_song_mp3_file "Reptilia" "reptilia.mp3" "Reptilia";
+    test_read_song_mp3_file "Break My Heart" "break_my_heart.mp3"
+      "Break My Heart";
+    test_raise_exception "unknown playlist"
+      (fun () -> select_playlist "non_existent_playlist")
+      (UnknownPlaylist "non_existent_playlist");
+    test_raise_exception "read song liked"
+      (fun () -> read_song_liked "non_existent_liked_song")
+      (UnknownSong "non_existent_liked_song");
+    test_raise_exception "unknown song mp3"
+      (fun () -> read_song_mp3_file "non_existent_mp3_song")
+      (UnknownSong "non_existent_mp3_song");
+    test_raise_exception "unknown song artist"
+      (fun () -> read_song_mp3_file "non_existent_artist_song")
+      (UnknownSong "non_existent_artist_song");
+    test_raise_exception "unknown song album"
+      (fun () -> read_song_mp3_file "non_existent_album_song")
+      (UnknownSong "non_existent_album_song");
+    test_raise_exception "unknown song year"
+      (fun () -> read_song_mp3_file "non_existent_year_song")
+      (UnknownSong "non_existent_year_song");
+    test_raise_exception "unknown song tags"
+      (fun () -> read_song_mp3_file "non_existent_tags_song")
+      (UnknownSong "non_existent_tags_song");
   ]
 
 let streamer_tests =
