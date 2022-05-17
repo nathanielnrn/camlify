@@ -51,6 +51,8 @@ let help_message : string =
   \  "
 
 let remove_dup lst = List.sort_uniq compare lst
+let remove_empty lst = List.filter (fun x -> String.length x > 0) lst
+let remove_zero lst = List.filter (fun x -> int_of_string x > 0) lst
 
 let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
   let get_cmd : Camlify.Command.command =
@@ -158,7 +160,8 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       print_endline "Names of all artists in this player :";
       all_songs
       |> List.map read_song_artist
-      |> remove_dup |> String.concat ", " |> print_endline;
+      |> remove_dup |> remove_empty |> String.concat ", "
+      |> print_endline;
       print_string "Select artist \n >";
       let artist = read_line () in
       let res = select_playlist_by_artist artist q in
@@ -167,7 +170,8 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       print_endline "Names of all albums in this player :";
       all_songs
       |> List.map read_song_album
-      |> remove_dup |> String.concat ", " |> print_endline;
+      |> remove_dup |> remove_empty |> String.concat ", "
+      |> print_endline;
       print_string "Select album \n >";
       let album = read_line () in
       let res = select_playlist_by_album album q in
@@ -175,18 +179,26 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
   | PlayYear ->
       print_endline "List of years of songs in this player :";
       all_songs |> List.map read_song_year |> remove_dup
-      |> List.map string_of_int |> String.concat ", " |> print_endline;
+      |> List.map string_of_int |> remove_zero |> String.concat ", "
+      |> print_endline;
       print_string "Select year \n >";
       let year = read_line () in
-      let res = select_playlist_by_year (int_of_string year) q in
-      h_play_year year res q
+      if year = "" then (
+        print_endline "You didn't type anything";
+        step_r q)
+      else
+        let res =
+          try select_playlist_by_year (int_of_string year) q with
+          | _ -> Illegal
+        in
+        h_play_year year res q
   | PlayLiked ->
       let res = select_playlist_by_liked q in
       h_play_liked res q
   | PlayTag ->
       print_endline "Names of all tags in this player :";
       all_songs |> List.map read_tags |> List.flatten |> remove_dup
-      |> String.concat ", " |> print_endline;
+      |> remove_empty |> String.concat ", " |> print_endline;
       print_string "Select tag \n > ";
       let tag = read_line () in
       let res = select_playlist_by_tag tag q in
