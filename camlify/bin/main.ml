@@ -50,22 +50,23 @@ let help_message : string =
   \ \n\
   \  "
 
-let get_cmd : Camlify.Command.command =
-  match read_line () with
-  | exception End_of_file -> Quit
-  | command -> begin
-      try parse command with
-      | Empty ->
-          let _ = print_endline "Please write anything..." in
-          Idle
-      | Malformed ->
-          let _ = print_endline "Wrong command input" in
-          Idle
-    end
-
 let remove_dup lst = List.sort_uniq compare lst
 
 let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
+  let get_cmd : Camlify.Command.command =
+    match read_line () with
+    | exception End_of_file -> Quit
+    | command -> begin
+        try parse command with
+        | Empty ->
+            let _ = print_endline "Please write anything..." in
+            Idle
+        | Malformed ->
+            let _ = print_endline "Wrong command input" in
+            Idle
+      end
+  in
+
   print_string "> ";
 
   match get_cmd with
@@ -184,7 +185,6 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       h_play_liked res q
   | PlayTag ->
       print_endline "Names of all tags in this player :";
-
       all_songs |> List.map read_tags |> List.flatten |> remove_dup
       |> String.concat ", " |> print_endline;
       print_string "Select tag \n > ";
@@ -192,7 +192,6 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       let res = select_playlist_by_tag tag q in
       h_play_tag tag res q
   | _ -> failwith "TODO?"
-(* TODO: put back step_r q *)
 
 and h_play song_name q =
   let res = play_song_by_name song_name q in
@@ -314,8 +313,7 @@ and h_play_artist artist res q =
       step_r q
   | Legal new_q ->
       print_endline ("Playing songs by " ^ artist ^ "...");
-      ignore (step_r new_q);
-      step_r q
+      step_r new_q
 
 and h_play_album album res q =
   match res with
@@ -324,8 +322,7 @@ and h_play_album album res q =
       step_r q
   | Legal new_q ->
       print_endline ("Playing songs in " ^ album ^ "...");
-      ignore (step_r new_q);
-      step_r q
+      step_r new_q
 
 and h_play_year year res q =
   match res with
@@ -334,8 +331,7 @@ and h_play_year year res q =
       step_r q
   | Legal new_q ->
       print_endline ("Playing songs from " ^ year ^ "...");
-      ignore (step_r new_q);
-      step_r q
+      step_r new_q
 
 and h_play_liked res q =
   match res with
@@ -344,8 +340,7 @@ and h_play_liked res q =
       step_r q
   | Legal new_q ->
       print_endline "Playing liked songs...";
-      ignore (step_r new_q);
-      step_r q
+      step_r new_q
 
 and h_play_tag tag res q =
   match res with
@@ -354,8 +349,7 @@ and h_play_tag tag res q =
       step_r q
   | Legal new_q ->
       print_endline ("Playing songs with tag " ^ tag ^ "...");
-      ignore (step_r new_q);
-      step_r q
+      step_r new_q
 
 (*add [filename.mp3] : add a song named filename.mp3 in current playlist
   rm [filename.mp3 ]: remove song filename.mp3 in current playlist*)
