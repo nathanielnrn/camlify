@@ -1,5 +1,5 @@
-(* TODO: Populate. This file is the "state" of the player.
- * Current song being played, list of previous songs, next songs, etc. *)
+(** This file is the "state" of the player. * Current song being played,
+    list of previous songs, next songs, etc. *)
 
 type t
 (** The abstract type of values representing current state of music

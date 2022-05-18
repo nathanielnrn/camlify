@@ -8,7 +8,7 @@
 (* TODO: change the name and NetID below to your own, then delete this
    TODO comment. *)
 
-(** CS 3110 Spring 2022 Assignment MS1 : Alpha
+(** CS 3110 Spring 2022 Assignment MS3 : Production
 
     @author Sarah Ha (nh285), Bryant Hwang (bh487), Nathaniel Navarro (nrn25), Diego Khayat (hdk35) *)
 

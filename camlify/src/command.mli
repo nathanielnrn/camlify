@@ -4,7 +4,9 @@ type song_name = string
 type playlist_name = string
 type index = int
 
+(**Raised for empty strings*)
 exception Empty
+(**All other malformed commands raise this*)
 exception Malformed
 
 (**Defines command type*)
@@ -40,5 +42,4 @@ type command =
   | Idle
 
 val parse : string -> command
-(**Uses pattern matching vs else if trees to continue implementing
-   compare to [parse] below and match correct output with match*)
+(**Uses pattern matching to parse strings and convert them into commands*)

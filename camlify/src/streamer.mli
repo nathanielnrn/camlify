@@ -1,11 +1,11 @@
-open Gstreamer
-
-open Option
 (** This module allows us to make calls to the gstreamer library and
     makes audio play on a computer.
 
     Behavior -> functions take in a ref option and mutates that ref to
     contain latest and greatest pipeline. *)
+
+open Gstreamer
+open Option
 
 val play : Element.t Option.t ref -> string -> unit
 (** [play pipeline file_name] Plays audio based on string of a file.
