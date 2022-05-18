@@ -78,6 +78,20 @@
           "tags": []
         }
       ]
+    },
+    {
+      "name": "new",
+      "songs": [
+        {
+          "name": "reptilia",
+          "liked": false,
+          "mp3 file": "reptilia.mp3",
+          "artist": null,
+          "album": null,
+          "year": null,
+          "tags": []
+        }
+      ]
     }
   ]
 }

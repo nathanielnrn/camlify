@@ -439,7 +439,27 @@ let main () =
       ignore (Thread.create (Camlify.Streamer.play pipeline) file_name);
       step new_q
 
+let rec wait_message msg =
+  match msg with
+  | "demo" -> setfile "data/demo.json"
+  | "scratch" -> load_data ()
+  | "saved" -> (
+      try setfile "data.saved" with
+      | _ ->
+          setfile "data/saved.json";
+          load_data ())
+  | _ ->
+      print_endline "not an option";
+      wait_message (read_line ())
+
+let wait_for_start_message () =
+  print_endline "Start demo, scratch, or saved?";
+  let msg = read_line () in
+  wait_message msg
+
+let begin_prompt () = wait_for_start_message ()
+
 (* Execute the mp3. *)
 let _ =
-  load_data ();
+  begin_prompt ();
   main ()

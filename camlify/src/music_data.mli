@@ -102,6 +102,3 @@ val load_data : unit -> unit
 
 val reset : unit -> unit
 (**[reset ()] resets the json files for testing*)
-
-val load_default : unit -> unit
-(**[load_default ()] adds hardcoded fields to songs to work with*)

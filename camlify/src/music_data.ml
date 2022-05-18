@@ -7,7 +7,14 @@ exception UnknownInformation of string
 exception UnknownPlaylist of string
 
 let file = ref "data/data.json"
-let setfile s = file := s
+
+let setfile s =
+  let j =
+    Yojson.Basic.from_file
+      (file := s;
+       !file)
+  in
+  (fun j' -> ()) j
 
 type song = {
   name : string;
@@ -367,11 +374,7 @@ let rec songs_to_interface slist : song list =
   | [] -> []
 
 (*initial playlist list (TODO: set later to [])*)
-let init_playlists slist =
-  [
-    { name = "Playlist one"; songs = slist };
-    { name = "Playlist two"; songs = slist };
-  ]
+let init_playlists slist = [ { name = "All_songs"; songs = slist } ]
 
 let interface_from_song_list slist : interface =
   { all_songs = slist; playlists = init_playlists slist }
@@ -394,5 +397,3 @@ let reset () =
   let out_chan = open_out "data/writable.json" in
   Printf.fprintf out_chan "%s\n" pushed;
   close_out out_chan
-
-let load_default () = failwith "unimplemented"
