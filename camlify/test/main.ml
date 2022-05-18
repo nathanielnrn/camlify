@@ -35,6 +35,9 @@ open Camlify.Command
    creates a test case named [name], and tests for [called_input] =
    [expected_output]. Turns output to string using printer_function*)
 
+let () = setfile "data/interface.json"
+let () = print_endline "hello"
+
 let test
     (name : string)
     expected_output
@@ -81,177 +84,87 @@ let prev st = st |> prev_song |> result_to_t
 (* let rec next_count n nxt = next_count (n-1) (next nxt) *)
 
 (*Tests queue functions*)
-let queue_tests =
-  [
-    init_state_song_name_test
-      "First song of Playlist one is \"All Falls Down\"" "Playlist one"
-      "All Falls Down";
-    init_state_song_name_test
-      "First song of Playlist zero is \"All Falls Down\""
-      "Playlist zero" "All Falls Down";
-    queue_test "Playlist one name is \"Playlist one\"" "Playlist one"
-      (init_state "Playlist one" |> current_playlist_name)
-      Fun.id;
-    queue_test "Current song of initial state 0" 0
-      (init_state "Playlist one" |> current_song_idx)
-      string_of_int;
-    queue_test "Current playlist of playlist one"
-      [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
-      (init_state "Playlist one" |> current_playlist)
-      list_to_message;
-    queue_test "Songs with artist Dua Lipa is Break My Heart"
-      [ "Break My Heart" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_artist "Dua Lipa"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test "Songs in album Du is Break My Heart"
-      [ "Break My Heart" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_album "Du"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test "Songs from year 2004 is All Falls Down"
-      [ "All Falls Down" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_year 2004
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test
-      "Songs that are liked are Break My Heart, Reptilia, fly me to \
-       the moon, fly me to the caml"
-      [
-        "Break My Heart";
-        "Reptilia";
-        "fly me to the moon";
-        "fly me to the caml";
-      ]
-      (init_state "Playlist one"
-      |> select_playlist_by_liked |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test "Songs with the tag banger is Reptilia" [ "Reptilia" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_tag "banger"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test
-      "Songs with the tag good is Sample 15s, fly me to the moon"
-      [ "Sample 15s"; "fly me to the moon" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_tag "good"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test "Songs with the tag good is Break My Heart, Sample 15s"
-      [ "Break My Heart"; "Sample 15s" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_tag "new"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test
-      "Songs with the tag good is All Falls Down, Reptilia, Sample \
-       15s, fly me to the moon"
-      [
-        "All Falls Down"; "Reptilia"; "Sample 15s"; "fly me to the moon";
-      ]
-      (init_state "Playlist one"
-      |> select_playlist_by_tag "old"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test "Songs with the tag good is All Falls Down, Sample 15s"
-      [ "All Falls Down"; "Sample 15s" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_tag "rap"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test "Songs with the tag good is Break My Heart, Sample 15s"
-      [ "Break My Heart"; "Sample 15s" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_tag "sad"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test "Current song of play by name 'Reptilia' is 2" 2
-      (init_state "Playlist one"
-      |> play_song_by_name "Reptilia"
-      |> result_to_t |> current_song_idx)
-      string_of_int;
-    queue_test "Current song idx is 1" 1
-      (init_state "Playlist one"
-      |> play_song_by_idx 1 |> result_to_t |> current_song_idx)
-      string_of_int;
-    queue_test "Song id of 3 nexts is 3" 3
-      (init_state "Playlist one"
-      |> next |> next |> next |> current_song_idx)
-      string_of_int;
-    queue_test "song id loops after 4 nexts " 0
-      (init_state "Playlist one"
-      |> next |> next |> next |> next |> current_song_idx)
-      string_of_int;
-    queue_test "song id loops after 6 nexts" 2
-      (init_state "Playlist one"
-      |> next |> next |> next |> next |> next |> next
-      |> current_song_idx)
-      string_of_int;
-    queue_test "Prev song loops and is 1" 1
-      (init_state "Playlist one"
-      |> prev |> prev |> prev |> current_song_idx)
-      string_of_int;
-    queue_test "Prev song loops 3 3" 3
-      (init_state "Playlist one"
-      |> prev |> prev |> prev |> prev |> prev |> current_song_idx)
-      string_of_int;
-    queue_test "Prev loop name is correct" "Sample 15s"
-      (init_state "Playlist one"
-      |> prev |> prev |> prev |> prev |> prev |> current_song_name)
-      Fun.id;
-    queue_test
-      "select_playlist_by_artist\n\
-      \     \"Dua Lipa\" (init_state Playlist  one) = [\"Break My \
-       Heart\"]"
-      [ "Break My Heart" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_artist "Dua Lipa"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test
-      "select_playlist_by_liked (init_state Playlist one) = [\"All \
-       Falls Down\"]"
-      [
-        "Break My Heart";
-        "Reptilia";
-        "fly me to the moon";
-        "fly me to the caml";
-      ]
-      (init_state "Playlist one"
-      |> select_playlist_by_liked |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test
-      "select_playlist_by_year 2004\n\
-      \     (init_state Playlist one) = [\"All Falls Down\"]"
-      [ "All Falls Down" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_year 2004
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test
-      "select_playlist_by_tag \"old\" (init_state Playlist one) = \
-       [\"All Falls Down\"; \"Reptilia\";\"Sample 15s\";\"fly me to the\n\
-      \     moon\"]"
-      [
-        "All Falls Down"; "Reptilia"; "Sample 15s"; "fly me to the moon";
-      ]
-      (init_state "Playlist one"
-      |> select_playlist_by_tag "old"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-    queue_test
-      "select_playlist_by_album \"Ka\" (init_state Playlist one) = \
-       [\"All Falls Down\"]"
-      [ "All Falls Down" ]
-      (init_state "Playlist one"
-      |> select_playlist_by_album "Ka"
-      |> result_to_t |> current_playlist)
-      list_to_message;
-  ]
+(* let queue_tests = [ init_state_song_name_test "First song of Playlist
+   one is \"All Falls Down\"" "Playlist one" "All Falls Down";
+   init_state_song_name_test "First song of Playlist zero is \"All Falls
+   Down\"" "Playlist zero" "All Falls Down"; queue_test "Playlist one
+   name is \"Playlist one\"" "Playlist one" (init_state "Playlist one"
+   |> current_playlist_name) Fun.id; queue_test "Current song of initial
+   state 0" 0 (init_state "Playlist one" |> current_song_idx)
+   string_of_int; queue_test "Current playlist of playlist one" [ "All
+   Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ] (init_state
+   "Playlist one" |> current_playlist) list_to_message; queue_test
+   "Songs with artist Dua Lipa is Break My Heart" [ "Break My Heart" ]
+   (init_state "Playlist one" |> select_playlist_by_artist "Dua Lipa" |>
+   result_to_t |> current_playlist) list_to_message; queue_test "Songs
+   in album Du is Break My Heart" [ "Break My Heart" ] (init_state
+   "Playlist one" |> select_playlist_by_album "Du" |> result_to_t |>
+   current_playlist) list_to_message; queue_test "Songs from year 2004
+   is All Falls Down" [ "All Falls Down" ] (init_state "Playlist one" |>
+   select_playlist_by_year 2004 |> result_to_t |> current_playlist)
+   list_to_message; queue_test "Songs that are liked are Break My Heart,
+   Reptilia, fly me to \ the moon, fly me to the caml" [ "Break My
+   Heart"; "Reptilia"; "fly me to the moon"; "fly me to the caml"; ]
+   (init_state "Playlist one" |> select_playlist_by_liked |> result_to_t
+   |> current_playlist) list_to_message; queue_test "Songs with the tag
+   banger is Reptilia" [ "Reptilia" ] (init_state "Playlist one" |>
+   select_playlist_by_tag "banger" |> result_to_t |> current_playlist)
+   list_to_message; queue_test "Songs with the tag good is Sample 15s,
+   fly me to the moon" [ "Sample 15s"; "fly me to the moon" ]
+   (init_state "Playlist one" |> select_playlist_by_tag "good" |>
+   result_to_t |> current_playlist) list_to_message; queue_test "Songs
+   with the tag good is Break My Heart, Sample 15s" [ "Break My Heart";
+   "Sample 15s" ] (init_state "Playlist one" |> select_playlist_by_tag
+   "new" |> result_to_t |> current_playlist) list_to_message; queue_test
+   "Songs with the tag good is All Falls Down, Reptilia, Sample \ 15s,
+   fly me to the moon" [ "All Falls Down"; "Reptilia"; "Sample 15s";
+   "fly me to the moon"; ] (init_state "Playlist one" |>
+   select_playlist_by_tag "old" |> result_to_t |> current_playlist)
+   list_to_message; queue_test "Songs with the tag good is All Falls
+   Down, Sample 15s" [ "All Falls Down"; "Sample 15s" ] (init_state
+   "Playlist one" |> select_playlist_by_tag "rap" |> result_to_t |>
+   current_playlist) list_to_message; queue_test "Songs with the tag
+   good is Break My Heart, Sample 15s" [ "Break My Heart"; "Sample 15s"
+   ] (init_state "Playlist one" |> select_playlist_by_tag "sad" |>
+   result_to_t |> current_playlist) list_to_message; queue_test "Current
+   song of play by name 'Reptilia' is 2" 2 (init_state "Playlist one" |>
+   play_song_by_name "Reptilia" |> result_to_t |> current_song_idx)
+   string_of_int; queue_test "Current song idx is 1" 1 (init_state
+   "Playlist one" |> play_song_by_idx 1 |> result_to_t |>
+   current_song_idx) string_of_int; queue_test "Song id of 3 nexts is 3"
+   3 (init_state "Playlist one" |> next |> next |> next |>
+   current_song_idx) string_of_int; queue_test "song id loops after 4
+   nexts " 0 (init_state "Playlist one" |> next |> next |> next |> next
+   |> current_song_idx) string_of_int; queue_test "song id loops after 6
+   nexts" 2 (init_state "Playlist one" |> next |> next |> next |> next
+   |> next |> next |> current_song_idx) string_of_int; queue_test "Prev
+   song loops and is 1" 1 (init_state "Playlist one" |> prev |> prev |>
+   prev |> current_song_idx) string_of_int; queue_test "Prev song loops
+   3 3" 3 (init_state "Playlist one" |> prev |> prev |> prev |> prev |>
+   prev |> current_song_idx) string_of_int; queue_test "Prev loop name
+   is correct" "Sample 15s" (init_state "Playlist one" |> prev |> prev
+   |> prev |> prev |> prev |> current_song_name) Fun.id; queue_test
+   "select_playlist_by_artist\n\ \ \"Dua Lipa\" (init_state Playlist
+   one) = [\"Break My \ Heart\"]" [ "Break My Heart" ] (init_state
+   "Playlist one" |> select_playlist_by_artist "Dua Lipa" |> result_to_t
+   |> current_playlist) list_to_message; queue_test
+   "select_playlist_by_liked (init_state Playlist one) = [\"All \ Falls
+   Down\"]" [ "Break My Heart"; "Reptilia"; "fly me to the moon"; "fly
+   me to the caml"; ] (init_state "Playlist one" |>
+   select_playlist_by_liked |> result_to_t |> current_playlist)
+   list_to_message; queue_test "select_playlist_by_year 2004\n\ \
+   (init_state Playlist one) = [\"All Falls Down\"]" [ "All Falls Down"
+   ] (init_state "Playlist one" |> select_playlist_by_year 2004 |>
+   result_to_t |> current_playlist) list_to_message; queue_test
+   "select_playlist_by_tag \"old\" (init_state Playlist one) = \ [\"All
+   Falls Down\"; \"Reptilia\";\"Sample 15s\";\"fly me to the\n\ \
+   moon\"]" [ "All Falls Down"; "Reptilia"; "Sample 15s"; "fly me to the
+   moon"; ] (init_state "Playlist one" |> select_playlist_by_tag "old"
+   |> result_to_t |> current_playlist) list_to_message; queue_test
+   "select_playlist_by_album \"Ka\" (init_state Playlist one) = \ [\"All
+   Falls Down\"]" [ "All Falls Down" ] (init_state "Playlist one" |>
+   select_playlist_by_album "Ka" |> result_to_t |> current_playlist)
+   list_to_message; ]*)
 
 (* test exceptions *)
 let test_raise_exception name f expected_exception =
@@ -409,9 +322,6 @@ let command_tests =
 
 let suite =
   "test suite for Camlify"
-  >::: List.flatten
-         [
-           queue_tests; music_data_tests; streamer_tests; command_tests;
-         ]
+  >::: List.flatten [ music_data_tests; streamer_tests; command_tests ]
 
 let _ = run_test_tt_main suite

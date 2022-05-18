@@ -6,8 +6,8 @@ exception UnknownSong of string
 exception UnknownInformation of string
 exception UnknownPlaylist of string
 
-let file = "data/data.json"
-let data = Yojson.Basic.from_file file
+let file = ref "data/data.json"
+let setfile s = file := s
 
 type song = {
   name : string;
@@ -98,11 +98,9 @@ let rec to_interface (interface : interface) : Yojson.t =
       ("playlists", `List (interface.playlists |> List.map to_playlist));
     ]
 
-let file' = "data/data.json"
-
 let update_json iface =
   let pushed = Yojson.pretty_to_string (to_interface iface) in
-  let out_chan = open_out file' in
+  let out_chan = open_out !file in
   Printf.fprintf out_chan "%s\n" pushed;
   close_out out_chan
 
@@ -121,7 +119,7 @@ let rec playlist_selector (plist : playlist list) (pname : string) =
 (**[select_playlist playlist_name] returns the list of song names that
    the playlist of playlist_name contains*)
 let select_playlist pname =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   playlist_selector iface.playlists pname
 
@@ -129,25 +127,25 @@ let get_mp3 lst = List.map (fun x -> x.mp3_file) lst
 
 (*song list to mp3 file of song lists*)
 let all_songs_mp3 : string list =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   get_mp3 iface.all_songs
 
 (**[list_of_playlist] is a list of all playlist names*)
 let list_of_playlist : string list =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   plist_to_pnames iface.playlists
 
 (*song list to name of song lists*)
 let all_songs : string list =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   slist_to_snames iface.all_songs
 
 (*song list to name of song lists*)
 let all_songs_objects : song list =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   iface.all_songs
 
@@ -158,7 +156,7 @@ let rec song_name_to_mp3_file song_name (lst : song list) =
   | h :: t -> song_name_to_mp3_file song_name t
 
 let read_song_liked song =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   let rec song_liked song (songlst : song list) =
     match songlst with
@@ -169,7 +167,7 @@ let read_song_liked song =
   song_liked song iface.all_songs
 
 let read_song_component f song =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   let rec read_song song (songlst : song list) =
     match songlst with
@@ -190,23 +188,11 @@ let option_to_useful_int component song =
   | None -> 0
 
 let read_song_mp3_file song =
-  let j = Yojson.Basic.from_file file in
-  let iface = from_json j in
-  let rec song_mp3 song (songlst : song list) =
-    match songlst with
-    | [] -> raise (UnknownSong song)
-    | h :: t when h.name = song -> h.mp3_file
-    | h :: t -> song_mp3 song t
-  in
-  song_mp3 song iface.all_songs
-
-(*TODO: test this and delete the above*)
-let read_song_mp3_file song =
   read_song_component (fun sng -> sng.mp3_file) song
 
 let read_song_artist song =
   let read_song song =
-    let j = Yojson.Basic.from_file file in
+    let j = Yojson.Basic.from_file !file in
     let iface = from_json j in
     let rec song_artist song (songlst : song list) =
       match songlst with
@@ -228,7 +214,7 @@ let read_song_artist song =
 
 let read_song_album song =
   let read_song song =
-    let j = Yojson.Basic.from_file file in
+    let j = Yojson.Basic.from_file !file in
     let iface = from_json j in
     let rec song_album song (songlst : song list) =
       match songlst with
@@ -250,7 +236,7 @@ let read_song_album song =
 
 let read_song_year song =
   let read_song song =
-    let j = Yojson.Basic.from_file file in
+    let j = Yojson.Basic.from_file !file in
     let iface = from_json j in
     let rec song_year song (songlst : song list) =
       match songlst with
@@ -272,7 +258,7 @@ let read_song_year song =
 
 let read_tags song =
   let read_song song =
-    let j = Yojson.Basic.from_file file in
+    let j = Yojson.Basic.from_file !file in
     let iface = from_json j in
     let rec song_tags song (songlst : song list) =
       match songlst with
@@ -299,7 +285,7 @@ let rec delete_playlist (playlists : playlist list) playlist song =
   | h :: t -> h :: delete_playlist t playlist song
 
 let delete_song_from_playlist playlist song =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   let newiface =
     {
@@ -317,7 +303,7 @@ let rec add_song_playlist (playlists : playlist list) playlist song =
   | h :: t -> h :: add_song_playlist t playlist song
 
 let add_song_to_playlist playlist song =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   let newiface =
     {
@@ -337,11 +323,21 @@ let rec modify_song f (songlst : song list) song =
   | h :: t when h.name = song -> f h :: t
   | h :: t -> h :: modify_song f t song
 
+let rec update_playlists f (plist : playlist list) song =
+  match plist with
+  | [] -> []
+  | h :: t ->
+      { h with songs = modify_song f h.songs song }
+      :: update_playlists f t song
+
 let modify_song_and_write f song =
-  let j = Yojson.Basic.from_file file in
+  let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
   let newiface =
-    { iface with all_songs = modify_song f iface.all_songs song }
+    {
+      all_songs = modify_song f iface.all_songs song;
+      playlists = update_playlists f iface.playlists song;
+    }
   in
   update_json newiface
 
@@ -408,8 +404,15 @@ let rec songs_to_interface slist : song list =
       :: songs_to_interface t
   | [] -> []
 
+(*initial playlist list (TODO: set later to [])*)
+let init_playlists slist =
+  [
+    { name = "Playlist one"; songs = slist };
+    { name = "Playlist two"; songs = slist };
+  ]
+
 let interface_from_song_list slist : interface =
-  { all_songs = slist; playlists = [] }
+  { all_songs = slist; playlists = init_playlists slist }
 
 let load_data () =
   get_dir_songs ()

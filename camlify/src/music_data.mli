@@ -10,6 +10,10 @@ exception UnknownPlaylist of string
 exception UnknownInformation of string
 (**raised when the song does not contain the information requested*)
 
+val setfile : string -> unit
+(**[set file file_name] changes the file that music_data reads from. For
+   testing purposes*)
+
 val select_playlist : string -> string list
 (**[select_playlist playlist_name] returns the list of song names that
    the playlist of playlist_name contains. Raises [UnknownPlaylist] for
