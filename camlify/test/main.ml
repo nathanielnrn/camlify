@@ -86,10 +86,10 @@ let prev st = st |> prev_song |> result_to_t
 let queue_tests =
   [
     init_state_song_name_test
-      "First song of Playlist\n   one is \"All Falls Down\""
-      "Playlist one" "All Falls Down";
+      "First song of Playlist one is \"All Falls Down\"" "Playlist one"
+      "All Falls Down";
     init_state_song_name_test
-      "First song of Playlist zero is \"All Falls\n   Down\""
+      "First song of Playlist zero is \"All Falls Down\""
       "Playlist zero" "All Falls Down";
     queue_test "Playlist one\n   name is \"Playlist one\""
       "Playlist one"
@@ -99,9 +99,7 @@ let queue_tests =
       (init_state "Playlist one" |> current_song_idx)
       string_of_int;
     queue_test "Current playlist of playlist one"
-      [
-        "All\n   Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s";
-      ]
+      [ "All Falls Down"; "Break My Heart"; "Reptilia"; "Sample 15s" ]
       (init_state "Playlist one" |> current_playlist)
       list_to_message;
     queue_test "Songs with artist Dua Lipa is Break My Heart"
@@ -126,7 +124,7 @@ let queue_tests =
       "Songs that are liked are Break My Heart,\n\
       \   Reptilia, fly me to  the moon, fly me to the caml"
       [
-        "Break My\n   Heart";
+        "Break My Heart";
         "Reptilia";
         "fly me to the moon";
         "fly me to the caml";
@@ -228,7 +226,7 @@ let queue_tests =
         "Break My Heart";
         "Reptilia";
         "fly me to the moon";
-        "fly\n   me to the caml";
+        "fly me to the caml";
       ]
       (init_state "Playlist one"
       |> select_playlist_by_liked |> result_to_t |> current_playlist)
@@ -247,10 +245,7 @@ let queue_tests =
       \   Falls Down\"; \"Reptilia\";\"Sample 15s\";\"fly me to the\n\
       \ moon\"]"
       [
-        "All Falls Down";
-        "Reptilia";
-        "Sample 15s";
-        "fly me to the\n   moon";
+        "All Falls Down"; "Reptilia"; "Sample 15s"; "fly me to the moon";
       ]
       (init_state "Playlist one"
       |> select_playlist_by_tag "old"
@@ -410,16 +405,12 @@ let command_tests =
     test_command "pl" CurrentPlayList;
     test_bad_command "pl new playlist";
     test_bad_command "pl 3";
-    test_bad_command "pl     ";
     test_command "change_pl playist 2" (ChangePlayList "playist 2");
     test_bad_command "change_pl";
-    test_bad_command "change_pl     ";
     test_command "change_ar 22 t" (ChangeSongArtist "22 t");
     test_bad_command "change_ar";
-    test_bad_command "change_ar     ";
     test_command "change_al qwerty" (ChangeSongAlbum "qwerty");
     test_bad_command "change_al";
-    test_bad_command "change_al   ";
     test_command "change_y name 2001" (ChangeSongYear ("name", 2001));
     test_bad_command "change_y";
     test_command "add_tag happy" (AddSongTag "happy");
