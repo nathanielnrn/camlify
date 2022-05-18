@@ -91,10 +91,6 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       print_endline ("Stopping " ^ song_name ^ "...");
       Camlify.Streamer.stop pipeline;
       step_r q
-  (* |TODO: Update command to match: Continue -> let song_name =
-     Camlify.Queue.current_song_name q in print_endline ("Continuing " ^
-     song_name ^ "..."); Camlify.Streamer.continue pipeline; (step_r
-     q) *)
   | PlayIndex idx -> h_play_index idx q
   | CurrentSongName ->
       let song_name = current_song_name q in
