@@ -4,7 +4,7 @@ play:
 test:
 	OCAMLRUNPARAM=b dune exec test/main.exe
 
-doc:
+docs:
 	cd .. && dune build @doc
 
 build:
