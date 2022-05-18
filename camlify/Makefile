@@ -10,4 +10,8 @@ doc:
 build:
 	dune build
 
+zip:
+	rm -f camlify.zip
+	zip -r camlify.zip . -x@exclude.lst
+
 .PHONY: all test clean

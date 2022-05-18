@@ -1,5 +1,5 @@
-(* TODO: Populate. This module reads and writes to files in data/ directory.
- * These files contain info on playlists, settings, etc. *)
+(**This module reads and writes to files in data/ directory. * These
+   files contain info on playlists, settings, etc. *)
 
 exception UnknownSong of string
 (**raised when the inputed song is unknown*)
