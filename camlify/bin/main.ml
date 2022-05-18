@@ -123,13 +123,15 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       print_endline "What is the name of the artist?";
       print_string "> ";
       let artist = read_line () in
-      change_song_artist song_name artist;
+      (try change_song_artist song_name artist with
+      | UnknownSong song_name -> print_endline "there was no such song");
       step_r q
   | ChangeSongAlbum song_name ->
       print_endline "What is the name of the album?";
       print_string "> ";
       let album = read_line () in
-      change_song_album song_name album;
+      (try change_song_album song_name album with
+      | UnknownSong song_name -> print_endline "there was no such song");
       step_r q
   | ChangeSongYear (song_name, year) ->
       print_endline
@@ -141,13 +143,15 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       print_endline "Enter the new tag";
       print_string "> ";
       let tag = read_line () in
-      add_song_tag song_name tag;
+      (try add_song_tag song_name tag with
+      | UnknownSong song_name -> print_endline "there was no such song");
       step_r q
   | RemoveSongTag song_name ->
       print_endline "Which tag would you like to remove?";
       print_string "> ";
       let tag = read_line () in
-      remove_song_tag song_name tag;
+      (try remove_song_tag song_name tag with
+      | UnknownSong song_name -> print_endline "there was no such song");
       step_r q
   | CreatePlayList pl_name -> h_create_playList pl_name q
   | NextSong ->
