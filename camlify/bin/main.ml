@@ -136,13 +136,13 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       change_song_year song_name year;
       step_r q
   | AddSongTag song_name ->
-      print_endline "What is a new tag?";
+      print_endline "Enter the new tag";
       print_string "> ";
       let tag = read_line () in
       add_song_tag song_name tag;
       step_r q
   | RemoveSongTag song_name ->
-      print_endline "What is the tag?";
+      print_endline "Which tag would you like to remove?";
       print_string "> ";
       let tag = read_line () in
       remove_song_tag song_name tag;
