@@ -100,8 +100,7 @@ let prev_song st =
 
 let rec random_song st =
   let random_num = Random.int (List.length st.current_playlist) in
-  if random_num = current_song_idx st then random_song st
-  else play_song_by_idx random_num st
+  play_song_by_idx random_num st
 
 let add_song_to_playlist song_name st =
   try
