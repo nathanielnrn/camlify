@@ -509,16 +509,11 @@ let music_data__writer_tests =
       test_change_read "Making fly me to the caml in the future"
         change_song_year "fly me to the caml" 3022 read_song_year 3022
         string_of_int;
-      test_change_read "adding tag" change_song_liked "All Falls Down"
-        true read_song_liked true string_of_bool;
-      test_change_read "Liking all falls down" change_song_liked
-        "All Falls Down" true read_song_liked true string_of_bool;
-      test_change_read "Liking all falls down" change_song_liked
-        "All Falls Down" true read_song_liked true string_of_bool;
-      test_change_read "Liking all falls down" change_song_liked
-        "All Falls Down" true read_song_liked true string_of_bool;
-      test_change_read "Liking all falls down" change_song_liked
-        "All Falls Down" true read_song_liked true string_of_bool;
+      test_change_read "adding tag to fly me to the moon" add_song_tag
+        "fly me to the moon" "jazzy" read_tags [ "good"; "jazzy" ]
+        list_to_message;
+      test_change_read "Liking all falls down" remove_song_tag
+        "fly me to the moon" "old" read_tags [ "good" ] list_to_message;
     ]
   in
   setfile "data/interface.json";
