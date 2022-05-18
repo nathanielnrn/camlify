@@ -381,34 +381,6 @@ let load_data () =
   |> List.map seperate_song_mp3
   |> songs_to_interface |> interface_from_song_list |> update_json
 
-(*the following is for testing purposes*)
-let song1 =
-  {
-    name = "fly me to the moon";
-    liked = true;
-    mp3_file = "yeet";
-    artist = None;
-    album = None;
-    year = None;
-    tags = [];
-  }
-
-let song2 =
-  {
-    name = "fly me to the caml";
-    liked = true;
-    mp3_file = "yeet";
-    artist = None;
-    album = None;
-    year = None;
-    tags = [];
-  }
-
-let playlist1 = { name = "bangers"; songs = [ song1; song2 ] }
-
-let x : interface =
-  { all_songs = [ song1; song2 ]; playlists = [ playlist1 ] }
-
 let original_test_interface =
   from_json (Yojson.Basic.from_file "data/archived.json")
 
@@ -424,45 +396,3 @@ let reset () =
   close_out out_chan
 
 let load_default () = failwith "unimplemented"
-
-(* let () = (* Write message to file *) let oc = open_out file' in (*
-   create or truncate file, return channel *) Printf.fprintf oc "%s\n"
-   pushed; (* write something *) close_out oc
-
-   (*COPPIED CODE CHECK IF THAT IS OK*) let () = (* Write message to
-   file *) let oc = open_out file' in (* create or truncate file, return
-   channel *) Printf.fprintf oc "%s\n" message; (* write something *)
-   close_out oc; (* flush and close the channel *)
-
-   (* Read file and display the first line *) let ic = open_in file' in
-   try let line = input_line ic in (* read line, discard \n *)
-   print_endline line; (* write the result to stdout *) flush stdout; (*
-   write on the underlying device now *) close_in ic (* close the input
-   channel *) with e -> (* some unexpected exception occurs *)
-   close_in_noerr ic; (* emergency closing *) raise e (* exit with
-   error: files are closed but channels are not flushed *)
-
-   let x = Yojson.Basic.pretty_to_string j
-
-   let () = print_endline x*)
-
-(*let rec to_interface (interface : interface) : Yojson.Basic.t = `Assoc
-  [("playlists",(match interface.playlists with | [] -> `List [] | h::t
-  -> [List]*)
-(*(*let rec to_interface (interface : interface) : Yojson.Basic.t =
-  `Assoc [("playlists",(match interface.playlists with | [] -> `List []
-  | h::t -> [List]*) (*let file = "interface.json" let message =
-  "Hello!" let test_write = (* Write message to file *) let oc =
-  open_out file in (* create or truncate file, return channel *)
-  Printf.fprintf oc "%s\n" message; (* write something *) close_out oc;
-  (*let rewrite_json = () type t = {x: int; y: int} [@@deriving
-  to_yojson] type u = {s: string; pos: t} [@@deriving to_yojson] let ()
-  = print_endline (Yojson.Safe.pretty_to_string (u_to_yojson {s=
-  "hello"; pos={x= 1; y= 2}})) let song1 ={ name = "fly me to the moon";
-  liked = true; mp3_file = "yeet"; artist = None; album = None; year =
-  None; tags = Some []; } let song2 ={ name = "fly me to the caml";
-  liked = true; mp3_file = "yeet"; artist = None; album = None; year =
-  None; tags = Some []; } let playlist1 = {name = "bangers"; songs =
-  [song1;song2] } let x : interface = {all_songs = [song1;song2];
-  playlists = [playlist1]} let to_x = to_interface x let pushed =
-  Yojson.pretty_to_string to_x *)*)*)
