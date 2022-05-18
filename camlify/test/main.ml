@@ -522,7 +522,7 @@ let music_data__writer_tests =
         list_to_message;
       test "adding fly me to the moon to hi"
         [ "fly me to the moon" ]
-        (add_song_to_playlist "Playlist one" "fly me to the moon";
+        (add_song_to_playlist "hi" "fly me to the moon";
          select_playlist "hi")
         list_to_message;
       test "adding playlist hi"
