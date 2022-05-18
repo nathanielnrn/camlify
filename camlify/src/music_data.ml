@@ -248,9 +248,26 @@ let add_song_to_playlist playlist song =
       iface with
       playlists =
         add_song_playlist iface.playlists playlist
-          (List.find
-             (fun (sng : song) -> sng.name = song)
-             iface.all_songs);
+          (try
+             List.find
+               (fun (sng : song) -> sng.name = song)
+               iface.all_songs
+           with
+          | _ -> raise (UnknownSong song));
+    }
+  in
+  update_json newiface
+
+(*makes a trivial playlist from a playlist name*)
+let default_playlist playlist = { name = playlist; songs = [] }
+
+let add_playlist playlist =
+  let j = Yojson.Basic.from_file !file in
+  let iface = from_json j in
+  let newiface =
+    {
+      iface with
+      playlists = iface.playlists @ [ default_playlist playlist ];
     }
   in
   update_json newiface
@@ -405,6 +422,8 @@ let reset () =
   let out_chan = open_out "data/writable.json" in
   Printf.fprintf out_chan "%s\n" pushed;
   close_out out_chan
+
+let load_default () = failwith "unimplemented"
 
 (* let () = (* Write message to file *) let oc = open_out file' in (*
    create or truncate file, return channel *) Printf.fprintf oc "%s\n"

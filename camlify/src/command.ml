@@ -13,6 +13,7 @@ type command =
   | CurrentSongName
   | CurrentSongIndex
   | ViewPlaylists
+  | NewPlaylist of playlist_name
   | CurrentPlayList
   | ChangePlayList of playlist_name
   | CreatePlayList of playlist_name
@@ -81,5 +82,6 @@ let parse (str : string) : command =
         | "play_liked", [] -> PlayLiked
         | "play_tag", [] -> PlayTag
         | "help", [] -> Help
+        | "new_playlist", _ :: _ -> NewPlaylist (String.concat " " t)
         | _ -> raise Malformed
       end

@@ -334,7 +334,7 @@ let music_data_tests =
     test_read_song_mp3_file "Reptilia" "reptilia.mp3" "Reptilia";
     test_read_song_mp3_file "Break My Heart" "break_my_heart.mp3"
       "Break My Heart";
-    test_raise_exception "unknown playlist"
+    test_raise_exception "unknown playlist from select_playlist"
       (fun () -> select_playlist "non_existent_playlist")
       (UnknownPlaylist "non_existent_playlist");
     test_raise_exception "read song liked"
@@ -344,16 +344,16 @@ let music_data_tests =
       (fun () -> read_song_mp3_file "non_existent_mp3_song")
       (UnknownSong "non_existent_mp3_song");
     test_raise_exception "unknown song artist"
-      (fun () -> read_song_mp3_file "non_existent_artist_song")
+      (fun () -> read_song_artist "non_existent_artist_song")
       (UnknownSong "non_existent_artist_song");
     test_raise_exception "unknown song album"
-      (fun () -> read_song_mp3_file "non_existent_album_song")
+      (fun () -> read_song_album "non_existent_album_song")
       (UnknownSong "non_existent_album_song");
     test_raise_exception "unknown song year"
-      (fun () -> read_song_mp3_file "non_existent_year_song")
+      (fun () -> read_song_year "non_existent_year_song")
       (UnknownSong "non_existent_year_song");
     test_raise_exception "unknown song tags"
-      (fun () -> read_song_mp3_file "non_existent_tags_song")
+      (fun () -> read_tags "non_existent_tags_song")
       (UnknownSong "non_existent_tags_song");
   ]
 
@@ -384,8 +384,16 @@ let test_bad_command (command_string : string) : test =
   "bad command " ^ command_string >:: fun _ ->
   assert_raises Malformed (fun _ -> parse command_string)
 
+let test_empty_command (command_string : string) : test =
+  "bad command " ^ command_string >:: fun _ ->
+  assert_raises Empty (fun _ -> parse command_string)
+
 let command_tests =
   [
+    test_empty_command "";
+    test_bad_command "a";
+    test_bad_command "1";
+    test_bad_command "!#@";
     test_command "quit" Quit;
     test_bad_command "quit All Falls Down";
     test_command "p All Falls Down" (Play "All Falls Down");
@@ -396,6 +404,7 @@ let command_tests =
     test_bad_command "s song name";
     test_command "pi 7" (PlayIndex 7);
     test_bad_command "pi huh";
+    test_bad_command "pi";
     test_command "name" CurrentSongName;
     test_bad_command "name     ";
     test_bad_command "name skk 77";
@@ -447,6 +456,10 @@ let command_tests =
     test_bad_command "play_tag sad";
     test_command "help" Help;
     test_bad_command "help ewfd";
+    test_command "new_playlist hi" (NewPlaylist "hi");
+    test_bad_command "new_playlist";
+    test_command "new_playlist multiple words"
+      (NewPlaylist "multiple words");
   ]
 
 (**[test_change_read name writer song_name value reader output printer]
@@ -464,8 +477,6 @@ let music_data__writer_tests =
   let tlst =
     [
       test "adding fly me to the moon to Playlist one"
-        (add_song_to_playlist "Playlist one" "fly me to the caml";
-         select_playlist "Playlist one")
         [
           "All Falls Down";
           "Break My Heart";
@@ -473,6 +484,13 @@ let music_data__writer_tests =
           "Sample 15s";
           "fly me to the caml";
         ]
+        (add_song_to_playlist "Playlist one" "fly me to the caml";
+         select_playlist "Playlist one")
+        list_to_message;
+      test "adding playlist hi"
+        [ "Playlist zero"; "Playlist one"; "hi" ]
+        (add_playlist "hi";
+         list_of_playlist ())
         list_to_message;
       test "deleting All falls down from playlist zero"
         (delete_song_from_playlist "Playlist zero" "All Falls Down";

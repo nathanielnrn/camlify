@@ -1,5 +1,5 @@
-(** This module reads and writes to files in data/ directory. * These
-    files contain info on playlists, settings, etc. *)
+(* TODO: Populate. This module reads and writes to files in data/ directory.
+ * These files contain info on playlists, settings, etc. *)
 
 exception UnknownSong of string
 (**raised when the inputed song is unknown*)
@@ -36,27 +36,24 @@ val read_song_mp3_file : string -> string
 
 val read_song_artist : string -> string
 (**[read_song_artist song_name] returns the artist of song_name. Raises
-   [UnknownSong] for a song that does not exist Raises
-   [UnknownInformation] if the artist for the song was not specified in
-   the json file*)
+   [UnknownSong] for a song that does not exist returns the empty string
+   if the artist for the song was not specified in the json file*)
 
 val read_song_album : string -> string
 (**[read_song_album song_name] returns the album of song_name. Raises
-   [UnknownSong] for a song that does not exist Raises
-   [UnknownInformation] if the album for the song was not specified in
-   the json file*)
+   [UnknownSong] for a song that does not exist returns the empty string
+   if the album for the song was not specified in the json file*)
 
 val read_song_year : string -> int
 (**[read_song_year song_name] returns the year of song_name. Raises
-   [UnknownSong] for a song that does not exist Raises
-   [UnknownInformation] if the year for the song was not specified in
-   the json file*)
+   [UnknownSong] for a song that does not exist returns 0 if the year
+   for the song was not specified in the json file*)
 
 val read_tags : string -> string list
 (**[read_tags song_name] returns the list of tags associated with
    [song_name]. Raises [UnknownSong] for a song that does not exist
-   Raises [UnknownInformation] if the tags for the song was not
-   specified in the json file*)
+   returns the empty list if the tags for the song was not specified in
+   the json file*)
 
 val add_song_to_playlist : string -> string -> unit
 (** [add_song_to_playlist playlist song] adds [song] to [playlist] in
@@ -66,6 +63,10 @@ val add_song_to_playlist : string -> string -> unit
 val delete_song_from_playlist : string -> string -> unit
 (**[delete_song_from_playlist playlist song] deletes song from playlist
    in json raises [UnknownSong] and [UnknownPlaylist]*)
+
+val add_playlist : string -> unit
+(**[add playlist pname] adds a playlist with no songs to the json file
+   with name [pname]*)
 
 val change_song_liked : string -> bool -> unit
 (**[change_song_liked song_name liked_state ] modifies the liked field
@@ -101,3 +102,6 @@ val load_data : unit -> unit
 
 val reset : unit -> unit
 (**[reset ()] resets the json files for testing*)
+
+val load_default : unit -> unit
+(**[load_default ()] adds hardcoded fields to songs to work with*)

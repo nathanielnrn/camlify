@@ -48,7 +48,8 @@ let help_message : string =
   \ play_liked : plays all liked songs\n\
   \  play_tag : displays list of tag names and plays selected tag's \
    songs \n\
-  \ \n\
+  \ new_playlist [playlist_name] : adds a new playlist with no songs\n\
+  \   \n\
   \  "
 
 let remove_dup lst = List.sort_uniq compare lst
@@ -210,6 +211,10 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       let tag = read_line () in
       let res = select_playlist_by_tag tag q in
       h_play_tag tag res q
+  | NewPlaylist pname ->
+      add_playlist pname;
+      h_add_playlist pname q
+
 (* | _ -> failwith "TODO?" *)
 
 and h_play song_name q =
@@ -368,6 +373,25 @@ and h_play_tag tag res q =
       step_r q
   | Legal new_q ->
       print_endline ("Playing songs with tag " ^ tag ^ "...");
+      step_r new_q
+
+and wait_for_song pname =
+  let sng = read_line () in
+  try Camlify.Music_data.add_song_to_playlist pname sng with
+  | UnknownSong _ ->
+      print_endline "no such song, try again";
+      wait_for_song pname
+
+and h_add_playlist pname q =
+  match make_new_playlist pname q with
+  | Illegal ->
+      print_endline ("Playlist " ^ pname ^ "already exists");
+      step_r q
+  | Legal new_q ->
+      print_endline
+        ("added playlist " ^ pname ^ ". Please add a base song");
+      wait_for_song pname;
+      print_endline "added song successfully";
       step_r new_q
 
 (*add [filename.mp3] : add a song named filename.mp3 in current playlist

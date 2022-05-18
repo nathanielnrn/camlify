@@ -3,7 +3,6 @@
 type song_name = string
 type playlist_name = string
 type index = int
-
 (**Raised for empty strings*)
 exception Empty
 (**All other malformed commands raise this*)
@@ -18,6 +17,7 @@ type command =
   | CurrentSongName
   | CurrentSongIndex
   | ViewPlaylists
+  | NewPlaylist of playlist_name
   | CurrentPlayList
   | ChangePlayList of playlist_name
   | CreatePlayList of playlist_name
