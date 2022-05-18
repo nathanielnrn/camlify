@@ -169,6 +169,31 @@ let queue_tests =
       |> select_playlist_by_tag "rap"
       |> result_to_t |> current_playlist)
       list_to_message;
+    queue_test "Songs with the tag new is Break My Heart, Sample 15s"
+      [ "Break My Heart"; "Sample 15s" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "new"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test "Songs with the tag sad is Break My Heart, Sample 15s"
+      [ "Break My Heart"; "Sample 15s" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "sad"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test
+      "Songs with the tag good is Sample 15s, and fly me to the moon"
+      [ "Sample 15s"; "fly me to the moon" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "good"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test "Songs with the tag sample is Sample 15s. "
+      [ "Sample 15s" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_tag "sample"
+      |> result_to_t |> current_playlist)
+      list_to_message;
     queue_test
       "Songs with the tag\n   good is Break My Heart, Sample 15s"
       [ "Break My Heart"; "Sample 15s" ]
@@ -257,6 +282,14 @@ let queue_tests =
       \   Falls Down\"]" [ "All Falls Down" ]
       (init_state "Playlist one"
       |> select_playlist_by_album "Ka"
+      |> result_to_t |> current_playlist)
+      list_to_message;
+    queue_test
+      "select_playlist_by_album \"th\" (init_state Playlist one) =  \
+       [\"Reptilia\"]"
+      [ "Reptilia" ]
+      (init_state "Playlist one"
+      |> select_playlist_by_album "th"
       |> result_to_t |> current_playlist)
       list_to_message;
   ]
