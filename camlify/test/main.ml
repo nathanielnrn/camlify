@@ -379,20 +379,15 @@ let streamer_tests =
       string_of_bool;
   ]
 
-(* TODO: delete*)
-let new_parse = true
-
 let test_command
     (command_string : string)
     (command : Camlify.Command.command) : test =
   "parsing " ^ command_string >:: fun _ ->
-  assert_equal command
-    ((if new_parse then parse' else parse) command_string)
+  assert_equal command (parse command_string)
 
 let test_bad_command (command_string : string) : test =
   "bad command " ^ command_string >:: fun _ ->
-  assert_raises Malformed (fun _ ->
-      (if new_parse then parse' else parse) command_string)
+  assert_raises Malformed (fun _ -> parse command_string)
 
 let command_tests =
   [
@@ -414,12 +409,17 @@ let command_tests =
     test_bad_command "index 4";
     test_command "pl" CurrentPlayList;
     test_bad_command "pl new playlist";
+    test_bad_command "pl 3";
+    test_bad_command "pl     ";
     test_command "change_pl playist 2" (ChangePlayList "playist 2");
     test_bad_command "change_pl";
+    test_bad_command "change_pl     ";
     test_command "change_ar 22 t" (ChangeSongArtist "22 t");
     test_bad_command "change_ar";
+    test_bad_command "change_ar     ";
     test_command "change_al qwerty" (ChangeSongAlbum "qwerty");
     test_bad_command "change_al";
+    test_bad_command "change_al   ";
     test_command "change_y name 2001" (ChangeSongYear ("name", 2001));
     test_bad_command "change_y";
     test_command "add_tag happy" (AddSongTag "happy");

@@ -60,7 +60,7 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
     match read_line () with
     | exception End_of_file -> Quit
     | command -> begin
-        try parse' command with
+        try parse command with
         | Empty ->
             let _ = print_endline "Please write anything..." in
             Idle

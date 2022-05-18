@@ -42,7 +42,7 @@ let make_play_index i =
 
 (*Uses pattern matching versus else if trees to continue implementing
   compare to [parse] below and match correct output with match*)
-let parse' (str : string) : command =
+let parse (str : string) : command =
   if str = "" then raise Empty
   else
     match String.split_on_char ' ' str with

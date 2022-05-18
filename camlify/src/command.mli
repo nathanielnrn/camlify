@@ -1,3 +1,5 @@
+(**Module for command types and parsing of said types*)
+
 type song_name = string
 type playlist_name = string
 type index = int
@@ -5,6 +7,7 @@ type index = int
 exception Empty
 exception Malformed
 
+(**Defines command type*)
 type command =
   | Play of song_name
   | Pause
@@ -36,6 +39,6 @@ type command =
   | Quit
   | Idle
 
-val parse' : string -> command
+val parse : string -> command
 (**Uses pattern matching vs else if trees to continue implementing
    compare to [parse] below and match correct output with match*)
