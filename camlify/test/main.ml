@@ -279,20 +279,15 @@ let streamer_tests =
       string_of_bool;
   ]
 
-(* TODO: delete*)
-let new_parse = true
-
 let test_command
     (command_string : string)
     (command : Camlify.Command.command) : test =
   "parsing " ^ command_string >:: fun _ ->
-  assert_equal command
-    ((if new_parse then parse' else parse) command_string)
+  assert_equal command (parse' command_string)
 
 let test_bad_command (command_string : string) : test =
   "bad command " ^ command_string >:: fun _ ->
-  assert_raises Malformed (fun _ ->
-      (if new_parse then parse' else parse) command_string)
+  assert_raises Malformed (fun _ -> parse' command_string)
 
 let command_tests =
   [
@@ -318,6 +313,40 @@ let command_tests =
     test_bad_command "change_pl";
     test_command "change_ar 22 t" (ChangeSongArtist "22 t");
     test_bad_command "change_ar";
+    test_command "change_al qwerty" (ChangeSongAlbum "qwerty");
+    test_bad_command "change_al";
+    test_command "change_y name 2001" (ChangeSongYear ("name", 2001));
+    test_bad_command "change_y";
+    test_command "add_tag happy" (AddSongTag "happy");
+    test_bad_command "add_tag";
+    test_command "rm_tag songg" (RemoveSongTag "songg");
+    test_bad_command "rm_tag";
+    test_command "new_pl playlisttwo" (CreatePlayList "playlisttwo");
+    test_bad_command "new_pl";
+    test_command "next" NextSong;
+    test_bad_command "next All Falls";
+    test_command "prev" PreviousSong;
+    test_bad_command "prev All Falls";
+    test_command "shuffle" Shuffle;
+    test_bad_command "shuffle songg";
+    test_command "add sample" (AddSong "sample");
+    test_bad_command "add";
+    test_command "rm sample" (RemoveSong "sample");
+    test_bad_command "rm";
+    test_command "pls" ViewPlaylists;
+    test_bad_command "pls song1";
+    test_command "play_artist" PlayArtist;
+    test_bad_command "play_artist art";
+    test_command "play_album" PlayAlbum;
+    test_bad_command "play_album al";
+    test_command "play_year" PlayYear;
+    test_bad_command "play_year 2111";
+    test_command "play_liked" PlayLiked;
+    test_bad_command "play_liked liked";
+    test_command "play_tag" PlayTag;
+    test_bad_command "play_tag sad";
+    test_command "help" Help;
+    test_bad_command "help ewfd";
   ]
 
 let suite =
