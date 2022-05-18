@@ -16,7 +16,7 @@
       "artist": null,
       "album": null,
       "year": null,
-      "tags": [ "hi" ]
+      "tags": []
     },
     {
       "name": "reptilia",
@@ -57,7 +57,7 @@
           "artist": null,
           "album": null,
           "year": null,
-          "tags": [ "hi" ]
+          "tags": []
         },
         {
           "name": "reptilia",
@@ -98,7 +98,7 @@
           "artist": null,
           "album": null,
           "year": null,
-          "tags": [ "hi" ]
+          "tags": []
         },
         {
           "name": "reptilia",
