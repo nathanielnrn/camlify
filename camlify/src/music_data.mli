@@ -19,10 +19,10 @@ val select_playlist : string -> string list
    the playlist of playlist_name contains. Raises [UnknownPlaylist] for
    a playlist that does not exist *)
 
-val list_of_playlist : string list
-(**[list_of_playlist] is a list of all playlist names*)
+val list_of_playlist : unit -> string list
+(**[list_of_playlist ()] is a list of all playlist names*)
 
-val all_songs : string list
+val all_songs : unit -> string list
 (**[all_songs] is a list of all song names*)
 
 val read_song_liked : string -> bool

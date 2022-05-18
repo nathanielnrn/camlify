@@ -274,10 +274,10 @@ let test_select_playlist name expected_output playlist_name =
   test name expected_output (select_playlist playlist_name)
 
 let test_list_of_playlist name list_of_playlists =
-  test name list_of_playlists list_of_playlist
+  test name list_of_playlists (list_of_playlist ())
 
 let test_all_songs name list_of_songs =
-  test name list_of_songs all_songs
+  test name list_of_songs (all_songs ())
 
 let test_read_songs_liked name liked song_name =
   test name liked (read_song_liked song_name) string_of_bool

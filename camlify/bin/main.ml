@@ -108,7 +108,7 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       print_endline (String.concat "\n" (current_playlist q));
       step_r q
   | ViewPlaylists ->
-      print_endline (String.concat "\n" list_of_playlist);
+      print_endline (String.concat "\n" (list_of_playlist ()));
       step_r q
   | ChangePlayList pl_name -> h_change_playList pl_name q
   | ChangeSongLike song_name ->
@@ -165,7 +165,7 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       h_remove_song song_name res q
   | PlayArtist ->
       print_endline "Names of all artists in this player :";
-      all_songs
+      all_songs ()
       |> List.map read_song_artist
       |> remove_dup |> remove_empty |> String.concat ", "
       |> print_endline;
@@ -175,7 +175,7 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       h_play_artist artist res q
   | PlayAlbum ->
       print_endline "Names of all albums in this player :";
-      all_songs
+      all_songs ()
       |> List.map read_song_album
       |> remove_dup |> remove_empty |> String.concat ", "
       |> print_endline;
@@ -185,7 +185,7 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       h_play_album album res q
   | PlayYear ->
       print_endline "List of years of songs in this player :";
-      all_songs |> List.map read_song_year |> remove_dup
+      all_songs () |> List.map read_song_year |> remove_dup
       |> List.map string_of_int |> remove_zero |> String.concat ", "
       |> print_endline;
       print_string "Select year \n >";
@@ -204,7 +204,7 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       h_play_liked res q
   | PlayTag ->
       print_endline "Names of all tags in this player :";
-      all_songs |> List.map read_tags |> List.flatten |> remove_dup
+      all_songs () |> List.map read_tags |> List.flatten |> remove_dup
       |> remove_empty |> String.concat ", " |> print_endline;
       print_string "Select tag \n > ";
       let tag = read_line () in
@@ -377,7 +377,7 @@ let step (q : Camlify.Queue.t) = step_r q
 
 let rec choose_playlist () : string =
   print_endline "Choose Playlist:";
-  print_endline (String.concat "\n" list_of_playlist ^ "\n");
+  print_endline (String.concat "\n" (list_of_playlist ()) ^ "\n");
   print_string "> ";
   let playlist =
     match read_line () with
@@ -385,7 +385,7 @@ let rec choose_playlist () : string =
         let _ = print_endline "Empty input :(" in
         choose_playlist ()
     | some_str ->
-        if List.mem some_str list_of_playlist then some_str
+        if List.mem some_str (list_of_playlist ()) then some_str
         else
           let _ = print_endline "There is no such playlist :(" in
           choose_playlist ()

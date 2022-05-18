@@ -32,8 +32,8 @@ let init_state selected_playlist =
     current_song_idx = 0;
     current_playlist_name = selected_playlist;
     current_playlist = Music_data.select_playlist selected_playlist;
-    list_of_playlist = Music_data.list_of_playlist;
-    list_of_all_songs = Music_data.all_songs;
+    list_of_playlist = Music_data.list_of_playlist ();
+    list_of_all_songs = Music_data.all_songs ();
   }
 
 let current_song_name st = st.current_song_name
@@ -201,7 +201,7 @@ let select_playlist_by_artist artist st =
           List.nth
             (List.filter
                (fun x -> artist = Music_data.read_song_artist x)
-               Music_data.all_songs)
+               (Music_data.all_songs ()))
             0;
         current_song_mp3_file =
           Music_data.read_song_mp3_file st.current_song_name;
@@ -210,7 +210,7 @@ let select_playlist_by_artist artist st =
         current_playlist =
           List.filter
             (fun x -> artist = Music_data.read_song_artist x)
-            Music_data.all_songs;
+            (Music_data.all_songs ());
         list_of_playlist = st.list_of_playlist;
         list_of_all_songs = st.list_of_all_songs;
       }
@@ -230,7 +230,7 @@ let select_playlist_by_album album st =
           List.nth
             (List.filter
                (fun x -> album = Music_data.read_song_album x)
-               Music_data.all_songs)
+               (Music_data.all_songs ()))
             0;
         current_song_mp3_file =
           Music_data.read_song_mp3_file st.current_song_name;
@@ -239,7 +239,7 @@ let select_playlist_by_album album st =
         current_playlist =
           List.filter
             (fun x -> album = Music_data.read_song_album x)
-            Music_data.all_songs;
+            (Music_data.all_songs ());
         list_of_playlist = st.list_of_playlist;
         list_of_all_songs = st.list_of_all_songs;
       }
@@ -259,7 +259,7 @@ let select_playlist_by_year year st =
           List.nth
             (List.filter
                (fun x -> year = Music_data.read_song_year x)
-               Music_data.all_songs)
+               (Music_data.all_songs ()))
             0;
         current_song_mp3_file =
           Music_data.read_song_mp3_file st.current_song_name;
@@ -268,7 +268,7 @@ let select_playlist_by_year year st =
         current_playlist =
           List.filter
             (fun x -> year = Music_data.read_song_year x)
-            Music_data.all_songs;
+            (Music_data.all_songs ());
         list_of_playlist = st.list_of_playlist;
         list_of_all_songs = st.list_of_all_songs;
       }
@@ -288,7 +288,7 @@ let select_playlist_by_liked st =
           List.nth
             (List.filter
                (fun x -> true = Music_data.read_song_liked x)
-               Music_data.all_songs)
+               (Music_data.all_songs ()))
             0;
         current_song_mp3_file =
           Music_data.read_song_mp3_file st.current_song_name;
@@ -297,7 +297,7 @@ let select_playlist_by_liked st =
         current_playlist =
           List.filter
             (fun x -> true = Music_data.read_song_liked x)
-            Music_data.all_songs;
+            (Music_data.all_songs ());
         list_of_playlist = st.list_of_playlist;
         list_of_all_songs = st.list_of_all_songs;
       }
@@ -317,7 +317,7 @@ let select_playlist_by_tag tag st =
           List.nth
             (List.filter
                (fun x -> true = List.mem tag (Music_data.read_tags x))
-               Music_data.all_songs)
+               (Music_data.all_songs ()))
             0;
         current_song_mp3_file =
           Music_data.read_song_mp3_file st.current_song_name;
@@ -326,7 +326,7 @@ let select_playlist_by_tag tag st =
         current_playlist =
           List.filter
             (fun x -> true = List.mem tag (Music_data.read_tags x))
-            Music_data.all_songs;
+            (Music_data.all_songs ());
         list_of_playlist = st.list_of_playlist;
         list_of_all_songs = st.list_of_all_songs;
       }

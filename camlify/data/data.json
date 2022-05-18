@@ -1,15 +1,6 @@
 {
   "all songs": [
     {
-      "name": "break_my_heart",
-      "liked": false,
-      "mp3 file": "break_my_heart.mp3",
-      "artist": null,
-      "album": null,
-      "year": null,
-      "tags": []
-    },
-    {
       "name": "all_falls_down",
       "liked": false,
       "mp3 file": "all_falls_down.mp3",
@@ -19,18 +10,9 @@
       "tags": []
     },
     {
-      "name": "n95",
+      "name": "break_my_heart",
       "liked": false,
-      "mp3 file": "n95.mp3",
-      "artist": null,
-      "album": null,
-      "year": null,
-      "tags": []
-    },
-    {
-      "name": "sample-15s",
-      "liked": false,
-      "mp3 file": "sample-15s.mp3",
+      "mp3 file": "break_my_heart.mp3",
       "artist": null,
       "album": null,
       "year": null,
@@ -44,21 +26,21 @@
       "album": null,
       "year": null,
       "tags": []
+    },
+    {
+      "name": "sample-15s",
+      "liked": false,
+      "mp3 file": "sample-15s.mp3",
+      "artist": null,
+      "album": null,
+      "year": null,
+      "tags": []
     }
   ],
   "playlists": [
     {
       "name": "Playlist one",
       "songs": [
-        {
-          "name": "break_my_heart",
-          "liked": false,
-          "mp3 file": "break_my_heart.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
-          "tags": []
-        },
         {
           "name": "all_falls_down",
           "liked": false,
@@ -69,18 +51,9 @@
           "tags": []
         },
         {
-          "name": "n95",
+          "name": "break_my_heart",
           "liked": false,
-          "mp3 file": "n95.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
-          "tags": []
-        },
-        {
-          "name": "sample-15s",
-          "liked": false,
-          "mp3 file": "sample-15s.mp3",
+          "mp3 file": "break_my_heart.mp3",
           "artist": null,
           "album": null,
           "year": null,
@@ -90,6 +63,15 @@
           "name": "reptilia",
           "liked": false,
           "mp3 file": "reptilia.mp3",
+          "artist": null,
+          "album": null,
+          "year": null,
+          "tags": []
+        },
+        {
+          "name": "sample-15s",
+          "liked": false,
+          "mp3 file": "sample-15s.mp3",
           "artist": null,
           "album": null,
           "year": null,
@@ -101,15 +83,6 @@
       "name": "Playlist two",
       "songs": [
         {
-          "name": "break_my_heart",
-          "liked": false,
-          "mp3 file": "break_my_heart.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
-          "tags": []
-        },
-        {
           "name": "all_falls_down",
           "liked": false,
           "mp3 file": "all_falls_down.mp3",
@@ -119,18 +92,9 @@
           "tags": []
         },
         {
-          "name": "n95",
+          "name": "break_my_heart",
           "liked": false,
-          "mp3 file": "n95.mp3",
-          "artist": null,
-          "album": null,
-          "year": null,
-          "tags": []
-        },
-        {
-          "name": "sample-15s",
-          "liked": false,
-          "mp3 file": "sample-15s.mp3",
+          "mp3 file": "break_my_heart.mp3",
           "artist": null,
           "album": null,
           "year": null,
@@ -140,6 +104,15 @@
           "name": "reptilia",
           "liked": false,
           "mp3 file": "reptilia.mp3",
+          "artist": null,
+          "album": null,
+          "year": null,
+          "tags": []
+        },
+        {
+          "name": "sample-15s",
+          "liked": false,
+          "mp3 file": "sample-15s.mp3",
           "artist": null,
           "album": null,
           "year": null,
