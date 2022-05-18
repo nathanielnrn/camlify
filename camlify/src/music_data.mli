@@ -98,3 +98,6 @@ val get_dir_songs : unit -> string list
 val load_data : unit -> unit
 (**[load_data ()] writes to data.json file all the information obtained
    from the data*)
+
+val reset : unit -> unit
+(**[reset ()] resets the json files for testing*)

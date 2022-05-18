@@ -1,0 +1,111 @@
+{
+  "all songs": [
+    {
+      "name": "All Falls Down",
+      "liked": true,
+      "mp3 file": "all_falls_down.mp3",
+      "artist": "Kanye",
+      "album": "Super Bangers",
+      "year": 2004,
+      "tags": [ "old", "rap" ]
+    },
+    {
+      "name": "Break My Heart",
+      "liked": true,
+      "mp3 file": "break_my_heart.mp3",
+      "artist": "Diego",
+      "album": "Du",
+      "year": 2020,
+      "tags": [ "new", "sad", "", "[\"great\"]" ]
+    },
+    {
+      "name": "Reptilia",
+      "liked": true,
+      "mp3 file": "reptilia.mp3",
+      "artist": "Nathaniel",
+      "album": "th",
+      "year": 2003,
+      "tags": [ "old", "banger" ]
+    },
+    {
+      "name": "Sample 15s",
+      "liked": false,
+      "mp3 file": "sample-15s.mp3",
+      "artist": null,
+      "album": null,
+      "year": null,
+      "tags": [ "sample", "sad", "rap", "good", "new", "old" ]
+    },
+    {
+      "name": "fly me to the moon",
+      "liked": true,
+      "mp3 file": "sample-15s.mp3",
+      "artist": "Frank Sinatra",
+      "album": "Super Duper Bangers",
+      "year": 42,
+      "tags": [ "old", "good" ]
+    },
+    {
+      "name": "fly me to the caml",
+      "liked": true,
+      "mp3 file": "sample-15s.mp3",
+      "artist": null,
+      "album": null,
+      "year": 3022,
+      "tags": []
+    }
+  ],
+  "playlists": [
+    { "name": "Playlist zero", "songs": [] },
+    {
+      "name": "Playlist one",
+      "songs": [
+        {
+          "name": "All Falls Down",
+          "liked": true,
+          "mp3 file": "all_falls_down.mp3",
+          "artist": "Kanye",
+          "album": "Super Bangers",
+          "year": 2004,
+          "tags": [ "old", "rap" ]
+        },
+        {
+          "name": "Break My Heart",
+          "liked": true,
+          "mp3 file": "break_my_heart.mp3",
+          "artist": "Diego",
+          "album": "Du",
+          "year": 2020,
+          "tags": [ "new", "sad" ]
+        },
+        {
+          "name": "Reptilia",
+          "liked": true,
+          "mp3 file": "reptilia.mp3",
+          "artist": "Nathaniel",
+          "album": "th",
+          "year": 2003,
+          "tags": [ "old", "banger" ]
+        },
+        {
+          "name": "Sample 15s",
+          "liked": false,
+          "mp3 file": "sample-15s.mp3",
+          "artist": null,
+          "album": null,
+          "year": null,
+          "tags": [ "sample", "sad", "rap", "good", "new", "old" ]
+        },
+        {
+          "name": "fly me to the caml",
+          "liked": true,
+          "mp3 file": "sample-15s.mp3",
+          "artist": null,
+          "album": null,
+          "year": 3022,
+          "tags": []
+        }
+      ]
+    }
+  ]
+}

@@ -29,14 +29,14 @@ open Camlify.Command
 
 (*TODO: Add Command tests*)
 
+let _ = reset ()
+let _ = setfile "data/interface.json"
+
 (**A general test
-   case.[test expected_output called_function 
+   case.[test name expected_output called_function 
   printer_function]
    creates a test case named [name], and tests for [called_input] =
-   [expected_output]. Turns output to string using printer_function*)
-
-let () = setfile "data/interface.json"
-
+   [expected_output]. Turns output to string using [printer_function]*)
 let test
     (name : string)
     expected_output
@@ -445,11 +445,90 @@ let command_tests =
     test_bad_command "help ewfd";
   ]
 
+(**[test_change_read name writer song_name value reader output printer]
+   is a test named [name], calls [writer song_name value], and then
+   checks for [reader song_name] = [output]. prints error message with
+   the printer*)
+let test_change_read name writer song_name value reader output printer =
+  test name output
+    (writer song_name value;
+     reader song_name)
+    printer
+
+let music_data__writer_tests =
+  setfile "data/writable.json";
+  let tlst =
+    [
+      test "adding fly me to the moon to Playlist one"
+        (add_song_to_playlist "Playlist one" "fly me to the caml";
+         select_playlist "Playlist one")
+        [
+          "All Falls Down";
+          "Break My Heart";
+          "Reptilia";
+          "Sample 15s";
+          "fly me to the caml";
+        ]
+        list_to_message;
+      test "deleting All falls down from playlist zero"
+        (delete_song_from_playlist "Playlist zero" "All Falls Down";
+         select_playlist "Playlist zero")
+        [] list_to_message;
+      test "deleting Reptilia from playlist zero"
+        (delete_song_from_playlist "Playlist zero" "Reptilia";
+         select_playlist "Playlist zero")
+        [ "All Falls Down" ] list_to_message;
+      test "deleting Break My Heart from playlist zero"
+        (delete_song_from_playlist "Playlist zero" "Break My Heart";
+         select_playlist "Playlist zero")
+        [ "All Falls Down"; "Reptilia" ]
+        list_to_message;
+      test_change_read "Liking all falls down" change_song_liked
+        "All Falls Down" true read_song_liked true string_of_bool;
+      test_change_read "Disliking all falls down" change_song_liked
+        "All Falls Down" false read_song_liked false string_of_bool;
+      test_change_read "Diego wrote Break My Heart" change_song_artist
+        "Break My Heart" "Diego" read_song_artist "Diego" String.escaped;
+      test_change_read "Nathaniel wrote Reptilia" change_song_artist
+        "Reptilia" "Nathaniel" read_song_artist "Nathaniel"
+        String.escaped;
+      test_change_read "Change All Falls Down album to Super Bangers"
+        change_song_album "All Falls Down" "Super Bangers"
+        read_song_album "Super Bangers" String.escaped;
+      test_change_read
+        "Change fly me to the moon album to Super Duper Bangers"
+        change_song_album "fly me to the moon" "Super Duper Bangers"
+        read_song_album "Super Duper Bangers" String.escaped;
+      test_change_read "Making fly me to the moon very very old"
+        change_song_year "fly me to the moon" 42 read_song_year 42
+        string_of_int;
+      test_change_read "Making fly me to the caml in the future"
+        change_song_year "fly me to the caml" 3022 read_song_year 3022
+        string_of_int;
+      test_change_read "adding tag" change_song_liked "All Falls Down"
+        true read_song_liked true string_of_bool;
+      test_change_read "Liking all falls down" change_song_liked
+        "All Falls Down" true read_song_liked true string_of_bool;
+      test_change_read "Liking all falls down" change_song_liked
+        "All Falls Down" true read_song_liked true string_of_bool;
+      test_change_read "Liking all falls down" change_song_liked
+        "All Falls Down" true read_song_liked true string_of_bool;
+      test_change_read "Liking all falls down" change_song_liked
+        "All Falls Down" true read_song_liked true string_of_bool;
+    ]
+  in
+  setfile "data/interface.json";
+  tlst
+
 let suite =
   "test suite for Camlify"
   >::: List.flatten
          [
-           queue_tests; music_data_tests; streamer_tests; command_tests;
+           queue_tests;
+           music_data_tests;
+           streamer_tests;
+           command_tests;
+           music_data__writer_tests;
          ]
 
 let _ = run_test_tt_main suite

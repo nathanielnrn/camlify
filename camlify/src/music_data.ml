@@ -166,6 +166,7 @@ let read_song_liked song =
   in
   song_liked song iface.all_songs
 
+(*[read_song_component f song] is f on the song*)
 let read_song_component f song =
   let j = Yojson.Basic.from_file !file in
   let iface = from_json j in
@@ -191,84 +192,21 @@ let read_song_mp3_file song =
   read_song_component (fun sng -> sng.mp3_file) song
 
 let read_song_artist song =
-  let read_song song =
-    let j = Yojson.Basic.from_file !file in
-    let iface = from_json j in
-    let rec song_artist song (songlst : song list) =
-      match songlst with
-      | [] -> raise (UnknownSong song)
-      | h :: t when h.name = song -> h.artist
-      | h :: t -> song_artist song t
-    in
-    song_artist song iface.all_songs
-  in
-  match read_song song with
-  | Some s -> s
-  | None -> raise (UnknownInformation song)
-
-(*TODO: test this and delete the above*)
-let read_song_artist song =
   option_to_useful_str
     (read_song_component (fun sng -> sng.artist) song)
     song
 
-let read_song_album song =
-  let read_song song =
-    let j = Yojson.Basic.from_file !file in
-    let iface = from_json j in
-    let rec song_album song (songlst : song list) =
-      match songlst with
-      | [] -> raise (UnknownSong song)
-      | h :: t when h.name = song -> h.album
-      | h :: t -> song_album song t
-    in
-    song_album song iface.all_songs
-  in
-  match read_song song with
-  | Some s -> s
-  | None -> raise (UnknownInformation song)
-
-(*TODO: test this and delete the above*)
 let read_song_album song =
   option_to_useful_str
     (read_song_component (fun sng -> sng.album) song)
     song
 
 let read_song_year song =
-  let read_song song =
-    let j = Yojson.Basic.from_file !file in
-    let iface = from_json j in
-    let rec song_year song (songlst : song list) =
-      match songlst with
-      | [] -> raise (UnknownSong song)
-      | h :: t when h.name = song -> h.year
-      | h :: t -> song_year song t
-    in
-    song_year song iface.all_songs
-  in
-  match read_song song with
-  | Some i -> i
-  | None -> raise (UnknownInformation song)
-
-(*TODO: test this and delete the above*)
-let read_song_year song =
   option_to_useful_int
     (read_song_component (fun sng -> sng.year) song)
     song
 
-let read_tags song =
-  let read_song song =
-    let j = Yojson.Basic.from_file !file in
-    let iface = from_json j in
-    let rec song_tags song (songlst : song list) =
-      match songlst with
-      | [] -> raise (UnknownSong song)
-      | h :: t when h.name = song -> h.tags
-      | h :: t -> song_tags song t
-    in
-    song_tags song iface.all_songs
-  in
-  read_song song
+let read_tags song = read_song_component (fun sng -> sng.tags) song
 
 let rec delete_song (songs : song list) song =
   match songs with
@@ -297,7 +235,7 @@ let delete_song_from_playlist playlist song =
 
 let rec add_song_playlist (playlists : playlist list) playlist song =
   match playlists with
-  | [] -> raise (UnknownSong playlist)
+  | [] -> raise (UnknownPlaylist playlist)
   | h :: t when h.name = playlist ->
       { h with songs = h.songs @ [ song ] } :: t
   | h :: t -> h :: add_song_playlist t playlist song
@@ -323,11 +261,18 @@ let rec modify_song f (songlst : song list) song =
   | h :: t when h.name = song -> f h :: t
   | h :: t -> h :: modify_song f t song
 
+(*modifies a song without raising an exception*)
+let rec modify_song_no_exp f (songlst : song list) song =
+  match songlst with
+  | [] -> []
+  | h :: t when h.name = song -> f h :: t
+  | h :: t -> h :: modify_song_no_exp f t song
+
 let rec update_playlists f (plist : playlist list) song =
   match plist with
   | [] -> []
   | h :: t ->
-      { h with songs = modify_song f h.songs song }
+      { h with songs = modify_song_no_exp f h.songs song }
       :: update_playlists f t song
 
 let modify_song_and_write f song =
@@ -418,6 +363,48 @@ let load_data () =
   get_dir_songs ()
   |> List.map seperate_song_mp3
   |> songs_to_interface |> interface_from_song_list |> update_json
+
+(*the following is for testing purposes*)
+let song1 =
+  {
+    name = "fly me to the moon";
+    liked = true;
+    mp3_file = "yeet";
+    artist = None;
+    album = None;
+    year = None;
+    tags = [];
+  }
+
+let song2 =
+  {
+    name = "fly me to the caml";
+    liked = true;
+    mp3_file = "yeet";
+    artist = None;
+    album = None;
+    year = None;
+    tags = [];
+  }
+
+let playlist1 = { name = "bangers"; songs = [ song1; song2 ] }
+
+let x : interface =
+  { all_songs = [ song1; song2 ]; playlists = [ playlist1 ] }
+
+let original_test_interface =
+  from_json (Yojson.Basic.from_file "data/archived.json")
+
+let reset () =
+  let pushed =
+    Yojson.pretty_to_string (to_interface original_test_interface)
+  in
+  (let out_chan = open_out "data/interface.json" in
+   Printf.fprintf out_chan "%s\n" pushed;
+   close_out out_chan);
+  let out_chan = open_out "data/writable.json" in
+  Printf.fprintf out_chan "%s\n" pushed;
+  close_out out_chan
 
 (* let () = (* Write message to file *) let oc = open_out file' in (*
    create or truncate file, return channel *) Printf.fprintf oc "%s\n"
