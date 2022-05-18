@@ -5,7 +5,7 @@
       "liked": false,
       "mp3 file": "all_falls_down.mp3",
       "artist": "Kanye",
-      "album": "Ka",
+      "album": "album 1",
       "year": 2004,
       "tags": [
         "old",
@@ -17,7 +17,7 @@
       "liked": true,
       "mp3 file": "break_my_heart.mp3",
       "artist": "Dua Lipa",
-      "album": "Du",
+      "album": "album 1",
       "year": 2020,
       "tags": [
         "new",
@@ -32,7 +32,7 @@
       "mp3 file": "reptilia.mp3",
       "artist": "the Strokes",
       "album": "th",
-      "year": 2003,
+      "year": 2020,
       "tags": [
         "old",
         "banger"
@@ -64,8 +64,8 @@
           "liked": false,
           "mp3 file": "all_falls_down.mp3",
           "artist": "Kanye",
-          "album": "Ka",
-          "year": 2003,
+          "album": "album 1",
+          "year": 2004,
           "tags": [
             "old",
             "rap"
@@ -76,7 +76,7 @@
           "liked": true,
           "mp3 file": "break_my_heart.mp3",
           "artist": "Dua Lipa",
-          "album": "Du",
+          "album": "album 1",
           "year": 2020,
           "tags": [
             "new",
@@ -89,7 +89,7 @@
           "mp3 file": "reptilia.mp3",
           "artist": "the Strokes",
           "album": "th",
-          "year": 2003,
+          "year": 2020,
           "tags": [
             "old",
             "banger"
@@ -105,7 +105,7 @@
           "liked": false,
           "mp3 file": "all_falls_down.mp3",
           "artist": "Kanye",
-          "album": "Ka",
+          "album": "album 1",
           "year": 2004,
           "tags": [
             "old",
@@ -117,7 +117,7 @@
           "liked": true,
           "mp3 file": "break_my_heart.mp3",
           "artist": "Dua Lipa",
-          "album": "Du",
+          "album": "album 1",
           "year": 2020,
           "tags": [
             "new",

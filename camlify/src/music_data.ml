@@ -5,16 +5,17 @@ open Yojson.Basic.Util
 exception UnknownSong of string
 exception UnknownInformation of string
 exception UnknownPlaylist of string
+exception EmptyFile
 
 let file = ref "data/data.json"
 
 let setfile s =
-  let j =
-    Yojson.Basic.from_file
-      (file := s;
-       !file)
-  in
-  (fun j' -> ()) j
+  let j = Yojson.Basic.from_file s in
+  match j |> member "all songs" |> to_list with
+  | [] -> raise EmptyFile
+  | _ -> file := s
+
+let setfile' s = file := s
 
 type song = {
   name : string;

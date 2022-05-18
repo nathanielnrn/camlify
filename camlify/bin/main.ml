@@ -48,7 +48,8 @@ let help_message : string =
   \ play_liked : plays all liked songs\n\
   \  play_tag : displays list of tag names and plays selected tag's \
    songs \n\
-  \ new_playlist [playlist_name] : adds a new playlist with no songs\n\
+  \ new_playlist [playlist_name] : adds a new playlist with one \
+   required base song\n\
   \   \n\
   \  "
 
@@ -439,21 +440,33 @@ let main () =
       ignore (Thread.create (Camlify.Streamer.play pipeline) file_name);
       step new_q
 
+let reset_saved () =
+  let pushed = "{\n  \"all songs\": [],\n  \"playlists\": []\n} " in
+  let out_chan = open_out "data/saved.json" in
+  Printf.fprintf out_chan "%s\n" pushed;
+  close_out out_chan
+
 let rec wait_message msg =
   match msg with
   | "demo" -> setfile "data/demo.json"
   | "scratch" -> load_data ()
   | "saved" -> (
-      try setfile "data.saved" with
-      | _ ->
-          setfile "data/saved.json";
+      try setfile "data/saved.json" with
+      | EmptyFile ->
+          setfile' "data/saved.json";
           load_data ())
+  | "reset" ->
+      reset_saved ();
+      print_endline "save file has been reset";
+      wait_message (read_line ())
   | _ ->
       print_endline "not an option";
       wait_message (read_line ())
 
 let wait_for_start_message () =
-  print_endline "Start demo, scratch, or saved?";
+  print_endline
+    "Start demo, scratch, or saved? or type reset to reset the save \
+     file";
   let msg = read_line () in
   wait_message msg
 
