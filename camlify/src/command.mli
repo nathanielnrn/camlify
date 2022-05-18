@@ -1,8 +1,8 @@
 (**Module for command types and parsing of said types*)
 
-type song_name
-type playlist_name
-type index
+type song_name = string
+type playlist_name = string
+type index = int
 (**Raised for empty strings*)
 exception Empty
 (**All other malformed commands raise this*)
