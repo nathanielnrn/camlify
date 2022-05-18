@@ -14,7 +14,8 @@ let help_message : string =
   \ help : print this message\n\
   \ quit : turn off this program\n\
   \ p [song_name] : plays mp3 file with given filename\n\
-  \ pause : pause currently played mp3 file\n\
+  \ s : stops current songs\n\
+  \   pause : pause currently played mp3 file\n\
   \ pi [index] : plays mp3 file with given index in current playlist\n\
   \ pl : displays list of songs in current playlist\n\
   \ pls : displays list of all playlists\n\
@@ -123,13 +124,15 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       print_endline "What is the name of the artist?";
       print_string "> ";
       let artist = read_line () in
-      change_song_artist song_name artist;
+      (try change_song_artist song_name artist with
+      | UnknownSong song_name -> print_endline "there was no such song");
       step_r q
   | ChangeSongAlbum song_name ->
       print_endline "What is the name of the album?";
       print_string "> ";
       let album = read_line () in
-      change_song_album song_name album;
+      (try change_song_album song_name album with
+      | UnknownSong song_name -> print_endline "there was no such song");
       step_r q
   | ChangeSongYear (song_name, year) ->
       print_endline
@@ -141,13 +144,15 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       print_endline "Enter the new tag";
       print_string "> ";
       let tag = read_line () in
-      add_song_tag song_name tag;
+      (try add_song_tag song_name tag with
+      | UnknownSong song_name -> print_endline "there was no such song");
       step_r q
   | RemoveSongTag song_name ->
       print_endline "Which tag would you like to remove?";
       print_string "> ";
       let tag = read_line () in
-      remove_song_tag song_name tag;
+      (try remove_song_tag song_name tag with
+      | UnknownSong song_name -> print_endline "there was no such song");
       step_r q
   | CreatePlayList pl_name -> h_create_playList pl_name q
   | NextSong ->
@@ -232,7 +237,9 @@ and h_play song_name q =
       if song_name = current_song_name q then ()
       else Camlify.Streamer.stop pipeline;
       let file_name = read_song_mp3_file song_name in
-      ignore (Thread.create (Camlify.Streamer.play pipeline) file_name);
+      file_name
+      |> Thread.create (Camlify.Streamer.play pipeline)
+      |> ignore;
       step_r new_q
 
 and h_play_index idx q =
@@ -243,9 +250,13 @@ and h_play_index idx q =
       step_r q
   | Legal new_q ->
       let new_song_name : string = current_song_name new_q in
+      if new_song_name = current_song_name q then ()
+      else Camlify.Streamer.stop pipeline;
       print_endline ("Playing song " ^ new_song_name ^ "...");
       let file_name = read_song_mp3_file new_song_name in
-      Camlify.Streamer.play pipeline file_name;
+      file_name
+      |> Thread.create (Camlify.Streamer.play pipeline)
+      |> ignore;
       step_r new_q
 
 and h_change_playList pl_name q =
@@ -278,7 +289,9 @@ and h_next_song res q =
       print_endline ("Playing song " ^ new_song_name ^ "…");
       let file_name = read_song_mp3_file new_song_name in
       Camlify.Streamer.stop pipeline;
-      ignore (Thread.create (Camlify.Streamer.play pipeline) file_name);
+      file_name
+      |> Thread.create (Camlify.Streamer.play pipeline)
+      |> ignore;
       step_r new_q
 
 and h_previous_song res q =
@@ -291,7 +304,9 @@ and h_previous_song res q =
       print_endline ("Playing song " ^ new_song_name ^ "…");
       let file_name = read_song_mp3_file new_song_name in
       Camlify.Streamer.stop pipeline;
-      ignore (Thread.create (Camlify.Streamer.play pipeline) file_name);
+      file_name
+      |> Thread.create (Camlify.Streamer.play pipeline)
+      |> ignore;
       step_r new_q
 
 and h_shuffle res q =
@@ -303,8 +318,10 @@ and h_shuffle res q =
       let new_song_name : string = current_song_name new_q in
       print_endline ("Playing song " ^ new_song_name ^ "…");
       let file_name = read_song_mp3_file new_song_name in
-      Camlify.Streamer.stop pipeline;
-      ignore (Thread.create (Camlify.Streamer.play pipeline) file_name);
+      stop pipeline;
+      file_name
+      |> Thread.create (Camlify.Streamer.play pipeline)
+      |> ignore;
       step_r new_q
 
 and h_add_song song_name res q =
