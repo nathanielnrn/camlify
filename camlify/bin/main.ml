@@ -3,9 +3,6 @@ open Camlify.Queue
 open Camlify.Streamer
 open Camlify.Command
 
-(* TODO: update with interface to client using terminal,
- * see a2 bin/main.ml for direction *)
-
 let pipeline = Camlify.Streamer.get_pipeline
 
 let help_message : string =
@@ -221,8 +218,6 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       add_playlist pname;
       h_add_playlist pname q
 
-(* | _ -> failwith "TODO?" *)
-
 and h_play song_name q =
   let res = play_song_by_name song_name q in
   match res with
@@ -231,9 +226,7 @@ and h_play song_name q =
       step_r q
   | Legal new_q ->
       print_endline ("Playing " ^ song_name ^ "...");
-      (* TODO: should this logic be here? Might be better in either in
-         queue or streamer? Verdict: should probably add a string ref in
-         streamer*)
+
       if song_name = current_song_name q then ()
       else Camlify.Streamer.stop pipeline;
       let file_name = read_song_mp3_file song_name in
