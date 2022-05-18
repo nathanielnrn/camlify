@@ -210,7 +210,7 @@ let rec step_r (q : Camlify.Queue.t) : Camlify.Queue.t =
       let tag = read_line () in
       let res = select_playlist_by_tag tag q in
       h_play_tag tag res q
-  | _ -> failwith "TODO?"
+(* | _ -> failwith "TODO?" *)
 
 and h_play song_name q =
   let res = play_song_by_name song_name q in

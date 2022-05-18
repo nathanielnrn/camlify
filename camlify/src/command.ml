@@ -40,6 +40,10 @@ let make_play_index i =
   try PlayIndex (int_of_string i) with
   | Failure _ -> raise Malformed
 
+let make_change_song_year songn y =
+  try ChangeSongYear (String.concat " " [ songn ], int_of_string y) with
+  | Failure _ -> raise Malformed
+
 (*Uses pattern matching versus else if trees to continue implementing
   compare to [parse] below and match correct output with match*)
 let parse (str : string) : command =
@@ -61,8 +65,7 @@ let parse (str : string) : command =
         | "change_l", _ :: _ -> ChangeSongLike (String.concat " " t)
         | "change_ar", _ :: _ -> ChangeSongArtist (String.concat " " t)
         | "change_al", _ :: _ -> ChangeSongAlbum (String.concat " " t)
-        | "change_y", songn :: [ y ] ->
-            ChangeSongYear (String.concat " " [ songn ], int_of_string y)
+        | "change_y", songn :: [ y ] -> make_change_song_year songn y
         | "add_tag", _ :: _ -> AddSongTag (String.concat " " t)
         | "rm_tag", _ :: _ -> RemoveSongTag (String.concat " " t)
         | "new_pl", _ :: _ -> CreatePlayList (String.concat " " t)

@@ -413,9 +413,12 @@ let command_tests =
     test_bad_command "change_al";
     test_command "change_y name 2001" (ChangeSongYear ("name", 2001));
     test_bad_command "change_y";
+    test_bad_command "change_y name s";
     test_command "add_tag happy" (AddSongTag "happy");
+    test_command "add_tag   " (AddSongTag "  ");
     test_bad_command "add_tag";
     test_command "rm_tag songg" (RemoveSongTag "songg");
+    test_command "rm_tag    " (RemoveSongTag "   ");
     test_bad_command "rm_tag";
     test_command "new_pl playlisttwo" (CreatePlayList "playlisttwo");
     test_bad_command "new_pl";
@@ -426,6 +429,7 @@ let command_tests =
     test_command "shuffle" Shuffle;
     test_bad_command "shuffle songg";
     test_command "add sample" (AddSong "sample");
+    test_command "add sample 3" (AddSong "sample 3");
     test_bad_command "add";
     test_command "rm sample" (RemoveSong "sample");
     test_bad_command "rm";
