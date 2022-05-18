@@ -107,6 +107,19 @@
         }
       ]
     },
-    { "name": "hi", "songs": [] }
+    {
+      "name": "hi",
+      "songs": [
+        {
+          "name": "fly me to the moon",
+          "liked": true,
+          "mp3 file": "sample-15s.mp3",
+          "artist": "Frank Sinatra",
+          "album": "Super Duper Bangers",
+          "year": 42,
+          "tags": [ "good", "jazzy" ]
+        }
+      ]
+    }
   ]
 }

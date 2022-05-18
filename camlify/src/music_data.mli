@@ -100,9 +100,6 @@ val remove_song_tag : string -> string -> unit
 (**[remove_song_tag song_name tag_to_remove] removes tag_to_remove from
    the tags of song_name.*)
 
-val get_dir_songs : unit -> string list
-(*TODO: Delete this from the mli, only here for sake of testing.*)
-
 val load_data : unit -> unit
 (**[load_data ()] writes to data.json file all the information obtained
    from the data*)
